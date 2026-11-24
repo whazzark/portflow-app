@@ -1,0 +1,73 @@
+name: User story
+description: One action a user needs to perform. Becomes one spec.
+title: "[Story] "
+labels: ["story"]
+body:
+  - type: markdown
+    attributes:
+      value: Use the vocabulary of CONTEXT.md. Describe the need, not the solution.
+  - type: input
+    id: actor
+    attributes:
+      label: As a
+      description: The role from CONTEXT.md.
+      placeholder: Operations Admin
+    validations:
+      required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: I want to
+      placeholder: record the loaded weighing of a truck
+    validations:
+      required: true
+  - type: textarea
+    id: benefit
+    attributes:
+      label: So that
+      placeholder: the unloaded tonnage of the discharge is known in real time
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Situation, constraints, links to related issues.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected outcomes
+      description: Rough acceptance criteria. The spec will make them precise.
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+    validations:
+      required: false
+  - type: dropdown
+    id: ui-impact
+    attributes:
+      label: UI impact
+      options: ["Yes", "No"]
+    validations:
+      required: true
+  - type: dropdown
+    id: infra-impact
+    attributes:
+      label: Infrastructure impact
+      description: New service, environment variable, deployment change.
+      options: ["No", "Yes"]
+    validations:
+      required: true
+  - type: input
+    id: epic
+    attributes:
+      label: Epic
+      description: Number of the parent epic issue.
+      placeholder: "#12"
+    validations:
+      required: true

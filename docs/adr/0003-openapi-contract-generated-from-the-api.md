@@ -1,0 +1,30 @@
+# 0003. OpenAPI contract generated from the API
+
+Status: accepted (2026-11-24)
+
+Superseded in part by ADR 0009: an issue has one code pull request, so there is no
+back-end pull request to merge alone. Contract changes stay backward compatible for
+another reason: a browser tab opened before a deployment runs the previous front end
+against the new API. The text below is kept as it was decided.
+
+## Context
+
+The web app must never drift from the API. With two languages there is no shared
+type system, so the guarantee has to come from a generated contract.
+
+## Decision
+
+- The API generates `contracts/openapi.json` from its code (utoipa). The file is committed.
+- The web app generates its TypeScript types from that file (`openapi-typescript`) and
+  calls the API through `openapi-fetch`, bound to TanStack Query with `openapi-react-query`.
+- CI regenerates the contract and the types and fails on any difference with what is committed.
+- Within a multi-PR issue, contract changes are backward compatible so the back-end PR
+  can be merged alone.
+
+## Consequences
+
+- An API change that the web app does not handle breaks its compilation.
+- One generation step is needed after an API change; a watch script covers local development.
+- Response codes and descriptions are declared by hand in annotations and deserve
+  attention in review.
+- Generated types stay at the edge of each front-end feature.

@@ -1,0 +1,32 @@
+name: Bug
+description: The product does not behave as its spec says.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: Quote the spec and requirement when one exists (for example 12/FR-002).
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: If fixing it changes what a screen shows, say so. A fix has no design gate.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: main at <commit>, Chrome on tablet
+    validations:
+      required: true

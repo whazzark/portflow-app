@@ -1,0 +1,81 @@
+name: Conventions
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: conventions-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  conventions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BRANCH: ${{ github.head_ref }}
+      TITLE: ${{ github.event.pull_request.title }}
+      BODY: ${{ github.event.pull_request.body }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch main (gates and ranges are always read from main)
+        run: git fetch origin main:refs/remotes/origin/main
+
+      # The checks that judge a pull request are the ones of main, not the ones the
+      # pull request brings: a branch cannot pass by weakening its own checks. Only a
+      # chore/ branch, which is the place to change them, runs its own version.
+      - name: Choose the checks to run
+        run: |
+          case "$BRANCH" in
+            chore/*)
+              echo "CHECKS=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+              ;;
+            *)
+              git worktree add --detach "$RUNNER_TEMP/base" origin/main
+              echo "CHECKS=$RUNNER_TEMP/base" >> "$GITHUB_ENV"
+              ;;
+          esac
+
+      - name: Self-test of the convention scripts
+        run: python3 -m unittest discover -s scripts/tests
+
+      - name: Branch name
+        run: python3 "$CHECKS/scripts/conventions.py" branch "$BRANCH"
+
+      - name: Files this type of branch may change
+        run: python3 "$CHECKS/scripts/conventions.py" paths --branch "$BRANCH" --base origin/main
+
+      - name: Pull request title and body
+        run: |
+          printf '%s' "$BODY" > "$RUNNER_TEMP/body.md"
+          python3 "$CHECKS/scripts/conventions.py" pr --branch "$BRANCH" --title "$TITLE" \
+            --body-file "$RUNNER_TEMP/body.md" --template "$CHECKS/.github/pull_request_template.md"
+
+      - name: Commit messages
+        run: python3 "$CHECKS/scripts/conventions.py" commits origin/main..HEAD
+
+      - name: Spec structure and test reports
+        run: python3 "$CHECKS/scripts/conventions.py" specs
+
+      - name: Gate - spec approved on main
+        if: startsWith(github.head_ref, 'feat/') || startsWith(github.head_ref, 'design/')
+        run: python3 "$CHECKS/scripts/conventions.py" spec-approved --branch "$BRANCH" --ref origin/main
+
+      - name: Gate - design approved on main
+        if: startsWith(github.head_ref, 'feat/')
+        run: python3 "$CHECKS/scripts/conventions.py" design-approved --branch "$BRANCH" --ref origin/main
+
+      - name: Functional requirement coverage
+        if: startsWith(github.head_ref, 'feat/')
+        run: python3 "$CHECKS/scripts/conventions.py" fr-coverage --branch "$BRANCH"
+
+      - name: Test report
+        if: startsWith(github.head_ref, 'feat/')
+        run: python3 "$CHECKS/scripts/conventions.py" test-report --branch "$BRANCH"

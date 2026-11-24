@@ -1,0 +1,27 @@
+name: Epic
+description: One activity of the story map. Groups user stories.
+title: "[Epic] "
+labels: ["epic"]
+body:
+  - type: textarea
+    id: activity
+    attributes:
+      label: Activity
+      description: The user activity this epic covers, as named in docs/product/story-map.md.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What users can do once this epic is complete.
+    validations:
+      required: true
+  - type: textarea
+    id: stories
+    attributes:
+      label: Stories
+      description: Task list of the user stories, in delivery order.
+      placeholder: "- [ ] #13"
+    validations:
+      required: false
