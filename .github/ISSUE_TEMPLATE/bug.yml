@@ -1,8 +1,11 @@
 name: Bug
 description: The product does not behave as its spec says.
-title: "[Bug] "
-labels: ["bug"]
+labels: ["fix"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Title: `<Area>: <what is wrong>`, for example `Weighings: net tonnage is wrong after a correction`. No type prefix: the label carries it.
   - type: textarea
     id: steps
     attributes:

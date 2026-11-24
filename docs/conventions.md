@@ -7,8 +7,35 @@ human. Do not add a rule here without saying how it is checked.
 
 ## Issues
 
-Created only through the forms in `.github/ISSUE_TEMPLATE/`: user story, epic, bug,
-chore. Blank issues are disabled in GitHub. A user story is one user action and becomes one spec.
+Created only through the forms in `.github/ISSUE_TEMPLATE/`: feature, bug, chore,
+documentation, epic. Blank issues are disabled in GitHub. A feature is one user action
+and becomes one spec; the "user stories" of a spec are the slices of that action.
+
+- Title: `<Area>: <result>`, in English, without a type prefix (not checked).
+
+  | Type | Title | Example |
+  |---|---|---|
+  | Feature | `<Area>: <what the user does>` | `Weighings: record a loaded weighing` |
+  | Bug | `<Area>: <what is wrong>` | `Weighings: net tonnage is wrong after a correction` |
+  | Chore | `<Area>: <result>` | `CI: cache the Rust builds` |
+  | Documentation | `<Area>: <result>` | `README: describe the setup of an existing repository` |
+  | Epic | The user activity of the story map | `Rotations and weighings` |
+
+- The area is a part of the product in the words of `CONTEXT.md`, or a part of the
+  repository (`README`, `CI`, `Skills`).
+- The type is carried by the label the form applies. A label is the type of the branch
+  the issue is worked on, the same word as in commits and pull request titles:
+
+  | Label | Issue | Work branch |
+  |---|---|---|
+  | `feat` | Feature | `feat/`, after its `spec/` and, with a user interface, its `design/` branch |
+  | `fix` | Bug | `fix/` |
+  | `chore` | Chore | `chore/` |
+  | `docs` | Documentation, product discovery | `docs/` |
+  | `epic` | Epic | None: it groups features |
+
+  The labels must exist in the repository. The skills read the label to name the
+  branch, and `/spec` accepts only a `feat` issue.
 
 ## Branches
 
@@ -23,7 +50,7 @@ issue 12 gives `spec/012-record-weighing`. Issues above 999 keep their digits.
 |---|---|
 | `spec` | The spec of an issue |
 | `design` | The mock-up of an issue |
-| `feat` | Code for a user story: `feat/012-record-weighing`. One branch and one pull request per issue |
+| `feat` | Code for a feature: `feat/012-record-weighing`. One branch and one pull request per issue |
 | `fix` | Bug fix |
 | `chore` | Tooling, CI, refactoring, dependencies |
 | `docs` | Documentation and product discovery |
@@ -86,7 +113,7 @@ specs/<NNN>-<slug>/
   spec.md
   design/        brief.md and the mock-up export, only when ui_impact is yes
   plan.md        written by /develop on the work branch (not checked)
-  test-report.md written by /test on the work branch of a user story
+  test-report.md written by /test on the work branch of a feature
 ```
 
 - Front matter: `issue` (without leading zeros), `title`, `ui_impact` (yes/no),
@@ -131,7 +158,7 @@ Only test files count: everything under `e2e/`, any `tests/` folder, `*.test.ts(
 `*.spec.ts(x)` files, and Rust files that contain test code (`#[test]`,
 `#[cfg(test)]`). A reference in application code is ignored.
 
-The code pull request of a user story must cover every functional requirement of its
+The code pull request of a feature must cover every functional requirement of its
 spec (`fr-coverage`) and contain the test report (`test-report`).
 
 ## Commands

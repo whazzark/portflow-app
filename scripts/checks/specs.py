@@ -228,7 +228,7 @@ def find_spec_dir(root, issue):
 
 
 def check_test_report_present(root, issue):
-    """The code pull request of a user story carries the report of the test stage."""
+    """The code pull request of a feature carries the report of the test stage."""
     report = find_spec_dir(root, issue) / "test-report.md"
     if not report.is_file():
         raise Failure([

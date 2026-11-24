@@ -11,7 +11,8 @@ The deliverables are, on the work branch: `specs/<NNN>-<slug>/plan.md`, the code
 unit and integration tests committed before it, and `contracts/openapi.json` up to
 date. `<NNN>` is the issue number padded to three digits (issue 12 gives `012`).
 
-The work branch is `feat/<NNN>-<slug>` for a user story and `fix/<NNN>-<slug>` for a bug.
+The work branch is named after the label of the issue: `feat/<NNN>-<slug>` for a
+feature (label `feat`), `fix/<NNN>-<slug>` for a bug (label `fix`).
 
 End-to-end and regression tests, documentation and the pull request belong to the
 next stages. Do not do them here.
@@ -23,8 +24,8 @@ next stages. Do not do them here.
 - `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
   and give the human the command it prints.
 - `git fetch origin`, then `gh issue view $ARGUMENTS --json labels,state,title --comments`.
-- For a bug (label `bug`), read "Bugs" at the end first.
-- For a user story: `python3 scripts/conventions.py spec-approved --issue $ARGUMENTS`
+- For a bug (label `fix`), read "Bugs" at the end first.
+- For a feature: `python3 scripts/conventions.py spec-approved --issue $ARGUMENTS`
   must pass. If not, stop.
 - Switch to the work branch if it exists, otherwise create it from `origin/main`.
 - Bring in what was merged since: if `git log HEAD..origin/main --oneline` is not empty,

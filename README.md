@@ -45,10 +45,10 @@ change goes through a branch and a pull request, and CI judges it with the check
 
 The repository is public on GitHub. Its settings remain to be made, once:
 
-1. Create the labels used by the issue forms:
-   `gh label create story`, `gh label create epic`, `gh label create chore` (`bug` exists
-   by default). A form whose label does not exist silently applies none, and `/spec`
-   recognises a user story by its label.
+1. Create the labels used by the issue forms: `feat`, `fix`, `chore`, `docs` and `epic`
+   (`gh label create feat`, and so on). They are the types of the work branches. A form
+   whose label does not exist silently applies none, and the skills read the label:
+   `/spec` accepts only a `feat` issue.
 2. Protect `main` (Settings, Branches or Rulesets):
    - require a pull request before merging;
    - require linear history, block force pushes and deletions;
@@ -75,7 +75,7 @@ gate is that only you click "Merge" (see `docs/workflow.md`).
 
 ## How work flows
 
-A user story:
+A feature:
 
 ```
 /discover          vision, story map, roadmap, issues     gate: product
@@ -120,7 +120,7 @@ the only kind of branch judged by its own checks, so review it closely.
      in `.claude/rules/testing.md`: `/test` needs both;
    - the commands that export the contract and regenerate the types;
    - a CI workflow for the code, which you then add to the required checks of `main`.
-3. The stories of the first release, created by `/discover`.
+3. The features of the first release, created by `/discover`.
 
 ## Checks
 
