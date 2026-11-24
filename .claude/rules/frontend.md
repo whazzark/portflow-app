@@ -72,6 +72,18 @@ The component layers follow atomic design (ADR 0012).
 - If the mock-up cannot be built as drawn, or contradicts the spec, stop and report:
   the answer goes through a design or spec pull request.
 
+## Responsive
+
+- Every screen is responsive (ADR 0004): usable from a phone 360px wide to a wide
+  desktop, in portrait and landscape, with no horizontal scroll of the page.
+- Mobile first: base styles for the narrow width, then the breakpoints of the Tailwind
+  theme. No breakpoint written as a raw value, no fixed pixel width on a layout container.
+- The templates carry the page layout at each width. A screen does not rebuild it.
+- A dense table has a narrow form (priority columns, or one card per row), shown by
+  the mock-up. Do not hide an action or a datum the user needs at a narrow width.
+- Same components at every width: adapt with CSS, not with a second component tree
+  chosen from the window size.
+
 ## UX rules
 
 - Handle loading, error and empty states for every read.
