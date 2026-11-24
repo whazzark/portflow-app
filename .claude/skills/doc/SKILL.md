@@ -79,7 +79,8 @@ session. If one cannot be ticked, stop and report instead of opening the pull re
 
 - `python3 scripts/conventions.py commits origin/main..HEAD`
 - `python3 scripts/conventions.py paths`: the branch changed only what it may
-- Title `feat(<context>): <description> (#$ARGUMENTS)`, or `fix(...)` on a `fix/` branch.
+- Title `feat(<context>): <description>`, or `fix(...)` on a `fix/` branch, without any
+  number: the issue is in the body.
   Validate title and body with `python3 scripts/conventions.py pr`.
 - Push. If a pull request already exists for the branch (`gh pr list --head <branch>`),
   update its body with `gh pr edit`; otherwise create it. Never merge it.

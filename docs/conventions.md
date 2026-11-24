@@ -93,7 +93,9 @@ and a pull request cannot weaken the checks that judge it.
 
 ## Pull requests
 
-- Title: `<type>(<scope>): <description> (#<issue>)`. The type must match the branch type
+- Title: `<type>(<scope>): <description>`, 64 characters at most, with no issue or pull
+  request number: GitHub appends the pull request number at merge, and the issue is in
+  the body. The type must match the branch type
   (`chore/` branches accept `chore`, `ci`, `build`, `refactor`, `test`, `perf`).
 - Body: the sections of `.github/pull_request_template.md`, all present, in order,
   none empty (`N/A` when a section does not apply).
@@ -102,7 +104,8 @@ and a pull request cannot weaken the checks that judge it.
 - `Spec` links `specs/<NNN>-<slug>/` for spec, design and feat PRs.
 - `Requirements covered` lists the functional requirements on a `feat/` PR.
 - Every checklist item of the template is present and ticked; none is removed or reworded.
-- Merged by squash; the PR title becomes the commit on `main` (a repository setting).
+- Merged by squash; the commit on `main` is the PR title followed by the pull request
+  number, `<title> (#<pr>)` (a repository setting: default commit message "Pull request title").
 
 ## Specs
 

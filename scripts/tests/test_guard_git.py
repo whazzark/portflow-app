@@ -43,7 +43,7 @@ class GuardHookTests(unittest.TestCase):
             "git checkout -b feat/012-back-record-weighing",
             "git switch -c spec/012-record-weighing",
             "git fetch origin main",
-            "gh pr create --title 'spec: x (#12)' --body-file body.md",
+            "gh pr create --title 'spec: x' --body-file body.md",
             "gh issue view 12 --json title,body",
             "gh pr view 12",
             "cargo test",
