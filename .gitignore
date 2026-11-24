@@ -1,0 +1,21 @@
+# Rust
+target/
+# Node
+node_modules/
+dist/
+.turbo/
+coverage/
+# Playwright
+test-results/
+playwright-report/
+# Python (convention scripts)
+__pycache__/
+# Environment
+.env
+.env.*
+!.env.example
+# Claude Code local settings
+.claude/settings.local.json
+# OS and editors
+.DS_Store
+.idea/

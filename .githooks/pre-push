@@ -1,0 +1,30 @@
+#!/bin/sh
+# Refuses pushes to the protected branch and to badly named branches.
+# The very first push of main, which creates the remote repository, is allowed.
+root="$(git rev-parse --show-toplevel)"
+
+is_zero() {
+  case "$1" in
+    *[!0]*) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      if [ "$local_ref" = "refs/heads/main" ] && is_zero "$remote_sha"; then
+        continue
+      fi
+      echo "error: pushing to 'main' is not allowed. Open a pull request." >&2
+      exit 1
+      ;;
+    refs/heads/*)
+      if is_zero "$local_sha"; then
+        continue   # deleting a branch
+      fi
+      python3 "$root/scripts/conventions.py" branch "${remote_ref#refs/heads/}" >/dev/null || exit 1
+      ;;
+  esac
+done
+exit 0

@@ -1,0 +1,3 @@
+#!/bin/sh
+# Rejects commit messages that do not follow docs/conventions.md.
+exec python3 "$(git rev-parse --show-toplevel)/scripts/conventions.py" commit-msg "$1"

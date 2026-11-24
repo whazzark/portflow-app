@@ -1,0 +1,15 @@
+#!/bin/sh
+# Refuses commits on the protected branch and on badly named branches.
+# The very first commit of the repository is allowed on main.
+branch="$(git symbolic-ref --short -q HEAD)"
+[ -z "$branch" ] && exit 0   # detached HEAD (rebase in progress, etc.)
+
+if [ "$branch" = "main" ]; then
+  if git rev-parse -q --verify HEAD >/dev/null 2>&1; then
+    echo "error: 'main' is protected. Create a branch named <type>/<NNN>-<slug>." >&2
+    exit 1
+  fi
+  exit 0
+fi
+
+python3 "$(git rev-parse --show-toplevel)/scripts/conventions.py" branch "$branch" >/dev/null
