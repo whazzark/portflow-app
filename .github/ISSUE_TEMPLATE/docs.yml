@@ -1,0 +1,22 @@
+name: Documentation
+description: A change to the documentation or to the product discovery, with no change in product behaviour.
+labels: ["docs"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Title: `<Area>: <result>`, for example `README: describe the setup of an existing repository`. No type prefix: the label carries it.
+        A `docs/` branch may change only `docs/`, `README.md` and `CONTEXT.md`. Anything else is a chore.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: A checkable end state.
+    validations:
+      required: true

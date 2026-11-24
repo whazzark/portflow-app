@@ -11,6 +11,6 @@ human (the product gate). They are written by `/discover`.
 
 These files do not exist yet: the first run of `/discover` creates them.
 
-In GitHub: an epic per activity, a milestone per release, a user story per action.
+In GitHub: an epic per activity, a milestone per release, a feature per action.
 Only the release being built is broken down into issues. Later releases stay as
 titles until they are next.

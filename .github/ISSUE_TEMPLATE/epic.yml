@@ -1,8 +1,11 @@
 name: Epic
-description: One activity of the story map. Groups user stories.
-title: "[Epic] "
+description: One activity of the story map. Groups features.
 labels: ["epic"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Title: the user activity, as named in the story map, for example `Rotations and weighings`. No type prefix: the label carries it.
   - type: textarea
     id: activity
     attributes:
@@ -18,10 +21,10 @@ body:
     validations:
       required: true
   - type: textarea
-    id: stories
+    id: features
     attributes:
-      label: Stories
-      description: Task list of the user stories, in delivery order.
+      label: Features
+      description: Task list of the features, in delivery order.
       placeholder: "- [ ] #13"
     validations:
       required: false
