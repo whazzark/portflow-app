@@ -31,6 +31,8 @@ Write `specs/<NNN>-<slug>/design/brief.md`, which the human pastes into Claude D
 - The screens to design and, for each, every state required by the acceptance
   scenarios: nominal, empty, loading, error, refused action.
 - A table: acceptance scenario visible on screen, screen, state.
+- Every screen is responsive: ask for each one at phone width and at desktop width,
+  and for the narrow form of each dense table.
 - The actor and context of use (office desktop, or field tablet/phone with gloves and sunlight).
 - The French labels to show on screen. `CONTEXT.md` defines the terms in English and
   holds no French label: reuse the labels of the mock-ups already approved in `specs/`,

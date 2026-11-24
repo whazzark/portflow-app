@@ -2,6 +2,9 @@
 
 Status: accepted (2026-11-24)
 
+Completed by ADR 0012: the design system, and atomic design as the layering of the
+components inside the feature slices. The text below is kept as it was decided.
+
 ## Context
 
 The product is used behind a login, on office desktops (dense tables, filters,
