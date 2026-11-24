@@ -27,26 +27,23 @@ with the walking-skeleton issue.
 | `.claude/` | Agents, skills, rules, the two guards and the settings |
 | `.githooks/`, `scripts/`, `.github/` | Git hooks, convention checks and their tests, CI and templates |
 
-## First-time setup
+## Setup
 
 You need Python 3, git, and the GitHub CLI signed in (`gh auth status`).
 
-The local repository is initialised, its hooks are active and `origin` points to
-the GitHub repository. On a new clone, run `git config core.hooksPath .githooks` once.
-
-The first commit and its push are yours to run, in your own terminal. An agent
-cannot: the git guard refuses every commit on `main`, the first one included.
+On a new clone, once:
 
 ```bash
-python3 -m unittest discover -s scripts/tests     # the checks test themselves
-git add . && git commit -m "chore: bootstrap repository"
-git push -u origin main
+git config core.hooksPath .githooks              # activate the git hooks
+python3 scripts/conventions.py setup             # confirms they are active
+python3 -m unittest discover -s scripts/tests    # the checks test themselves
 ```
 
-The first commit must contain `scripts/`: CI judges every pull request with the checks
-of `main`.
+`main` receives no direct commit: the git hooks and the git guard refuse it. Every
+change goes through a branch and a pull request, and CI judges it with the checks of
+`main`.
 
-Then, once:
+The repository is public on GitHub. Its settings remain to be made, once:
 
 1. Create the labels used by the issue forms: `feat`, `fix`, `chore`, `docs` and `epic`
    (`gh label create feat`, and so on). They are the types of the work branches. A form
@@ -144,6 +141,8 @@ Verified:
 - The git guard was given 39 ways around it; the ones it let through were closed and
   are now tests.
 - The YAML of the issue forms and of the CI workflow parses.
+- The three git hooks ran for real on the first commit and the first push of `main`,
+  and let them through.
 
 Not verified:
 
@@ -152,7 +151,7 @@ Not verified:
 - No agent and no skill has ever been run on a real issue.
 - Whether the edit guard really asks for confirmation in a session, and whether the
   hooks apply to the agents a skill launches.
-- The `pre-push` hook on a real push: it was tested with what git sends it.
+- The git hooks on a refusal: they have only been seen to accept, outside their tests.
 - That the commit pinned for `actions/checkout` is the release it claims to be.
 
 Expect to adjust the agents and skills after the first two or three issues. Add a
