@@ -45,3 +45,8 @@ Use `CONTEXT.md` vocabulary. Challenge vague answers with concrete cases.
 Only then, and only on request, create in GitHub: the milestone for the release, the
 epics, then the stories following `.github/ISSUE_TEMPLATE/user-story.yml`, each linked
 to its epic and milestone. List what you created.
+
+Title each issue as `docs/conventions.md` says: `<Area>: <what the user does>` for a
+story, the name of the activity for an epic, no type prefix. Give each issue its label
+(`story`, `epic`): a command-line creation does not apply the label of the form. If a
+label does not exist in the repository, stop and tell the human.

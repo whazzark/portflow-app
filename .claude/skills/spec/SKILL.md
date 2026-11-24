@@ -22,7 +22,8 @@ You run in an interactive session: ask the human instead of guessing a business 
   and give the human the command it prints.
 - `gh issue view $ARGUMENTS --json number,title,body,labels,state`. Stop if the issue
   is closed. Stop if it is not a user story (label `story`): a bug has no spec, see
-  "Bugs" in `docs/workflow.md`.
+  "Bugs" in `docs/workflow.md`. If the issue has no label at all, ask the human which
+  type it is rather than guessing from its title.
 - `git fetch origin`. If `specs/<NNN>-*/` already exists on `origin/main`, stop: the
   spec is approved. If a `spec/<NNN>-*` branch exists, switch to it and resume from the
   first step that is not done.

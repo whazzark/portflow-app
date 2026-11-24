@@ -10,6 +10,20 @@ human. Do not add a rule here without saying how it is checked.
 Created only through the forms in `.github/ISSUE_TEMPLATE/`: user story, epic, bug,
 chore. Blank issues are disabled in GitHub. A user story is one user action and becomes one spec.
 
+- Title: `<Area>: <result>`, in English, without a type prefix (not checked).
+
+  | Type | Title | Example |
+  |---|---|---|
+  | User story | `<Area>: <what the user does>` | `Weighings: record a loaded weighing` |
+  | Bug | `<Area>: <what is wrong>` | `Weighings: net tonnage is wrong after a correction` |
+  | Chore | `<Area>: <result>` | `CI: cache the Rust builds` |
+  | Epic | The user activity of the story map | `Rotations and weighings` |
+
+- The area is a part of the product in the words of `CONTEXT.md`, or a part of the
+  repository (`README`, `CI`, `Skills`).
+- The type is carried by the label the form applies: `story`, `bug`, `chore`, `epic`. The
+  labels must exist in the repository, and `/spec` recognises a user story by its label.
+
 ## Branches
 
 ```

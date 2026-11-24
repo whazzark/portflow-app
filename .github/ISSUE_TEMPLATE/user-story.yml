@@ -1,11 +1,12 @@
 name: User story
 description: One action a user needs to perform. Becomes one spec.
-title: "[Story] "
 labels: ["story"]
 body:
   - type: markdown
     attributes:
-      value: Use the vocabulary of CONTEXT.md. Describe the need, not the solution.
+      value: |
+        Title: `<Area>: <what the user does>`, for example `Weighings: record a loaded weighing`. No type prefix: the label carries it.
+        Use the vocabulary of CONTEXT.md. Describe the need, not the solution.
   - type: input
     id: actor
     attributes:

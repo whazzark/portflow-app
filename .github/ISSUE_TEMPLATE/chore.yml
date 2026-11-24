@@ -1,11 +1,12 @@
 name: Chore
 description: Technical work with no change in product behaviour (tooling, CI, docs, refactoring).
-title: "[Chore] "
 labels: ["chore"]
 body:
   - type: markdown
     attributes:
-      value: A chore that changes the guards, the convention checks or the conventions workflow is the only way to change them. Say so in the goal, it gets a closer review.
+      value: |
+        Title: `<Area>: <result>`, for example `CI: cache the Rust builds`. No type prefix: the label carries it.
+        A chore is the only way to change the guards, the convention checks or the conventions workflow. Say so in the goal: it gets a closer review.
   - type: textarea
     id: goal
     attributes:
