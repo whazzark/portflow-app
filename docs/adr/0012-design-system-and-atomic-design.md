@@ -1,6 +1,6 @@
 # 0012. Design system and atomic design
 
-Status: proposed (2026-11-24)
+Status: accepted (2026-11-24)
 
 Completes ADR 0004, which chooses shadcn/ui and a feature-sliced structure without
 saying how components are layered or where the visual language is decided.
