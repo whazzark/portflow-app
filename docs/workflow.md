@@ -35,6 +35,10 @@ Each skill ends with a handover comment on the issue, whose first line is
 `## Handover: <stage>`: what was done, what was not verified, what the next stage must
 know. Run each stage in a fresh session.
 
+The skills that open a pull request turn Auto-fix on when the session offers it: the
+session is then woken on a CI failure, a merge conflict or a review comment. It lifts
+no rule.
+
 A work branch never rebases: each stage merges `origin/main` into it when `main` has
 moved, for example after the design pull request.
 
