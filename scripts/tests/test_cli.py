@@ -40,7 +40,7 @@ class CommandLineTests(unittest.TestCase):
         for argv in (
             ["commit-msg", "msg"],
             ["commits", "HEAD~1..HEAD"],
-            ["pr", "--branch", branch, "--title", "spec(discharges): record a weighing (#12)", "--body-file", "body.md"],
+            ["pr", "--branch", branch, "--title", "spec(discharges): record a weighing", "--body-file", "body.md"],
             ["specs"],
             ["spec-approved", "--issue", "12", "--ref", "main"],
             ["design-approved", "--branch", branch, "--ref", "main"],
@@ -54,7 +54,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(self.run_cli("test-report", "--issue", "13")[0], 1)
 
     def test_a_missing_file_is_an_error_not_a_crash(self):
-        code, output = self.run_cli("pr", "--branch", "spec/012-x", "--title", "spec: x (#12)", "--body-file", "/nonexistent/body.md")
+        code, output = self.run_cli("pr", "--branch", "spec/012-x", "--title", "spec: x", "--body-file", "/nonexistent/body.md")
         self.assertEqual(code, 1)
         self.assertIn("error:", output)
 

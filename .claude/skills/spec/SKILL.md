@@ -94,7 +94,7 @@ the human before adding it.
 - Commit `spec(<context>): <description>`, and push the branch.
 - If a pull request already exists for the branch (`gh pr list --head <branch>`), update
   it instead of creating one.
-- Title `spec(<context>): <description> (#$ARGUMENTS)`, body from
+- Title `spec(<context>): <description>`, without any number, body from
   `.github/pull_request_template.md` with `Refs #$ARGUMENTS`. Sections that do not
   apply contain `N/A`. In the checklist, the two items about tests are ticked: a spec
   pull request changes no test and no code.
