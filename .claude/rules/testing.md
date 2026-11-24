@@ -21,7 +21,8 @@ paths:
   assert what the user sees, through roles and accessible names. A regression test
   reproduces a bug or a gap and stays in the suite.
 - **Every screen is tested at two widths.** The end-to-end tests of a screen run at a
-  phone width and at a desktop width, and assert at both that the actions of the
+  phone width (below the `sm` breakpoint of Tailwind) and at a desktop width (`lg` or
+  above), and assert at both that the actions of the
   scenario are reachable and that the page does not scroll horizontally.
 - The developer never changes a file under `e2e/`; the QA agent never changes a test
   under `apps/`.

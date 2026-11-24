@@ -74,10 +74,13 @@ The component layers follow atomic design (ADR 0012).
 
 ## Responsive
 
-- Every screen is responsive (ADR 0004): usable from a phone 360px wide to a wide
-  desktop, in portrait and landscape, with no horizontal scroll of the page.
-- Mobile first: base styles for the narrow width, then the breakpoints of the Tailwind
-  theme. No breakpoint written as a raw value, no fixed pixel width on a layout container.
+- Every screen is responsive (ADR 0004): usable at every width, from the base one of
+  Tailwind (below `sm`) to `2xl` and above, in portrait and landscape, with no
+  horizontal scroll of the page.
+- The widths are the default breakpoints of Tailwind (`sm`, `md`, `lg`, `xl`, `2xl`),
+  unchanged. No other minimum width, no custom breakpoint, no raw value in a media query.
+- Mobile first: unprefixed utilities are the phone form, the prefixes widen it. No
+  fixed pixel width on a layout container.
 - The templates carry the page layout at each width. A screen does not rebuild it.
 - A dense table has a narrow form (priority columns, or one card per row), shown by
   the mock-up. Do not hide an action or a datum the user needs at a narrow width.
