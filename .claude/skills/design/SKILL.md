@@ -56,7 +56,7 @@ The export is every file of `design/` other than `brief.md`.
   the files in `design/`. If the line is not there, add the links at the end of the section.
 - Run `python3 scripts/conventions.py specs` and `python3 scripts/conventions.py paths`.
 - Commit `design(<context>): <screen name>` and push.
-- Title `design(<context>): <screen name> (#$ARGUMENTS)`, body from
+- Title `design(<context>): <screen name>`, without any number, body from
   `.github/pull_request_template.md` with `Refs #$ARGUMENTS`. Sections that do not
   apply contain `N/A`. In the checklist, the two items about tests are ticked: a design
   pull request changes no test and no code.

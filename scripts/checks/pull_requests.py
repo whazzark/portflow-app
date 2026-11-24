@@ -2,11 +2,14 @@
 import re
 
 from .branches import parse_branch
-from .commits import HEADER_RE, header_problems
+from .commits import HEADER_MAX, HEADER_RE, header_problems
 from .common import Failure, pad_issue, split_sections, strip_comments
 
 
-TITLE_SUFFIX_RE = re.compile(r" \(#(?P<issue>[1-9]\d*)\)$")
+# GitHub appends " (#<pull request>)" to the title when it squashes: the title itself
+# carries no number, and leaves room for that suffix within the 72 characters of a header.
+TITLE_NUMBER_RE = re.compile(r"\(?#\d+\)?\s*$")
+TITLE_MAX = HEADER_MAX - len(" (#9999)")
 TITLE_TYPES_BY_BRANCH = {
     "spec": {"spec"},
     "design": {"design"},
@@ -41,16 +44,19 @@ def check_pr(branch, title, body, template=None):
     problems = []
     btype, issue, _ = parse_branch(branch)
 
-    suffix = TITLE_SUFFIX_RE.search(title)
-    if not suffix:
-        problems.append("PR title must end with ' (#<issue>)'")
+    if TITLE_NUMBER_RE.search(title):
+        problems.append(
+            "PR title must not end with an issue or pull request number: GitHub adds the pull "
+            f"request number at merge, and the issue goes in the body ('Closes #{issue}' or 'Refs #{issue}')"
+        )
     else:
-        if int(suffix["issue"]) != issue:
-            problems.append(f"PR title references #{suffix['issue']} but the branch is for #{issue}")
-        header = title[: suffix.start()]
-        header_issues = header_problems(header, label="PR title")
-        problems.extend(header_issues)
-        match = HEADER_RE.match(header)
+        problems.extend(header_problems(title, label="PR title"))
+        if len(title) > TITLE_MAX:
+            problems.append(
+                f"PR title is {len(title)} characters, the limit is {TITLE_MAX} "
+                "(GitHub appends the pull request number at merge)"
+            )
+        match = HEADER_RE.match(title)
         if match and match["type"] not in TITLE_TYPES_BY_BRANCH[btype]:
             allowed = ", ".join(sorted(TITLE_TYPES_BY_BRANCH[btype]))
             problems.append(f"PR title type '{match['type']}' is not allowed on a {btype}/ branch (allowed: {allowed})")
