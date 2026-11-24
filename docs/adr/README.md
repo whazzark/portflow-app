@@ -21,6 +21,7 @@ decision, they draft a new ADR and stop for the human.
 | 0009 | Spec format and numbering |
 | 0010 | Delivery stages and project board |
 | 0011 | Protected frame and sources of truth |
+| 0012 | Design system and atomic design (proposed) |
 
 Domain decisions taken in the previous repository (immutable report snapshots,
 activity log scope, rotation corrections, capacity compliance, and others) are not

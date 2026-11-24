@@ -78,6 +78,11 @@ difference, so a contract change that the web app does not handle breaks the bui
 import between features. Server state in TanStack Query, navigable state in the URL.
 Details in `.claude/rules/frontend.md`.
 
+Components are layered by atomic design inside those slices (ADR 0012): tokens,
+atoms, molecules and templates in `shared`, organisms and pages in the features.
+The tokens of the Tailwind theme are the only source of visual values, and the atoms
+start from shadcn/ui.
+
 The web app is responsive and designed for touch and unreliable networks on field
 screens. A native app is not planned; token-based authentication can be added later
 as another adapter next to the session cookie.
