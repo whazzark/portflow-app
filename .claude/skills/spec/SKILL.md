@@ -21,7 +21,7 @@ You run in an interactive session: ask the human instead of guessing a business 
 - `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
   and give the human the command it prints.
 - `gh issue view $ARGUMENTS --json number,title,body,labels,state`. Stop if the issue
-  is closed. Stop if it is not a user story (label `story`): a bug has no spec, see
+  is closed. Stop if it is not a feature (label `feat`): a bug has no spec, see
   "Bugs" in `docs/workflow.md`. If the issue has no label at all, ask the human which
   type it is rather than guessing from its title.
 - `git fetch origin`. If `specs/<NNN>-*/` already exists on `origin/main`, stop: the

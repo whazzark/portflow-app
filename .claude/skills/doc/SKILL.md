@@ -11,7 +11,8 @@ The deliverables are, on the work branch: the user documentation up to date, and
 code pull request, whose body is assembled from what the earlier stages left. `<NNN>`
 is the issue number padded to three digits.
 
-The work branch is `feat/<NNN>-<slug>` for a user story and `fix/<NNN>-<slug>` for a bug.
+The work branch is named after the label of the issue: `feat/<NNN>-<slug>` for a
+feature (label `feat`), `fix/<NNN>-<slug>` for a bug (label `fix`).
 
 ## 1. Preconditions
 
@@ -25,7 +26,7 @@ The work branch is `feat/<NNN>-<slug>` for a user story and `fix/<NNN>-<slug>` f
   must run again.
 - The last issue comment starting with `## Handover: test` must say `Result: pass`.
   If not, stop: `/test $ARGUMENTS` comes first.
-- For a user story:
+- For a feature:
   - `python3 scripts/conventions.py test-report --issue $ARGUMENTS` and
     `python3 scripts/conventions.py specs` must pass. If not, stop: `/test $ARGUMENTS`
     comes first.

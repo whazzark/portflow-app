@@ -11,7 +11,8 @@ The deliverables are, on the work branch: the end-to-end and regression tests un
 `e2e/`, and `specs/<NNN>-<slug>/test-report.md` with one passing line per functional
 requirement. `<NNN>` is the issue number padded to three digits.
 
-The work branch is `feat/<NNN>-<slug>` for a user story and `fix/<NNN>-<slug>` for a bug.
+The work branch is named after the label of the issue: `feat/<NNN>-<slug>` for a
+feature (label `feat`), `fix/<NNN>-<slug>` for a bug (label `fix`).
 
 The value of this stage is independence: the tests come from the spec, not from the
 code. Run it in a fresh session, not in the one that ran `/develop`.
@@ -23,7 +24,7 @@ code. Run it in a fresh session, not in the one that ran `/develop`.
 - `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
   and give the human the command it prints.
 - `git fetch origin`, then `gh issue view $ARGUMENTS --json labels,state,title --comments`.
-- For a bug (label `bug`), read "Bugs" at the end first.
+- For a bug (label `fix`), read "Bugs" at the end first.
 - Switch to the work branch. Stop if it does not exist: `/develop $ARGUMENTS` comes first.
 - Bring in what was merged since: if `git log HEAD..origin/main --oneline` is not empty,
   `git merge origin/main`. On a conflict, stop and report.

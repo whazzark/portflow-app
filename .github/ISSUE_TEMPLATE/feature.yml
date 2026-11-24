@@ -1,6 +1,6 @@
-name: User story
+name: Feature
 description: One action a user needs to perform. Becomes one spec.
-labels: ["story"]
+labels: ["feat"]
 body:
   - type: markdown
     attributes:

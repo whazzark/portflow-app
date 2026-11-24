@@ -1,6 +1,6 @@
 name: Bug
 description: The product does not behave as its spec says.
-labels: ["bug"]
+labels: ["fix"]
 body:
   - type: markdown
     attributes:

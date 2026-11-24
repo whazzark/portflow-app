@@ -49,7 +49,7 @@ moved, for example after the design pull request.
 
 ## Bugs
 
-A bug (issue form "Bug") has no spec of its own. Its branch is `fix/<NNN>-<slug>`.
+A bug (issue form "Bug", label `fix`) has no spec of its own. Its branch is `fix/<NNN>-<slug>`.
 
 1. `/test <issue>` creates the branch and commits the regression test that reproduces
    the bug. It must fail.
@@ -110,7 +110,7 @@ packages the export.
 - Spec and design pull requests use `Refs #12`. The code pull request uses `Closes #12`.
 - The code is one branch and one pull request, `feat/<NNN>-<slug>`, back end and front
   end together. It is not split: the skills find the work branch from the issue number.
-- The code pull request of a user story contains `test-report.md` and covers every
+- The code pull request of a feature contains `test-report.md` and covers every
   functional requirement. CI checks both.
 
 ## Limits
