@@ -43,15 +43,17 @@ function git(...gitArgs: string[]): string {
 /** The `--name: value` declarations of each block of a stylesheet, by selector. */
 function declarations(css: string): { selector: string; values: Map<string, string> }[] {
   const withoutComments = css.replaceAll(/\/\*[\s\S]*?\*\//g, '')
-  return [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, selector = '', body = '']) => ({
-    selector: selector.trim(),
-    values: new Map(
-      [...body.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name = '', value = '']) => [
-        name,
-        value.replaceAll(/\s+/g, ' ').trim(),
-      ]),
-    ),
-  }))
+  return [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(
+    ([, selector = '', body = '']) => ({
+      selector: selector.trim(),
+      values: new Map(
+        [...body.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name = '', value = '']) => [
+          name,
+          value.replaceAll(/\s+/g, ' ').trim(),
+        ]),
+      ),
+    }),
+  )
 }
 
 const COLOUR_USAGE: Record<string, string> = {
@@ -60,7 +62,8 @@ const COLOUR_USAGE: Record<string, string> = {
   'surface-muted': 'A quiet area: the navigation of the office layout, hovered rows, skeletons.',
   text: 'Body text and headings, on background, surface and surface-muted.',
   'text-muted': 'Secondary text: captions, descriptions, placeholders, column names of a card.',
-  border: 'Hairlines between rows and around cards: decoration, never the only boundary of a control.',
+  border:
+    'Hairlines between rows and around cards: decoration, never the only boundary of a control.',
   'border-strong': 'The border of a control (input, select, checkbox): 3:1 on its ground.',
   ring: 'The focus ring of every control: 3:1 on the page.',
   primary: 'The main action of an area and links; text in primary reaches 4.5:1 on the page.',
@@ -210,9 +213,7 @@ function tokens(ref: string, repo: string) {
         tokens: ['src/styles/tokens.css', 'src/styles/theme.css'],
         docs: ['.claude/rules/design-system.md', '.claude/rules/frontend.md'],
       },
-      components: Object.fromEntries(
-        COMPONENTS.map((component) => [component.name, 'src/']),
-      ),
+      components: Object.fromEntries(COMPONENTS.map((component) => [component.name, 'src/'])),
       synced: new Date().toISOString().slice(0, 10),
     },
   }
@@ -289,13 +290,20 @@ function index(via: string, note: string) {
     ],
     // Synced from code: read-only in Claude Design, changed through the package.
     editing: 'code',
-    lastChange: { by: git('config', 'user.name') || 'Claude', at: new Date().toISOString(), via, note },
+    lastChange: {
+      by: git('config', 'user.name') || 'Claude',
+      at: new Date().toISOString(),
+      via,
+      note,
+    },
   }
 }
 
 // --- Write ----------------------------------------------------------------------------
 
-const repo = git('remote', 'get-url', 'origin').replace(/^.*github\.com[:/]/, '').replace(/\.git$/, '')
+const repo = git('remote', 'get-url', 'origin')
+  .replace(/^.*github\.com[:/]/, '')
+  .replace(/\.git$/, '')
 const ref = `${git('rev-parse', '--abbrev-ref', 'HEAD')}@${git('rev-parse', '--short', 'HEAD')}`
 
 rmSync(PROJECT, { recursive: true, force: true })

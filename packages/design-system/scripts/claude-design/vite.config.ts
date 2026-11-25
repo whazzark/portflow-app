@@ -4,8 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-import { SELF_ALIAS } from '../../vite.config.ts'
-
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
 /**
@@ -17,7 +15,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      ...SELF_ALIAS,
+      '@portflow/design-system': here('../../src'),
       'react/jsx-runtime': here('./jsx-runtime.ts'),
       'react/jsx-dev-runtime': here('./jsx-runtime.ts'),
     },
