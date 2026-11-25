@@ -77,6 +77,7 @@ async fn serve() -> Result<(), CommandError> {
     axum::serve(listener, api::router(AppState::new(pool)))
         .with_graceful_shutdown(shutdown_signal())
         .await?;
+    tracing::info!("API stopped");
     Ok(())
 }
 
