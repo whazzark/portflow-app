@@ -76,6 +76,9 @@ The API generates `contracts/openapi.json` from its code (utoipa). The web app
 generates its TypeScript types from that file. CI regenerates both and fails on any
 difference, so a contract change that the web app does not handle breaks the build.
 
+Every error is a problem (RFC 9457) with a stable `code`, and each endpoint documents
+its success response and every error it can answer (ADR 0015).
+
 ## Front end: feature slices
 
 `app`, `routes`, `features/<context>`, `shared`, with one-way dependencies and no
