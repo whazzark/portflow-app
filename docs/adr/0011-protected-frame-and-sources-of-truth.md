@@ -2,6 +2,9 @@
 
 Status: accepted (2026-11-24)
 
+Completed by ADR 0016: the API is in `packages/contracts/openapi.json`. The text below
+is kept as it was decided.
+
 Completes ADR 0008 (human gates) and ADR 0010 (delivery stages and board).
 Supersedes nothing.
 
