@@ -5,19 +5,24 @@ import { routeTree } from '@/routeTree.gen'
 
 import { RouteError, RouteNotFound, RoutePending } from './route-states'
 
-/** The router of the app; the loaders reach the query client through its context. */
+/**
+ * The router of the app. Its loaders reach TanStack Query through the context: each one
+ * awaits the data of its page with `ensureQueryData`, and the page reads it with
+ * `useSuspenseQuery` (`.claude/rules/frontend.md`, State).
+ */
 export function createAppRouter(queryClient: QueryClient) {
   return createRouter({
     routeTree,
     context: { queryClient },
+    // Hovering or focusing a link runs the loader of its route ahead of the click.
     defaultPreload: 'intent',
-    // A loader waits for the data of its page (`ensureQueryData`) and the page reads it
-    // with `useSuspenseQuery`: the route shows these states meanwhile and on failure.
+    // The states every route shows: while its loader waits (after `defaultPendingMs`,
+    // 1s), when the loader or the page fails, and for a path that matches no route.
     defaultPendingComponent: RoutePending,
     defaultErrorComponent: RouteError,
     defaultNotFoundComponent: RouteNotFound,
-    // A preload, on hovering a link, always runs the loader: `ensureQueryData` then
-    // reads the cache of TanStack Query, which decides what is fresh.
+    // The router keeps no data of its own, so a preload always runs the loader; the
+    // data is cached once, by TanStack Query, which `ensureQueryData` reads first.
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
   })
