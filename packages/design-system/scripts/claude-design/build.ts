@@ -171,7 +171,7 @@ function listOf(values: Map<string, string>, prefix: string, usage: Record<strin
   }
 }
 
-function tokens(ref: string, repo: string) {
+function tokens(ref: string, packageRef: string, repo: string) {
   const values = themeValues()
   return {
     name: 'Portflow',
@@ -208,6 +208,8 @@ function tokens(ref: string, repo: string) {
       source: 'github',
       repo,
       ref,
+      // The last commit that changed the package: `/design` compares it with `main`.
+      packageRef,
       package: 'packages/design-system',
       paths: {
         tokens: ['src/styles/tokens.css', 'src/styles/theme.css'],
@@ -304,11 +306,17 @@ function index(via: string, note: string) {
 const repo = git('remote', 'get-url', 'origin')
   .replace(/^.*github\.com[:/]/, '')
   .replace(/\.git$/, '')
+// The system says which commit of the package it shows: a change not committed would
+// make that a lie.
+if (git('status', '--porcelain', '--', '.') !== '') {
+  throw new Error('packages/design-system has changes not committed: commit them, then sync')
+}
 const ref = `${git('rev-parse', '--abbrev-ref', 'HEAD')}@${git('rev-parse', '--short', 'HEAD')}`
+const packageRef = git('log', '-1', '--format=%h', '--', '.')
 
 rmSync(PROJECT, { recursive: true, force: true })
 write('README.md', README)
-write('tokens.json', `${JSON.stringify(tokens(ref, repo), null, 2)}\n`)
+write('tokens.json', `${JSON.stringify(tokens(ref, packageRef, repo), null, 2)}\n`)
 for (const component of COMPONENTS) {
   write(`components/${component.name}/README.md`, component.readme)
   write(`components/${component.name}/preview.html`, preview(component))
@@ -319,7 +327,7 @@ write('components/bundle.css', readFileSync(join(OUT, 'build', 'bundle.css'), 'u
 write('components/index.d.ts', declarationsFile())
 write(
   'design-system.json',
-  `${JSON.stringify(index(`Claude Code · ${repo}@${ref.split('@')[1]}`, `synced from ${ref}`), null, 2)}\n`,
+  `${JSON.stringify(index(`Claude Code · ${repo}@${ref.split('@')[1]}`, `synced from ${ref}, package at ${packageRef}`), null, 2)}\n`,
 )
 
 console.info(`claude-design/project written from ${repo} ${ref}`)
