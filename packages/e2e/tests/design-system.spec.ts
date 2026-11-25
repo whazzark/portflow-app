@@ -42,7 +42,8 @@ test('every story fits the width of the window', async ({ page }) => {
 
   for (const id of stories) {
     await gotoStory(page, id)
-    await expect(page.locator('#storybook-root')).not.toBeEmpty()
+    // The story has rendered: its root holds an element (a skeleton holds no text).
+    await expect(page.locator('#storybook-root > *').first()).toBeAttached()
     await expectNoHorizontalScroll(page)
   }
 })
