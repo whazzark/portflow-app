@@ -61,18 +61,19 @@ a Design artifact is drawn from such a system.
   the package builds what the Design System artifact type reads: the tokens, a bundle
   of the components, and one preview and one guideline per component. The system is
   marked as synced from code, so it is read-only in Claude Design: a change goes
-  through the package, then the system is synced again. When the two differ, the
-  repository is right (ADR 0012).
+  through the package. It follows `main`: the design stage syncs it before drawing
+  when the package has changed since. When the two differ, the repository is right
+  (ADR 0012).
 
 - **A `designer` agent owns the design system and works at the design stage.**
-  - It changes the package, for an issue about the design system, and syncs the
-    system in Claude Design. The fullstack developer uses the package and never edits
-    it; it reports a missing token or variant.
+  - It changes the package, for an issue about the design system, with the
+    end-to-end test of its Storybook: the design system has no spec for the QA agent
+    to test from. The fullstack developer uses the package and never edits it; it
+    reports a missing token or variant.
   - At the design stage (`/design`), it writes the brief from the approved spec and
-    draws a first mock-up in Claude Design from the Portflow design system, with its
-    components only, then exports it into the spec folder and opens the design pull
-    request. The human reviews the mock-up, changes or replaces it if needed, and
-    merges: gate 2 does not change.
+    draws the mock-up in Claude Design from the Portflow design system, with its
+    components only, then exports it into the spec folder. The human reviews the
+    mock-up, asks for changes or makes them, and merges: gate 2 does not change.
   - It proposes a palette, a typeface or the look of a theme; the human decides.
 
 ## Consequences
@@ -83,8 +84,8 @@ a Design artifact is drawn from such a system.
 - A new atom is generated with the shadcn CLI configured in the package
   (`packages/design-system/components.json`), not in the web app.
 - The design-system commits are typed `style` (`docs/conventions.md`).
-- The Claude Design system is only as fresh as its last sync. The sync is run by the
-  designer at the end of a design-system issue, and checked before each design stage.
+- The Claude Design system is only as fresh as its last sync: between a merge that
+  changes the package and the next design stage, it shows the previous version.
 - A mock-up drawn by an agent can still be wrong. The human gate is the same, and the
   brief keeps the table of acceptance scenarios and states that the mock-up must cover.
 - The Storybook build adds time to the `web` job of CI.
