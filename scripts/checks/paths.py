@@ -22,6 +22,7 @@ FRAME = (
     "specs/_TEMPLATE/",
 )
 CODE_ARTEFACTS = ("plan.md", "test-report.md")
+USER_DOCS = "packages/user-docs/"
 
 
 def changed_files(base):
@@ -42,8 +43,8 @@ def problem_for(btype, issue, path):
         if not path.startswith(own_spec):
             return f"a design/ branch changes only the spec folder of its issue ({own_spec}<slug>/)"
     elif btype == "docs":
-        if not (path.startswith("docs/") or path in ("README.md", "CONTEXT.md")):
-            return "a docs/ branch changes only docs/, README.md and CONTEXT.md"
+        if not (path.startswith(("docs/", USER_DOCS)) or path in ("README.md", "CONTEXT.md")):
+            return f"a docs/ branch changes only docs/, {USER_DOCS}, README.md and CONTEXT.md"
     elif path.startswith("specs/"):
         folder, _, rest = path[len("specs/"):].partition("/")
         if btype == "feat" and ("specs/" + folder).startswith(own_spec) and rest in CODE_ARTEFACTS:

@@ -4,8 +4,9 @@ Status: accepted (2026-11-24)
 
 Completed by ADR 0011: a second backward move of a card, `review` to `active`, and
 the card that stays in `design` while the back end is developed early. Changed by
-ADR 0013: the end-to-end tests are under `packages/e2e/`, not `e2e/`. The text below
-is kept as it was decided.
+ADR 0013: the end-to-end tests are under `packages/e2e/`, not `e2e/`. Changed by
+ADR 0014: the user documentation is in `packages/user-docs/`, not `docs/user/`. The
+text below is kept as it was decided.
 
 Completes ADR 0008, which states that orchestration is "Claude Code skills calling
 deterministic scripts" without naming the stages. Supersedes nothing.

@@ -23,6 +23,7 @@ decision, they draft a new ADR and stop for the human.
 | 0011 | Protected frame and sources of truth |
 | 0012 | Design system and atomic design |
 | 0013 | A packages folder for the end-to-end tests and the user documentation |
+| 0014 | The user documentation in packages/user-docs |
 
 Domain decisions taken in the previous repository (immutable report snapshots,
 activity log scope, rotation corrections, capacity compliance, and others) are not

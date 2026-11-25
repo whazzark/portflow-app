@@ -63,7 +63,7 @@ Slug: lowercase kebab-case. `main` is protected: no direct commit, no direct pus
 |---|---|
 | `spec/` | `specs/` and `CONTEXT.md` |
 | `design/` | The spec folder of its issue, spec included |
-| `docs/` | `docs/`, `README.md`, `CONTEXT.md` |
+| `docs/` | `docs/`, `packages/user-docs/`, `README.md`, `CONTEXT.md` |
 | `feat/` | Everything except `specs/`, where it adds only `plan.md` and `test-report.md` to the folder of its issue |
 | `fix/` | Everything except `specs/` |
 | `chore/` | Everything |

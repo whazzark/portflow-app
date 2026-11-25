@@ -2,6 +2,9 @@
 
 Status: proposed (2026-11-25)
 
+Completed by ADR 0014: the user documentation is in `packages/user-docs/`. The text
+below is kept as it was decided.
+
 Completes ADR 0001, which sets the monorepo and its workspaces without saying where
 the parts that are not an application live, and changes one detail of ADR 0010: the
 end-to-end tests are under `packages/e2e/`, not `e2e/`.
