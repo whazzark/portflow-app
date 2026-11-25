@@ -85,8 +85,9 @@
   --cell-padding-y: 0.375rem;
 }
 
+/* A touch screen defaults to the field density; a density chosen on the document wins. */
 @media (pointer: coarse) {
-  :root {
+  :root:not([data-density]) {
     --control-height: 2.75rem;
     --control-padding-x: 1rem;
     --cell-padding-y: 0.75rem;
