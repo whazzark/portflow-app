@@ -37,9 +37,15 @@ pub async fn migrate(pool: &PgPool) -> Result<(), DatabaseError> {
 }
 
 /// Whether PostgreSQL answers a query. A failure is an answer, not an error: the
-/// health check reports it.
+/// health check reports it. The error stops here, so it is logged here.
 pub async fn ping(pool: &PgPool) -> bool {
-    sqlx::query("SELECT 1").execute(pool).await.is_ok()
+    match sqlx::query("SELECT 1").execute(pool).await {
+        Ok(_) => true,
+        Err(error) => {
+            tracing::error!(%error, "database ping failed");
+            false
+        }
+    }
 }
 
 #[cfg(test)]
