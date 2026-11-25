@@ -18,10 +18,11 @@ body) were plain text.
 
 - Every error of the API is a problem (RFC 9457), sent as `application/problem+json`,
   with the members `type`, `title`, `status` and `detail`, and one extension, `code`.
-- `code` is the stable identifier of the error. It is an enumeration in the OpenAPI
-  document, so the web app maps each value to a French label and its compilation
-  breaks when a value has no label. A value is never renamed or removed without the
-  two issues a contract change takes.
+- `code` is the stable identifier of the error, written in upper snake case
+  (`NOT_FOUND`). It is an enumeration in the OpenAPI document, so the web app gets a
+  union of its values and keeps the French labels in one constant record keyed by
+  that union: its compilation breaks when a value has no label. A value is never
+  renamed or removed without the two issues a contract change takes.
 - `type` is `about:blank` and `title` is the reason phrase of the status code, as the
   RFC provides when no page describes the error: `code` tells the errors apart.
   `detail` is in English, for the developer; it is never shown to the user.
