@@ -36,7 +36,7 @@ their own steps, and the documents below are read when the task calls for them.
    `docs/conventions.md`, change only on a `chore/` branch, on request. Never edit them
    to get past a check.
 7. **Languages.** Everything written to the repository and to GitHub is in English,
-   the labels the user sees included. One exception is in French: `packages/user-docs/`.
-   Talk to the human in French.
+   the labels the user sees and `packages/user-docs/` included (ADR 0018). Talk to the
+   human in French.
 8. **Small commits.** Commit each change on its own, as you go; never squash or rewrite
    a branch: the pull request is merged by squash.
