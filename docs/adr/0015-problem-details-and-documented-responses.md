@@ -1,6 +1,6 @@
 # 0015. Problem details for errors, and every response documented
 
-Status: proposed (2026-11-25)
+Status: accepted (2026-11-25)
 
 Completes ADR 0003, whose consequences left the response codes of an endpoint to the
 attention of the reviewer: they are now checked by tests too.

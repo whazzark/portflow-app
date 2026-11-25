@@ -1,6 +1,6 @@
 # 0014. The user documentation in packages/user-docs
 
-Status: proposed (2026-11-25)
+Status: accepted (2026-11-25)
 
 Changes one detail of ADR 0010: the documentation stage writes the user documentation
 in `packages/user-docs/`, not `docs/user/`. Completes ADR 0013, which planned the move
