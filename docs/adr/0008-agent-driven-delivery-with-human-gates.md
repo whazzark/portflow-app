@@ -6,7 +6,9 @@ Superseded in part by ADR 0009: the pull requests of an issue are spec, design a
 code pull request; traceability is by functional requirement, not acceptance
 criterion; Spec Kit is not used, and `docs/spec-kit.md` no longer exists. Completed by
 ADR 0010, which names the delivery stages. A few conventions have no automatic check;
-`docs/conventions.md` marks them. The text below is kept as it was decided.
+`docs/conventions.md` marks them. Changed by ADR 0019: the `designer` agent draws a
+first mock-up at the design stage; the human still approves it. The text below is kept
+as it was decided.
 
 ## Context
 
