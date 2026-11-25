@@ -30,5 +30,5 @@
 
 - [ ] Every command and result reported above was run in the session that opened this pull request
 - [ ] Tests were committed before the implementation they cover
-- [ ] No existing test was weakened to make the build pass
+- [ ] Every existing test that was weakened is justified in the Tests section
 - [ ] Vocabulary matches CONTEXT.md

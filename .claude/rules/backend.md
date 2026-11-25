@@ -7,29 +7,18 @@ paths:
 
 Stack: Rust, Axum, sqlx, PostgreSQL, utoipa. See `docs/architecture.md`.
 
-## Crates and dependency direction
+## Crates and contexts
 
-The diagram of `docs/architecture.md` is the reference:
+The crates, their dependency direction and the bounded contexts are in
+`docs/architecture.md` (Back end). When writing code:
 
-```
-api  ->  application  ->  domain
-infrastructure  ->  application, domain
-```
-
-- `domain`: entities, value objects, domain errors, ports (traits). No dependency on
-  axum, sqlx, tokio or any I/O crate. If you need one, the code belongs elsewhere.
-- `application`: one file per use case. Loads aggregates through ports, checks the
-  policy, calls the domain, saves, records the activity log, schedules side effects.
-  Owns the transaction.
-- `infrastructure`: implementations of the ports (PostgreSQL repositories, hashing,
-  mail, storage, job queue, event broadcaster).
-- `api`: routes, DTOs, OpenAPI annotations, error mapping, composition root. No business rule.
-
-## Contexts
-
-Each bounded context has the same module name in every crate: `auth`, `users`,
-`references`, `discharges`, `reporting`. Contexts reference each other by identifier
-only. Shared identifiers and tiny value objects live in `domain::shared`; nothing else does.
+- `domain` declares no axum, sqlx, tokio or other I/O crate. If you need one, the code
+  belongs elsewhere.
+- `application` has one file per use case: it loads aggregates through ports, checks
+  the policy, calls the domain, saves, records the activity log, schedules side
+  effects, and owns the transaction.
+- `infrastructure` only implements ports and queries. `api` holds no business rule.
+- `domain::shared` holds identifiers and tiny value objects, nothing else.
 
 ## Modelling
 
