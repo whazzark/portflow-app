@@ -5,6 +5,44 @@
 //! A handler takes `JsonBody`, `PathParams` and `QueryParams`, never `axum::Json`,
 //! `axum::extract::Path` or `axum::extract::Query` as an argument.
 
+use axum::extract::rejection::{JsonRejection, PathRejection, QueryRejection};
+use axum::extract::{FromRequest, FromRequestParts};
+
+use crate::problem::Problem;
+
+/// The JSON body of a request.
+#[derive(Debug, FromRequest)]
+#[from_request(via(axum::Json), rejection(Problem))]
+pub struct JsonBody<T>(pub T);
+
+/// The parameters in the path of a route.
+#[derive(Debug, FromRequestParts)]
+#[from_request(via(axum::extract::Path), rejection(Problem))]
+pub struct PathParams<T>(pub T);
+
+/// The parameters in the query string.
+#[derive(Debug, FromRequestParts)]
+#[from_request(via(axum::extract::Query), rejection(Problem))]
+pub struct QueryParams<T>(pub T);
+
+impl From<JsonRejection> for Problem {
+    fn from(rejection: JsonRejection) -> Self {
+        Problem::rejected(rejection.status(), &rejection.body_text())
+    }
+}
+
+impl From<PathRejection> for Problem {
+    fn from(rejection: PathRejection) -> Self {
+        Problem::rejected(rejection.status(), &rejection.body_text())
+    }
+}
+
+impl From<QueryRejection> for Problem {
+    fn from(rejection: QueryRejection) -> Self {
+        Problem::rejected(rejection.status(), &rejection.body_text())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use axum::Router;
