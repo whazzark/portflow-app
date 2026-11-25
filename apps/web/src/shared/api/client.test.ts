@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { unwrap } from './client'
+import { REFUSED_LABEL } from './constants'
 import { ApiError } from './problem'
 
 function answer<Data>(data: Data | undefined, error: unknown, status: number) {
@@ -24,6 +25,14 @@ describe('unwrap', () => {
     await expect(unwrap(answer(undefined, problem, 503))).rejects.toMatchObject({
       code: 'DATABASE_UNAVAILABLE',
     })
+  })
+
+  test('says that the server refused the request when it answers an unknown code', async () => {
+    const problem = { code: 'A_CODE_OF_A_NEWER_API', status: 409 }
+
+    const error = await unwrap(answer(undefined, problem, 409)).catch((thrown: unknown) => thrown)
+
+    expect(error).toMatchObject({ code: null, label: REFUSED_LABEL })
   })
 
   test('throws an error without code when the answer is not a problem', async () => {
