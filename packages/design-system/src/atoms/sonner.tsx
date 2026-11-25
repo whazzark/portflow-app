@@ -9,6 +9,8 @@ import type { CSSProperties } from 'react'
 import { Toaster as Sonner, type ToasterProps } from 'sonner'
 
 // The toasts take the colours of the tokens, so they follow the theme of the page.
+// Sonner styles its action button itself, with a higher specificity: the classes of a
+// control win with `!`, so the action follows the density and draws the focus ring.
 const TOKEN_STYLE = {
   '--normal-bg': 'var(--surface)',
   '--normal-text': 'var(--text)',
@@ -29,6 +31,12 @@ export function Toaster({ ...props }: ToasterProps) {
         loading: <Loader2Icon className="size-4 animate-spin" />,
       }}
       style={TOKEN_STYLE}
+      toastOptions={{
+        classNames: {
+          actionButton:
+            'h-control! rounded-md! bg-primary! px-control-x! text-primary-foreground! focus-visible:ring-3! focus-visible:ring-ring!',
+        },
+      }}
       {...props}
     />
   )
