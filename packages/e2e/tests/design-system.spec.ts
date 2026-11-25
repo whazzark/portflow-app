@@ -33,6 +33,87 @@ function contrast(first: string, second: string): number {
   return ((light ?? 0) + 0.05) / ((dark ?? 0) + 0.05)
 }
 
+type FocusIndicator = { outline: string[]; shadows: string[]; page: string; name: string }
+
+/** What the element that has the focus draws around it, and the colour of the page. */
+async function focusIndicator(page: Page): Promise<FocusIndicator | undefined> {
+  return page.evaluate(() => {
+    const element = document.activeElement
+    if (!element || element === document.body) return undefined
+    const style = getComputedStyle(element)
+    const outline =
+      style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 1
+        ? [style.outlineColor]
+        : []
+    // A ring is a box-shadow with a spread and no blur: `rgb(…) 0px 0px 0px 3px`.
+    const shadows = style.boxShadow
+      .split(/,(?![^(]*\))/)
+      .filter((shadow) => {
+        const lengths = (shadow.match(/-?[\d.]+px/g) ?? []).map(Number.parseFloat)
+        return (lengths[3] ?? 0) >= 1 && (lengths[2] ?? 0) === 0
+      })
+      .map((shadow) => shadow.match(/rgba?\([^)]*\)/)?.[0] ?? '')
+    return {
+      outline,
+      shadows,
+      page: getComputedStyle(document.body).backgroundColor,
+      name: `${element.tagName.toLowerCase()} "${(element.textContent ?? '').trim().slice(0, 30)}"`,
+    }
+  })
+}
+
+/** Whether a colour is opaque and reaches 3:1 against the page. */
+function visible(colour: string, pageColour: string): boolean {
+  const alpha = colour.startsWith('rgba') ? Number(colour.match(/[\d.]+/g)?.[3] ?? 1) : 1
+  return alpha === 1 && contrast(colour, pageColour) >= 3
+}
+
+for (const theme of ['light', 'dark', 'contrast'] as const) {
+  test(`every element of every story shows the keyboard focus, ${theme} theme`, async ({
+    page,
+  }) => {
+    const index = await (await page.request.get(`${STORYBOOK_URL}/index.json`)).json()
+    const stories = Object.values(index.entries as Record<string, { id: string; type: string }>)
+      .filter((entry) => entry.type === 'story')
+      .map((entry) => entry.id)
+
+    const unseen: string[] = []
+    for (const id of stories) {
+      await page.goto(`${STORYBOOK_URL}/iframe.html?id=${id}&viewMode=story&globals=theme:${theme}`)
+      await expect(page.locator('#storybook-root > *').first()).toBeAttached()
+      // Tab through the story until the focus leaves it or comes back to the start.
+      const seen = new Set<string>()
+      for (let step = 0; step < 30; step += 1) {
+        await page.keyboard.press('Tab')
+        const indicator = await focusIndicator(page)
+        if (!indicator || seen.has(indicator.name)) break
+        seen.add(indicator.name)
+        const drawn = [...indicator.outline, ...indicator.shadows]
+        if (!drawn.some((colour) => visible(colour, indicator.page))) {
+          unseen.push(`${id}: ${indicator.name}`)
+        }
+      }
+    }
+    expect(unseen).toEqual([])
+  })
+
+  test(`a toast that has the focus shows it, ${theme} theme`, async ({ page }) => {
+    await page.goto(
+      `${STORYBOOK_URL}/iframe.html?id=molecules-undo-toast--default&viewMode=story&globals=theme:${theme}`,
+    )
+    await page.getByRole('button', { name: 'Delete the weighing' }).click()
+    const toast = page.locator('[data-sonner-toast]')
+    await expect(toast).toBeVisible()
+    await toast.focus()
+    await page.keyboard.press('Shift+Tab')
+    await page.keyboard.press('Tab')
+    await expect(toast).toBeFocused()
+    const indicator = await focusIndicator(page)
+    const drawn = [...(indicator?.outline ?? []), ...(indicator?.shadows ?? [])]
+    expect(drawn.some((colour) => visible(colour, indicator?.page ?? ''))).toBe(true)
+  })
+}
+
 test('every story fits the width of the window', async ({ page }) => {
   const index = await (await page.request.get(`${STORYBOOK_URL}/index.json`)).json()
   const stories = Object.values(index.entries as Record<string, { id: string; type: string }>)
