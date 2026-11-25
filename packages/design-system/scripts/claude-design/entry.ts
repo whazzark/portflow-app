@@ -1,6 +1,17 @@
 // What the bundle of Claude Design exposes as `window.Portflow`: every atom, molecule
 // and template of the package, the styles, and `toast` to show a toast in a preview.
+// It also gives the previews and mock-ups its React, as the globals `React` and
+// `ReactDOM` they use, so that everything renders with the React the atoms are written for.
+import * as React from 'react'
+import { createPortal, flushSync } from 'react-dom'
+import { createRoot } from 'react-dom/client'
+
 import './styles.css'
+
+Object.assign(globalThis, {
+  React,
+  ReactDOM: { createRoot, createPortal, flushSync },
+})
 
 export * from '@portflow/design-system/atoms/badge'
 export * from '@portflow/design-system/atoms/button'

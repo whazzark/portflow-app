@@ -20,7 +20,6 @@ const PACKAGE = fileURLToPath(new URL('../../', import.meta.url))
 const OUT = join(PACKAGE, 'claude-design')
 const PROJECT = join(OUT, 'project')
 const NAMESPACE = 'Portflow'
-const REACT_VERSION = '18.3.1'
 
 const { values: args } = parseArgs({ options: { index: { type: 'string' } } })
 
@@ -295,10 +294,8 @@ function index(via: string, note: string) {
   return {
     ...base,
     namespace: NAMESPACE,
-    libraries: [
-      { name: 'react', version: REACT_VERSION },
-      { name: 'react-dom', version: REACT_VERSION },
-    ],
+    // The bundle carries its own React 19: the previews load nothing else.
+    libraries: [],
     // Synced from code: read-only in Claude Design, changed through the package.
     editing: 'code',
     lastChange: {

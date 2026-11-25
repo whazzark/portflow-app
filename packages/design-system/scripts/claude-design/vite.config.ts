@@ -8,16 +8,15 @@ const here = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
 /**
  * The bundle that the design system in Claude Design runs (ADR 0019): one classic
- * script that reads React 18 and ReactDOM as globals and assigns `window.Portflow`,
- * and the stylesheet of the components.
+ * script that carries React 19 and assigns `window.Portflow`, and the stylesheet of the
+ * components. React comes with it: the React 18 that the page would load drops the refs
+ * the atoms pass as props (`asChild` triggers).
  */
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@portflow/design-system': here('../../src'),
-      'react/jsx-runtime': here('./jsx-runtime.ts'),
-      'react/jsx-dev-runtime': here('./jsx-runtime.ts'),
     },
   },
   define: { 'process.env.NODE_ENV': JSON.stringify('production') },
@@ -30,10 +29,6 @@ export default defineConfig({
       name: 'Portflow',
       fileName: () => 'bundle.js',
       cssFileName: 'bundle',
-    },
-    rolldownOptions: {
-      external: ['react', 'react-dom'],
-      output: { globals: { react: 'React', 'react-dom': 'ReactDOM' } },
     },
   },
 })
