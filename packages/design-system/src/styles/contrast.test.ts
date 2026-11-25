@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 
 import { describe, expect, test } from 'vitest'
 
@@ -34,6 +34,9 @@ const PAIRS: [string, string, number][] = [
   ['border-strong', 'background', NON_TEXT],
   ['border-strong', 'surface', NON_TEXT],
   ['ring', 'background', NON_TEXT],
+  ['ring', 'surface', NON_TEXT],
+  ['ring', 'surface-muted', NON_TEXT],
+  ['danger', 'background', NON_TEXT],
   ['danger', 'surface', NON_TEXT],
 ]
 
@@ -81,4 +84,24 @@ describe.each(THEMES)('the %s theme', (theme) => {
     console.info(`${theme}\t${foreground} on ${background}\t${ratio.toFixed(2)}:1`)
     expect(ratio).toBeGreaterThanOrEqual(minimum)
   })
+})
+
+/*
+ * The ratios above hold only for the colours as declared. A focus ring or an error ring
+ * drawn with an alpha (`ring-ring/50`) blends with the page and falls below 3:1: the
+ * components draw them opaque.
+ */
+test('no focus or error ring is drawn translucent', () => {
+  const root = new URL('../', import.meta.url)
+  const sources = readdirSync(root, { recursive: true, encoding: 'utf8' })
+    .filter((path) => /\.(tsx|css)$/.test(path) && !/\.(test|stories)\.tsx$/.test(path))
+    .flatMap((path) =>
+      readFileSync(new URL(path, root), 'utf8')
+        .split('\n')
+        .map((line, index) => ({ where: `${path}:${index + 1}`, line })),
+    )
+  const translucent = sources
+    .filter(({ line }) => /(ring|outline)-(ring|destructive|danger)\/\d+/.test(line))
+    .map(({ where }) => where)
+  expect(translucent).toEqual([])
 })
