@@ -4,6 +4,7 @@ import { delay, http, HttpResponse } from 'msw'
 import { describe, expect, test } from 'vitest'
 
 import { PROBLEM_LABELS, UNREACHABLE_LABEL } from '@/shared/api/constants'
+import { PAGE_LABELS } from '@/shared/lib/constants'
 import { renderApp } from '@/test/render-app'
 import { server } from '@/test/server'
 
@@ -46,7 +47,7 @@ describe('the health page', () => {
 
     renderApp('/')
 
-    expect(await screen.findByRole('status')).toHaveTextContent(HEALTH_LABELS.loading)
+    expect(await screen.findByRole('status')).toHaveTextContent(PAGE_LABELS.loading)
   })
 
   test('shows the error the API answered, and shows the health once tried again', async () => {
@@ -60,7 +61,7 @@ describe('the health page', () => {
     renderApp('/')
 
     expect(await screen.findByRole('alert')).toHaveTextContent(PROBLEM_LABELS.DATABASE_UNAVAILABLE)
-    await userEvent.click(screen.getByRole('button', { name: HEALTH_LABELS.retry }))
+    await userEvent.click(screen.getByRole('button', { name: PAGE_LABELS.retry }))
     expect(await screen.findByRole('table', { name: HEALTH_LABELS.components })).toBeVisible()
   })
 
