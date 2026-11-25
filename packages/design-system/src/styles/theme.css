@@ -51,6 +51,8 @@
   --spacing-control: var(--control-height);
   --spacing-control-x: var(--control-padding-x);
   --spacing-cell: var(--cell-padding-y);
+  /* Around a control smaller than the control height (a checkbox): its hit area. */
+  --spacing-hit: calc((var(--control-height) - 1rem) / 2);
 }
 
 @theme {
