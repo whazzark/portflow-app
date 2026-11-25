@@ -82,9 +82,35 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 
 ## Components
 
-- Composition over configuration: children and sub-components, not boolean props.
-- Small does not mean generic. An organism becomes a molecule only when a third
-  screen needs it and its domain vocabulary can be removed.
+- Keep components small: one job each. When a part of a component can be named (a
+  header, a row, an empty state), it becomes a component of its own.
+- Compose like shadcn/ui, not with props. A piece of interface is a family of small
+  components, each rendering one element: it takes the props of that element and a
+  `className`, merges the classes with `cn`, and gets its content as `children`. The
+  caller assembles the family; it does not configure one component through many props.
+
+  ```tsx
+  export function Panel({ className, ...props }: ComponentProps<'section'>) {
+    return <section className={cn('flex flex-col gap-4', className)} {...props} />
+  }
+
+  export function PanelTitle({ className, ...props }: ComponentProps<'h2'>) {
+    return <h2 className={cn('text-lg font-semibold', className)} {...props} />
+  }
+
+  <Panel>
+    <PanelTitle>Rotations</PanelTitle>
+    <RotationList rotations={rotations} />
+  </Panel>
+  ```
+
+- Props carry what a component cannot get otherwise: the data it shows (screen types)
+  and its callbacks. A title, an action, an icon or an optional section is a child or
+  a sub-component, never a prop; no boolean prop that switches a part on or off.
+  Visual variants (`variant`, `size`) belong to the atoms of the design system.
+- Generic pieces live in `shared` (atoms, molecules, ADR 0012); the organisms of a
+  feature are small and compose them. Small does not mean shared: an organism becomes a
+  molecule only when a third screen needs it and its domain vocabulary can be removed.
 - Pages and large sections connect to data. Leaf components are pure.
 - Do not wrap every `useQuery` in a custom hook. Create a hook when there is logic.
 - A component is a function declaration, never an arrow function or a class, and
