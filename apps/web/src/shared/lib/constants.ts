@@ -2,4 +2,5 @@
 export const PAGE_LABELS = {
   loading: 'Loading…',
   retry: 'Try again',
+  unexpectedError: 'Something went wrong. Try again in a moment.',
 } as const

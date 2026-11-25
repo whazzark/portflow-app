@@ -1,7 +1,6 @@
 import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 import { type ErrorComponentProps, useRouter } from '@tanstack/react-router'
 
-import { UNREACHABLE_LABEL } from '@/shared/api/constants'
 import { ApiError } from '@/shared/api/problem'
 import { PAGE_LABELS } from '@/shared/lib/constants'
 
@@ -15,8 +14,9 @@ export function RoutePending() {
 }
 
 /**
- * What a route shows when its loader, or a suspended query of the page, failed. Trying
- * again clears the failed queries and runs the loaders again.
+ * What a route shows when its loader, or a suspended query of the page, failed: the
+ * label of the error of the API, or a general one for any other error (a bug, not the
+ * network). Trying again clears the failed queries and runs the loaders again.
  */
 export function RouteError({ error }: ErrorComponentProps) {
   const router = useRouter()
@@ -30,7 +30,7 @@ export function RouteError({ error }: ErrorComponentProps) {
   return (
     <main className="mx-auto max-w-xl p-4">
       <div role="alert" className="flex flex-col items-start gap-2">
-        <p>{error instanceof ApiError ? error.label : UNREACHABLE_LABEL}</p>
+        <p>{error instanceof ApiError ? error.label : PAGE_LABELS.unexpectedError}</p>
         <button type="button" className="min-h-11 rounded border px-4" onClick={retry}>
           {PAGE_LABELS.retry}
         </button>
