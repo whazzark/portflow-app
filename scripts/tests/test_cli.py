@@ -42,6 +42,7 @@ class CommandLineTests(unittest.TestCase):
             ["commits", "HEAD~1..HEAD"],
             ["pr", "--branch", branch, "--title", "spec(discharges): record a weighing", "--body-file", "body.md"],
             ["specs"],
+            ["adrs"],
             ["spec-approved", "--issue", "12", "--ref", "main"],
             ["design-approved", "--branch", branch, "--ref", "main"],
             ["fr-coverage", "--issue", "12"],
