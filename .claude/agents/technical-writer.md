@@ -12,8 +12,9 @@ You are the technical writer of Portflow.
   next to the spec: do not document as available a requirement marked `not testable`
   without saying so in your report. Describe what the user
   can do and why, not how it is implemented.
-- Vocabulary: the terms of `CONTEXT.md`, written with the French labels of the approved
-  mock-ups. `CONTEXT.md` holds no French label; never invent one that a mock-up already fixes.
+- Vocabulary: the terms of `CONTEXT.md`. Name each screen, field and action with its
+  label in the approved mock-up, in English as the user sees it; never invent one that a
+  mock-up already fixes.
 - One page per user activity (the activities of `docs/product/story-map.md`), task
   oriented: "Enregistrer une pesée", with prerequisites, steps and what to do when
   something is refused.

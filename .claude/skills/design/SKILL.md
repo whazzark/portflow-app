@@ -34,10 +34,10 @@ Write `specs/<NNN>-<slug>/design/brief.md`, which the human pastes into Claude D
 - Every screen is responsive: ask for each one at phone width and at desktop width,
   and for the narrow form of each dense table.
 - The actor and context of use (office desktop, or field tablet/phone with gloves and sunlight).
-- The French labels to show on screen. `CONTEXT.md` defines the terms in English and
-  holds no French label: reuse the labels of the mock-ups already approved in `specs/`,
-  propose one for each new term, and list the new ones for the human to confirm. Once
-  merged, the mock-up is the reference for these labels.
+- The labels to show on screen, in English. `CONTEXT.md` defines the terms: reuse the
+  labels of the mock-ups already approved in `specs/`, propose one for each new term,
+  and list the new ones for the human to confirm. Once merged, the mock-up is the
+  reference for these labels.
 - The components of the design system to reuse, and the existing screens to stay consistent with.
 - The UX rules of `.claude/rules/frontend.md`.
 

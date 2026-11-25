@@ -187,7 +187,7 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 - A disabled action explains why and how to unblock it.
 - Prefer a visible correction path over a confirmation dialog.
 - Field screens: touch targets of at least 44px, one task per screen.
-- Real `<button>`, `<a>`, `<label>` elements. UI copy is in French; code is in English.
+- Real `<button>`, `<a>`, `<label>` elements. UI copy is in English, like the code.
 
 ## Tests
 
