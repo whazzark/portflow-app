@@ -1,5 +1,6 @@
 # Adapters: implements the ports of the domain and the queries of the application
-# with PostgreSQL. Only the composition root in `api` depends on it.
+# with PostgreSQL. Only the composition root in `api` depends on it. It will declare
+# `application` with the first query trait it implements.
 [package]
 name = "infrastructure"
 version = "0.1.0"
@@ -11,9 +12,9 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
-application = { path = "../application" }
 domain = { path = "../domain" }
 sqlx = { version = "0.9.1", default-features = false, features = ["runtime-tokio", "postgres", "macros", "migrate"] }
+thiserror = "2.0.21"
 
 [dev-dependencies]
 tokio = { version = "1.54.1", features = ["macros", "rt"] }

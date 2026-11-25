@@ -699,9 +699,9 @@ dependencies = [
 name = "infrastructure"
 version = "0.1.0"
 dependencies = [
- "application",
  "domain",
  "sqlx",
+ "thiserror",
  "tokio",
 ]
 
