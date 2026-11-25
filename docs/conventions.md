@@ -90,6 +90,10 @@ and a pull request cannot weaken the checks that judge it.
 - Merge and revert commits written by git (`Merge branch ...`, `Revert "..."`) are exempt.
 - Tests are committed before the implementation they cover: `test(...)`, then
   `feat(...)` or `fix(...)` (not checked).
+- Many small commits, each one change that can be described in its header: a rename,
+  a test, a step of the implementation. Do not gather a branch into one commit and do
+  not rewrite its history to tidy it: the pull request is merged by squash, so only its
+  title reaches `main`, and small commits keep the review readable (not checked).
 
 ## Pull requests
 
