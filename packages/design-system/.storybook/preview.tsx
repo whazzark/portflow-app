@@ -2,10 +2,8 @@ import type { Decorator, Preview } from '@storybook/react-vite'
 import { useEffect } from 'storybook/preview-api'
 
 import { TooltipProvider } from '@portflow/design-system/atoms/tooltip'
-
-import { DENSITIES, THEMES } from '../src/styles/constants'
-
-import '../src/styles/storybook.css'
+import { DENSITIES, THEMES } from '@portflow/design-system/styles/constants'
+import '@portflow/design-system/styles/storybook.css'
 
 /**
  * Applies the theme and the density chosen in the toolbar to the whole document, as an

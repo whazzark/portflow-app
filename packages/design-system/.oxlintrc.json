@@ -29,8 +29,8 @@
       {
         "patterns": [
           {
-            "regex": "^(\\.\\./){2,}",
-            "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../../"
+            "regex": "^\\.\\./",
+            "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../"
           },
           {
             "regex": "^@portflow/(web|api|contracts|e2e)(/|$)",
@@ -49,8 +49,8 @@
           {
             "patterns": [
               {
-                "regex": "^(\\.\\./){2,}",
-                "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../../"
+                "regex": "^\\.\\./",
+                "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../"
               },
               {
                 "regex": "^@portflow/(web|api|contracts|e2e)(/|$)",
@@ -73,8 +73,8 @@
           {
             "patterns": [
               {
-                "regex": "^(\\.\\./){2,}",
-                "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../../"
+                "regex": "^\\.\\./",
+                "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../"
               },
               {
                 "regex": "^@portflow/(web|api|contracts|e2e)(/|$)",
