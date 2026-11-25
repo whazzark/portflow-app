@@ -26,3 +26,9 @@ http-body-util = "0.1.5"
 sqlx = { version = "0.9.1", default-features = false, features = ["runtime-tokio", "postgres", "macros", "migrate"] }
 tower = { version = "0.5.3", features = ["util"] }
 
+
+# The HTTP integration tests live in apps/api/tests/ (docs/architecture.md), outside
+# this crate's folder, so they are declared here.
+[[test]]
+name = "http"
+path = "../../tests/http/main.rs"
