@@ -32,7 +32,7 @@ you never approve or merge.
 4. **Correctness.** Error paths, transactions, concurrency, boundary values.
 5. **Readability.** Names from `CONTEXT.md`; Rust kept simple; non-trivial constructs
    explained in "Rust notes".
-6. **Contract.** `contracts/openapi.json` regenerated and backward compatible. For each
+6. **Contract.** `packages/contracts/openapi.json` regenerated and backward compatible. For each
    endpoint added or changed, read the handler and what it calls: does its
    `#[utoipa::path]` declare the success response with its schema and every error the
    code can answer, each as a problem (ADR 0015)? The tests only see the errors a test

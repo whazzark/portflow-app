@@ -27,8 +27,8 @@ their own steps, and the documents below are read when the task calls for them.
    front-end work when the spec has `ui_impact: yes`.
 3. **One source of truth.** Behaviour lives in the spec, decisions in ADRs, names in
    `CONTEXT.md`, user-facing labels in the approved mock-ups, the API in
-   `contracts/openapi.json`. Do not duplicate them, and never settle a business rule
-   yourself: ask the human.
+   `packages/contracts/openapi.json`. Do not duplicate them, and never settle a business
+   rule yourself: ask the human.
 4. **Stay in scope.** Change only what the issue asks. Report anything else you notice
    instead of fixing it.
 5. **Say what you did not verify.** Never claim a check passed if you did not run it.

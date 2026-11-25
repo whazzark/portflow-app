@@ -21,7 +21,7 @@ You are the technical writer of Portflow.
 
 ## Technical documentation: do not duplicate
 
-Specs, plans, ADRs, `CONTEXT.md` and `contracts/openapi.json` are the technical
+Specs, plans, ADRs, `CONTEXT.md` and `packages/contracts/openapi.json` are the technical
 documentation. Do not rewrite them. Your technical duties are limited to:
 
 - Keeping `README.md` and `docs/architecture.md` accurate when a PR changes structure,
