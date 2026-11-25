@@ -3,6 +3,7 @@
 pub mod docs;
 pub mod extract;
 pub mod health;
+pub mod logging;
 pub mod openapi;
 pub mod problem;
 pub mod state;
@@ -22,7 +23,7 @@ pub fn router(state: AppState) -> Router {
         .merge(health::routes())
         .merge(docs::routes())
         .with_state(state);
-    answer_problems(routes)
+    logging::log_requests(answer_problems(routes))
 }
 
 /// Makes the responses Axum produces by itself problems (ADR 0015): unknown route,

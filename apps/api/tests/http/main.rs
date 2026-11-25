@@ -8,4 +8,5 @@
 mod docs;
 mod fallbacks;
 mod health;
+mod logging;
 mod support;

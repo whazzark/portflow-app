@@ -1,3 +1,6 @@
 # Tests may unwrap: a panic there is a failed test (ADR 0002).
 allow-unwrap-in-tests = true
 allow-expect-in-tests = true
+# Tests may print: the test runner shows it only when a test fails.
+allow-print-in-tests = true
+allow-dbg-in-tests = true
