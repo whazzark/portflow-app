@@ -1,0 +1,3 @@
+/* The entry stylesheet of Storybook: what a consumer of the design system writes. */
+@import 'tailwindcss';
+@import './theme.css';

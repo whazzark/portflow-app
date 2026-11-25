@@ -1,0 +1,100 @@
+/*
+ * The tokens of the Portflow design system: the only source of visual values (ADR 0012).
+ * Every value here is a proposal: the palette, the typeface and the look of the three
+ * themes are the human's decision.
+ *
+ * Themes are sets of colour values, chosen by `data-theme` on any element (usually
+ * `<html>`): light (the default), dark, and contrast, for field screens in sunlight.
+ * Densities are sets of size values, chosen by `data-density`: office (dense tables,
+ * keyboard; the default with a fine pointer) and field (touch targets of at least 44px;
+ * the default with a coarse pointer).
+ */
+
+:root,
+[data-theme='light'] {
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --border: #e2e8f0;
+  --border-strong: #64748b;
+  --ring: #1d4ed8;
+  --primary: #1d4ed8;
+  --primary-text: #ffffff;
+  --secondary: #e2e8f0;
+  --secondary-text: #0f172a;
+  --danger: #b91c1c;
+  --danger-text: #ffffff;
+  --success: #15803d;
+  --success-text: #ffffff;
+  --warning: #b45309;
+  --warning-text: #ffffff;
+  --overlay: #0f172a99;
+}
+
+[data-theme='dark'] {
+  --background: #020617;
+  --surface: #0f172a;
+  --surface-muted: #1e293b;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --border-strong: #94a3b8;
+  --ring: #60a5fa;
+  --primary: #60a5fa;
+  --primary-text: #020617;
+  --secondary: #334155;
+  --secondary-text: #f8fafc;
+  --danger: #f87171;
+  --danger-text: #020617;
+  --success: #4ade80;
+  --success-text: #020617;
+  --warning: #fbbf24;
+  --warning-text: #020617;
+  --overlay: #000000b3;
+}
+
+/* Sunlight: black on white, strong borders, dark saturated colours. */
+[data-theme='contrast'] {
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #ebebeb;
+  --text: #000000;
+  --text-muted: #1f1f1f;
+  --border: #000000;
+  --border-strong: #000000;
+  --ring: #0033a0;
+  --primary: #0033a0;
+  --primary-text: #ffffff;
+  --secondary: #ffffff;
+  --secondary-text: #000000;
+  --danger: #9b0000;
+  --danger-text: #ffffff;
+  --success: #00561b;
+  --success-text: #ffffff;
+  --warning: #6b3600;
+  --warning-text: #ffffff;
+  --overlay: #000000cc;
+}
+
+:root,
+[data-density='office'] {
+  --control-height: 2.25rem;
+  --control-padding-x: 0.75rem;
+  --cell-padding-y: 0.375rem;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --control-height: 2.75rem;
+    --control-padding-x: 1rem;
+    --cell-padding-y: 0.75rem;
+  }
+}
+
+[data-density='field'] {
+  --control-height: 2.75rem;
+  --control-padding-x: 1rem;
+  --cell-padding-y: 0.75rem;
+}
