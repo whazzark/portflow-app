@@ -1,5 +1,6 @@
 //! HTTP routes, DTOs, the OpenAPI document and the composition root.
 
+pub mod extract;
 pub mod health;
 pub mod openapi;
 pub mod problem;
