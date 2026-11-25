@@ -1,5 +1,6 @@
 //! HTTP routes, DTOs, the OpenAPI document and the composition root.
 
+pub mod openapi;
 pub mod state;
 pub mod status;
 

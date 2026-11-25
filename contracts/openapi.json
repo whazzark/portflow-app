@@ -1,0 +1,74 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Portflow API",
+    "description": "Bulk discharge management for the operating organization of a port site",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/status": {
+      "get": {
+        "tags": [
+          "status"
+        ],
+        "summary": "Status of the service and of its database.",
+        "operationId": "get_status",
+        "responses": {
+          "200": {
+            "description": "The service and its database are up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatusResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The database does not answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ComponentStatus": {
+        "type": "string",
+        "enum": [
+          "up",
+          "down"
+        ]
+      },
+      "ServiceStatusResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "database"
+        ],
+        "properties": {
+          "database": {
+            "$ref": "#/components/schemas/ComponentStatus"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ComponentStatus",
+            "description": "`up` when every component is up."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "status",
+      "description": "Status of the service"
+    }
+  ]
+}
