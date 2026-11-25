@@ -6,13 +6,43 @@ pub mod openapi;
 pub mod problem;
 pub mod state;
 
-use axum::Router;
+use std::any::Any;
 
+use axum::Router;
+use axum::response::{IntoResponse, Response};
+use tower_http::catch_panic::CatchPanicLayer;
+
+use crate::problem::Problem;
 use crate::state::AppState;
 
 /// The whole router of the API, as the binary serves it and the tests call it.
 pub fn router(state: AppState) -> Router {
-    Router::new().merge(health::routes()).with_state(state)
+    let routes = Router::new().merge(health::routes()).with_state(state);
+    answer_problems(routes)
+}
+
+/// Makes the responses Axum produces by itself problems (ADR 0015): unknown route,
+/// wrong method, and a handler that panics. It is applied once every route is
+/// registered, because the answer to a wrong method is set on the routes that exist.
+fn answer_problems(routes: Router) -> Router {
+    routes
+        .fallback(unknown_route)
+        .method_not_allowed_fallback(wrong_method)
+        .layer(CatchPanicLayer::custom(panic_to_problem))
+}
+
+async fn unknown_route() -> Problem {
+    Problem::not_found()
+}
+
+async fn wrong_method() -> Problem {
+    Problem::method_not_allowed()
+}
+
+/// The answer to a handler that panicked. The value of the panic is its cause: it is
+/// dropped here, and the panic hook of Rust has already written it to the error output.
+fn panic_to_problem(_cause: Box<dyn Any + Send + 'static>) -> Response {
+    Problem::internal().into_response()
 }
 
 #[cfg(test)]
