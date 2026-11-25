@@ -42,7 +42,7 @@ report, and ask whether a page described the wrong behaviour.
 
 It returns, for each user story of the spec, one of:
 
-- the page of `docs/user/` it created or updated;
+- the page of `packages/user-docs/` it created or updated;
 - "not visible to the user", with the reason.
 
 and, separately, what it changed in `README.md` or `docs/architecture.md`, and any ADR
