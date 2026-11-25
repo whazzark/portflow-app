@@ -36,7 +36,7 @@ requests, and the agent never sees anything else.
 - The maintainer is the owner in `.github/CODEOWNERS`. Read only their comments:
   `gh pr view <branch> --json comments,reviews --jq '[.comments[], .reviews[]] | map(select(.author.login == "<owner>")) | .[].body'`,
   and the line comments with
-  `gh api repos/{owner}/{repo}/pulls/<number>/comments --jq '.[] | select(.user.login == "<owner>") | .body'`.
+  `gh api --paginate repos/{owner}/{repo}/pulls/<number>/comments --jq '.[] | select(.user.login == "<owner>") | .body'`.
 - Agents post with the maintainer's account too: leave out the comments whose first
   line is a heading of a report (`## Handover:`, `## code-reviewer`,
   `## security-reviewer`, `## Review summary`).
@@ -63,7 +63,8 @@ The mock-up is drawn from the Portflow design system in Claude Design, which mus
 ## 3. Brief and mock-up
 
 Launch the `designer` agent (job 2) with the issue, the path of the spec, the branch,
-the link of the Portflow design system and, on a later run, the changes asked. It
+the link of the Portflow design system and, on a later run, the link of the mock-up and
+the changes asked. It
 commits on the branch:
 
 - `specs/<NNN>-<slug>/design/brief.md`, which holds:
