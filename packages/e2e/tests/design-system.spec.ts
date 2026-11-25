@@ -37,9 +37,11 @@ type FocusIndicator = { outline: string[]; shadows: string[]; page: string; name
 
 /** What the element that has the focus draws around it, and the colour of the page. */
 async function focusIndicator(page: Page): Promise<FocusIndicator | undefined> {
-  return page.evaluate(() => {
+  return page.evaluate(async () => {
     const element = document.activeElement
     if (!element || element === document.body) return undefined
+    // Controls ease their ring in: measure it once the transition is over.
+    await Promise.all(element.getAnimations().map((animation) => animation.finished))
     const style = getComputedStyle(element)
     const outline =
       style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 1
@@ -104,9 +106,12 @@ for (const theme of ['light', 'dark', 'contrast'] as const) {
     await page.getByRole('button', { name: 'Delete the weighing' }).click()
     const toast = page.locator('[data-sonner-toast]')
     await expect(toast).toBeVisible()
-    await toast.focus()
-    await page.keyboard.press('Shift+Tab')
-    await page.keyboard.press('Tab')
+    // Reach the toast with the keyboard, from the start of the page.
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur())
+    for (let step = 0; step < 5; step += 1) {
+      await page.keyboard.press('Tab')
+      if (await toast.evaluate((element) => element === document.activeElement)) break
+    }
     await expect(toast).toBeFocused()
     const indicator = await focusIndicator(page)
     const drawn = [...(indicator?.outline ?? []), ...(indicator?.shadows ?? [])]
