@@ -17,7 +17,9 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
 thiserror = "2.0.21"
 tokio = { version = "1.54.1", features = ["macros", "rt-multi-thread", "net", "signal"] }
-tower-http = { version = "0.7.1", default-features = false, features = ["catch-panic"] }
+tower-http = { version = "0.7.1", default-features = false, features = ["catch-panic", "request-id", "trace"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter", "json"] }
 utoipa = { version = "6.0.0", features = ["axum_extras"] }
 # `vendored`: the files of Swagger UI come from a crate, so the build downloads nothing.
 utoipa-swagger-ui = { version = "10.0.2", features = ["axum", "vendored"] }

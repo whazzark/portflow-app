@@ -20,3 +20,7 @@ unsafe_code = "forbid"
 [workspace.lints.clippy]
 unwrap_used = "deny"
 expect_used = "deny"
+# Everything the API says goes through `tracing` (`.claude/rules/backend.md`, Logging).
+print_stdout = "deny"
+print_stderr = "deny"
+dbg_macro = "deny"
