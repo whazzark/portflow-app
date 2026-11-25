@@ -73,8 +73,13 @@ after commit for the real-time stream.
 ## Contract
 
 The API generates `contracts/openapi.json` from its code (utoipa). The web app
-generates its TypeScript types from that file. CI regenerates both and fails on any
-difference, so a contract change that the web app does not handle breaks the build.
+generates its TypeScript types from that file. Both files are committed, and a test
+of each app fails when its file differs from what would be generated: in the API,
+`the_committed_contract_matches_the_code` compares `contracts/openapi.json` with the
+code; in the web app, a test regenerates the types from `contracts/openapi.json` and
+compares them with the committed ones (with the walking skeleton of the front end,
+#11). CI runs them with the other tests, and they fail locally the same way, so a
+contract change that the web app does not handle breaks the build.
 
 Every error is a problem (RFC 9457) with a stable `code`, and each endpoint documents
 its success response and every error it can answer (ADR 0015).
