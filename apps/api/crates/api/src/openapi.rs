@@ -14,12 +14,18 @@ use utoipa::OpenApi;
 )]
 struct ApiDoc;
 
-/// The OpenAPI document as committed in `contracts/openapi.json`.
-pub fn to_json() -> Result<String, serde_json::Error> {
+/// The OpenAPI document of the API: the one source of `contracts/openapi.json` and of
+/// the page of `/api/docs`.
+pub fn document() -> utoipa::openapi::OpenApi {
     let mut document = ApiDoc::openapi();
     // utoipa copies the license of Cargo.toml, which the API does not declare.
     document.info.license = None;
-    let mut json = document.to_pretty_json()?;
+    document
+}
+
+/// The OpenAPI document as committed in `contracts/openapi.json`.
+pub fn to_json() -> Result<String, serde_json::Error> {
+    let mut json = document().to_pretty_json()?;
     json.push('\n');
     Ok(json)
 }
