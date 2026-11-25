@@ -213,7 +213,7 @@
                 "message": "routes never import app"
               },
               {
-                "regex": "^@/features/[^/]+/(model|components|hooks)(/|$)",
+                "regex": "^@/features/[^/]+/(model|components|hooks|constants)(/|$)",
                 "message": "A route imports the page of a feature and its queries (api/) only"
               },
               {
