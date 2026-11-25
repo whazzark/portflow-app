@@ -114,7 +114,9 @@ never from a branch that changes the package.
 2. Build, with the path where the read saved it:
    `pnpm --filter @portflow/design-system run build:claude-design --index <path>`.
    It checks before it builds: no change left uncommitted in the package, `origin/main`
-   up to date with GitHub (fetch first), and the package the same as on `origin/main`.
+   up to date with GitHub (fetch first), and the package, the root lockfile, workspace
+   and `package.json` the same as on `origin/main`; then it installs from that lockfile,
+   since the bundle inlines the dependencies.
    Then it empties `packages/design-system/claude-design/` and writes `project/` there
    (not committed). Without `--index` it builds the same files as a check, with no
    index: that folder is not published.
