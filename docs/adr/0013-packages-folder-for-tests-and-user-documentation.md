@@ -1,6 +1,6 @@
 # 0013. A packages folder for the end-to-end tests and the user documentation
 
-Status: proposed (2026-11-25)
+Status: accepted (2026-11-25)
 
 Completed by ADR 0014: the user documentation is in `packages/user-docs/`. The text
 below is kept as it was decided.
