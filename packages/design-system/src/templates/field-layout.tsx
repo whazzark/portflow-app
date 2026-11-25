@@ -9,15 +9,31 @@ import { cn } from '@portflow/design-system/lib/utils'
  * for the selects, dialogs and toasts that render at the root.
  */
 
+// How many field layouts are shown, and the density of the document before the first:
+// several can be shown at once (a page and a dialog, a page of stories), and the density
+// is given back only when the last one goes.
+let shown = 0
+let densityBefore: string | undefined
+
+function holdFieldDensity() {
+  const root = document.documentElement
+  if (shown === 0) densityBefore = root.dataset.density
+  shown += 1
+  root.dataset.density = 'field'
+}
+
+function releaseFieldDensity() {
+  shown -= 1
+  if (shown > 0) return
+  const root = document.documentElement
+  if (densityBefore === undefined) delete root.dataset.density
+  else root.dataset.density = densityBefore
+}
+
 export function FieldLayout({ className, ...props }: ComponentProps<'div'>) {
   useEffect(() => {
-    const root = document.documentElement
-    const previous = root.dataset.density
-    root.dataset.density = 'field'
-    return () => {
-      if (previous === undefined) delete root.dataset.density
-      else root.dataset.density = previous
-    }
+    holdFieldDensity()
+    return releaseFieldDensity
   }, [])
 
   return (
