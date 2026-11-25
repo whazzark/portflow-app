@@ -19,6 +19,9 @@ import { COMPONENTS, COVER, README } from './content.ts'
 const PACKAGE = fileURLToPath(new URL('../../', import.meta.url))
 const OUT = join(PACKAGE, 'claude-design')
 const PROJECT = join(OUT, 'project')
+const REPOSITORY = join(PACKAGE, '..', '..')
+// The files of the repository root that decide what gets installed, from the package.
+const ROOT_FILES = ['../../pnpm-lock.yaml', '../../pnpm-workspace.yaml', '../../package.json']
 const NAMESPACE = 'Portflow'
 
 const { values: args } = parseArgs({ options: { index: { type: 'string' } } })
@@ -312,10 +315,12 @@ function index(via: string, note: string) {
 // The path of the repository on its host, never the user or the token a remote URL can
 // carry: `https://user:token@host/owner/name.git` and `git@host:owner/name.git` give
 // `owner/name`.
-const repo = gitOr('portflow', 'remote', 'get-url', 'origin')
+const remotePath = gitOr('portflow', 'remote', 'get-url', 'origin')
   .replace(/^[a-z+]+:\/\/(?:[^@/]+@)?[^/]+\//i, '')
   .replace(/^[^@/]+@[^:]+:/, '')
   .replace(/\.git$/, '')
+// A local path (`/Users/…`, `../repo`, `file://…`) or a URL with no path is not published.
+const repo = /^\w[\w.-]*\/\w[\w.-]*$/.test(remotePath) ? remotePath : 'portflow'
 
 // The system says which commit of the package it shows: a change not committed would
 // make that a lie.
@@ -331,11 +336,16 @@ if (args.index) {
   if (!remoteMain || remoteMain !== gitOr('', 'rev-parse', 'origin/main')) {
     throw new Error('origin/main is not the main of GitHub: git fetch origin, then sync')
   }
+  // The bundle inlines the dependencies: the lockfile and the workspace must be main's too,
+  // and node_modules installed from them.
   try {
-    git('diff', '--quiet', 'origin/main', '--', '.')
+    git('diff', '--quiet', 'origin/main', '--', '.', ...ROOT_FILES)
   } catch {
-    throw new Error('packages/design-system differs from origin/main: sync from main')
+    throw new Error(
+      'packages/design-system or the lockfile differs from origin/main: sync from main',
+    )
   }
+  execFileSync('pnpm', ['install', '--frozen-lockfile'], { cwd: REPOSITORY, stdio: 'inherit' })
 }
 
 // Nothing of an earlier build may reach this one: the bundle, the types and the files
