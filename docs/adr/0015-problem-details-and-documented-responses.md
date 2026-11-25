@@ -35,6 +35,11 @@ body) were plain text.
   and every error it can answer, each with the problem schema. Every endpoint declares
   the internal error. A success without a body (204) is the only response without a
   schema.
+- Each documented error carries, as its example, the problem the endpoint really
+  answers. The example is built from the code that produces the response, never typed
+  by hand, so the two cannot differ. Without it, a tool that reads the document, like
+  the page of `/api/docs`, invents values from the schema: a status of 0 and the first
+  value of `code`.
 - `GET /api/health` is no exception: it answers a problem when the database is down.
 - The rule is checked three ways: it is written in `.claude/rules/backend.md`; a test
   of the generated document and a helper of the HTTP tests check it; the
@@ -43,7 +48,10 @@ body) were plain text.
 ## Consequences
 
 - The test of the document fails when an operation declares no success response with
-  a schema, an error response without the problem schema, or no internal error.
+  a schema, an error response without the problem schema, or no internal error. It
+  fails too when an error has no example, or an example with another status code. It
+  does not check that the `code` of the example is the one the endpoint answers:
+  building the example from the code is what guarantees it.
 - The helper of the HTTP tests fails when a route answers a status code that its
   operation does not declare. It only sees the cases a test exercises: an error that
   no test triggers can still be undocumented, which is why review checks it too.
