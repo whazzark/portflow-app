@@ -5,7 +5,7 @@ import { expect, test, vi } from 'vitest'
 import { Button } from '@portflow/design-system/atoms/button'
 
 test('a button is reached with Tab and pressed with Enter or Space', async () => {
-  const onClick = vi.fn()
+  const onClick = vi.fn<() => void>()
   render(<Button onClick={onClick}>Save</Button>)
 
   await userEvent.tab()
@@ -16,7 +16,7 @@ test('a button is reached with Tab and pressed with Enter or Space', async () =>
 })
 
 test('a disabled button cannot be pressed', async () => {
-  const onClick = vi.fn()
+  const onClick = vi.fn<() => void>()
   render(
     <Button disabled onClick={onClick}>
       Save
