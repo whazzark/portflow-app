@@ -87,21 +87,40 @@ describe.each(THEMES)('the %s theme', (theme) => {
 })
 
 /*
- * The ratios above hold only for the colours as declared. A focus ring or an error ring
- * drawn with an alpha (`ring-ring/50`) blends with the page and falls below 3:1: the
- * components draw them opaque.
+ * The ratios above hold only for the tokens they name, drawn opaque. Every focus
+ * indicator of the components and of the web app is drawn with those tokens: a ring or
+ * an outline in `ring` (or `destructive` on an invalid control), a focused option on
+ * `primary`. Any other colour, or an alpha, could blend below 3:1.
  */
-test('no focus or error ring is drawn translucent', () => {
-  const root = new URL('../', import.meta.url)
-  const sources = readdirSync(root, { recursive: true, encoding: 'utf8' })
-    .filter((path) => /\.(tsx|css)$/.test(path) && !/\.(test|stories)\.tsx$/.test(path))
-    .flatMap((path) =>
-      readFileSync(new URL(path, root), 'utf8')
-        .split('\n')
-        .map((line, index) => ({ where: `${path}:${index + 1}`, line })),
-    )
-  const translucent = sources
-    .filter(({ line }) => /(ring|outline)-(ring|destructive|danger)\/\d+/.test(line))
-    .map(({ where }) => where)
-  expect(translucent).toEqual([])
+const SOURCES = [
+  new URL('../', import.meta.url),
+  new URL('../../../../apps/web/src/', import.meta.url),
+]
+
+const RING = /(?<![\w-])(?:[\w-]+:|\[[^\]]*\]:)*(ring|outline)-([^\s'"`;]+)/g
+const RING_ALLOWED =
+  /^(\d+(\.\d+)?|inset|offset-\d+|offset-background|ring|destructive|none|hidden)$/
+const FOCUS_BACKGROUND =
+  /(?:^|\s|['"`])(?:focus|focus-visible|data-\[highlighted\]):bg-([^\s'"`]+)/g
+const FOCUS_BACKGROUND_ALLOWED = /^primary$/
+
+test('every focus indicator is drawn with a tested token, opaque', () => {
+  const lines = SOURCES.flatMap((root) =>
+    readdirSync(root, { recursive: true, encoding: 'utf8' })
+      .filter((path) => /\.(tsx?|css)$/.test(path) && !/\.(test|stories)\.tsx?$/.test(path))
+      .flatMap((path) =>
+        readFileSync(new URL(path, root), 'utf8')
+          .split('\n')
+          .map((line, index) => ({ where: `${path}:${index + 1}`, line })),
+      ),
+  )
+  const refused = lines.flatMap(({ where, line }) => [
+    ...[...line.matchAll(RING)]
+      .filter(([, , value = '']) => !RING_ALLOWED.test(value))
+      .map(([match]) => `${where} ${match}`),
+    ...[...line.matchAll(FOCUS_BACKGROUND)]
+      .filter(([, value = '']) => !FOCUS_BACKGROUND_ALLOWED.test(value))
+      .map(([match]) => `${where} ${match.trim()}`),
+  ])
+  expect(refused).toEqual([])
 })

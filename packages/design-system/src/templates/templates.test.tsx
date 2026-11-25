@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { expect, test } from 'vitest'
+import { afterEach, expect, test } from 'vitest'
 
 import {
   FieldLayout,
@@ -16,6 +16,10 @@ import {
   OfficeLayoutNavList,
 } from '@portflow/design-system/templates/office-layout'
 import { PageLayout, PageLayoutTitle } from '@portflow/design-system/templates/page-layout'
+
+afterEach(() => {
+  delete document.documentElement.dataset.density
+})
 
 test('the office layout has a named navigation and a main content', () => {
   render(
@@ -79,4 +83,18 @@ test('the page layout is the main content with its heading', () => {
   expect(screen.getByRole('main')).toContainElement(
     screen.getByRole('heading', { level: 1, name: 'Service health' }),
   )
+})
+
+test('two field layouts shown together give the density back once both are gone', () => {
+  document.documentElement.dataset.density = 'office'
+  const { unmount } = render(
+    <>
+      <FieldLayout>One</FieldLayout>
+      <FieldLayout>Two</FieldLayout>
+    </>,
+  )
+
+  expect(document.documentElement).toHaveAttribute('data-density', 'field')
+  unmount()
+  expect(document.documentElement).toHaveAttribute('data-density', 'office')
 })
