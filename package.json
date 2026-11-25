@@ -1,0 +1,19 @@
+{
+  "name": "portflow",
+  "private": true,
+  "packageManager": "pnpm@12.23.0",
+  "engines": {
+    "node": ">=26.13.1 <27"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format:check": "turbo run format:check",
+    "test": "turbo run test",
+    "db:up": "docker compose up --detach --wait postgres",
+    "db:down": "docker compose down"
+  },
+  "devDependencies": {
+    "turbo": "2.11.13"
+  }
+}

@@ -8,7 +8,7 @@ disable-model-invocation: true
 # /test <issue>
 
 The deliverables are, on the work branch: the end-to-end and regression tests under
-`e2e/`, and `specs/<NNN>-<slug>/test-report.md` with one passing line per functional
+`packages/e2e/`, and `specs/<NNN>-<slug>/test-report.md` with one passing line per functional
 requirement. `<NNN>` is the issue number padded to three digits.
 
 The work branch is named after the label of the issue: `feat/<NNN>-<slug>` for a
@@ -40,13 +40,13 @@ folder when there is one, and `contracts/openapi.json`. Do not give it `plan.md`
 development comments, or anything you know about the implementation.
 
 - **First run**: it derives the cases from every requirement, acceptance scenario and
-  edge case, writes the end-to-end tests under `e2e/` only, and commits them
+  edge case, writes the end-to-end tests under `packages/e2e/` only, and commits them
   (`test(<context>): ...`).
-- **Later run** (tests of this issue already exist under `e2e/`): it runs them as
+- **Later run** (tests of this issue already exist under `packages/e2e/`): it runs them as
   they are. It adds a test only for a requirement that has none, or to reproduce a
   new gap. It does not rewrite a test that failed.
 
-It then runs the whole `e2e/` suite and returns its table: requirement, test, result.
+It then runs the whole `packages/e2e/` suite and returns its table: requirement, test, result.
 
 Unit and integration tests are the developer's. For a requirement with nothing to
 see on screen, the QA agent finds the developer's test that references it, runs it,
@@ -83,7 +83,7 @@ Write `specs/<NNN>-<slug>/test-report.md` from `specs/_TEMPLATE/test-report.md`.
 looks like:
 
 ```markdown
-| FR-001 | e2e/weighing.spec.ts: [12/FR-001] stores the net tonnage | pass |
+| FR-001 | packages/e2e/weighing.spec.ts: [12/FR-001] stores the net tonnage | pass |
 | FR-003 | apps/api/.../weighing.rs: imports_a_weighing (12/FR-003) | not testable: needs the weighing equipment |
 ```
 
@@ -114,6 +114,6 @@ for the reason the issue describes. If it passes, the bug is not reproduced: sto
 ask the human. Push, post the handover (`Result: regression test written, failing`),
 and tell the human to run `/develop $ARGUMENTS`.
 
-**After the fix**: run the regression test and the whole `e2e/` suite. Sort the
+**After the fix**: run the regression test and the whole `packages/e2e/` suite. Sort the
 results as in step 3. Write no report; post the handover with the result table, then
 the next stage is `/doc $ARGUMENTS`.

@@ -24,7 +24,7 @@ you never approve or merge.
    requirement states, and requirements that are missing.
 2. **Tests.** Were tests committed before the implementation (`git log`)? Was any
    existing test modified, loosened or skipped? Do tests assert behaviour or just execute code?
-   Read `git log -p origin/main..HEAD -- e2e/`: a QA test changed after it was first
+   Read `git log -p origin/main..HEAD -- packages/e2e/`: a QA test changed after it was first
    committed is a blocker unless the change is explained in the test report.
 3. **Architecture.** Dependency direction between crates and between front-end layers;
    business rules outside `domain`/`application`; a context reaching into another;

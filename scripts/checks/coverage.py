@@ -7,13 +7,13 @@ from .specs import find_spec_dir, functional_requirements, parse_frontmatter
 
 
 SKIP_DIRS = {".git", "node_modules", "target", "dist", "build", ".turbo", "coverage"}
-DEFAULT_TEST_DIRS = ("apps", "e2e")
+DEFAULT_TEST_DIRS = ("apps", "packages/e2e")
 TEST_FILE_RE = re.compile(r"\.(test|spec)\.tsx?$")
 RUST_TEST_RE = re.compile(r"#\[(cfg\(test\)|test|tokio::test|sqlx::test)")
 
 
 def is_test_file(relative, text):
-    """A reference only counts in a test: e2e/, a tests/ folder, *.test.ts, or Rust test code."""
+    """A reference only counts in a test: packages/e2e/, a tests/ folder, *.test.ts, or Rust test code."""
     if "e2e" in relative.parts or "tests" in relative.parts:
         return True
     if TEST_FILE_RE.search(relative.name):

@@ -48,7 +48,7 @@ class PullRequestTests(unittest.TestCase):
             pull_requests.check_pr("spec/012-record-weighing", "spec: record a weighing", body)
 
     CODE_BODY = VALID_BODY.replace("Refs #12", "Closes #12").replace(
-        "## Requirements covered\n\nN/A", "## Requirements covered\n\n12/FR-001: e2e/weighing.spec.ts")
+        "## Requirements covered\n\nN/A", "## Requirements covered\n\n12/FR-001: packages/e2e/weighing.spec.ts")
 
     def test_code_pr_closes_the_issue(self):
         pull_requests.check_pr("feat/012-record-weighing", "feat(web): record a weighing", self.CODE_BODY)

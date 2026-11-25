@@ -70,7 +70,23 @@ only. Shared identifiers and tiny value objects live in `domain::shared`; nothin
 
 - A migration that is on `main` is never edited: add a new one.
 
+## Commands
+
+From the root of the repository. The toolchain is pinned in `rust-toolchain.toml`.
+Each script runs `apps/api/scripts/cargo.sh`, which skips cargo while the workspace has
+no crate.
+
+```
+pnpm format:check --filter @portflow/api   # cargo fmt --all --check
+pnpm lint --filter @portflow/api           # cargo clippy --all-targets -- -D warnings
+pnpm build --filter @portflow/api          # cargo build --all-targets
+pnpm test --filter @portflow/api           # cargo test
+pnpm db:up                                 # local PostgreSQL for the repository tests
+```
+
+Plain `cargo` commands work too, from `apps/api/`. The tests that need PostgreSQL read
+`DATABASE_URL` from the environment (see `.env.example`).
+
 ## Before handing over
 
-`cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`, and the
-OpenAPI export produces no diff.
+Format check, lint and tests pass, and the OpenAPI export produces no diff.

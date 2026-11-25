@@ -43,7 +43,7 @@ instances never work in the same checkout at the same time: `front` starts after
 - Reference each covered requirement as `<issue>/FR-<kkk>` in the test.
 - Unit and integration tests under `apps/` are yours, at every layer: domain, use
   cases, repositories against PostgreSQL, HTTP routes, front-end components.
-- `e2e/` belongs to the QA agent: never create, modify, skip or delete a file there.
+- `packages/e2e/` belongs to the QA agent: never create, modify, skip or delete a file there.
 - When the test stage reports a gap, fix the application. If you think the test is
   wrong, say so in your report and leave it as it is.
 - If what you build differs from `plan.md`, say so in your report.
