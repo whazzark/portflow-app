@@ -46,4 +46,11 @@ describe('unwrap', () => {
 
     await expect(unwrap(Promise.reject(aborted))).rejects.toBe(aborted)
   })
+
+  test('lets a cancelled request keep its error when it comes from another realm', async () => {
+    // The `fetch` of Node rejects with its own `DOMException`, not the one of jsdom.
+    const aborted = Object.assign(new Error('aborted'), { name: 'AbortError' })
+
+    await expect(unwrap(Promise.reject(aborted))).rejects.toBe(aborted)
+  })
 })
