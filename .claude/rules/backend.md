@@ -80,6 +80,12 @@ from the environment or from `.env` (copy `.env.example`). The API does not appl
 migrations when it starts: run `migrate` first. `GET /api/health` answers whether the
 API and its database are up.
 
+To browse and try the API from a browser, start it and open `/api/docs` on
+`API_ADDRESS` (`http://127.0.0.1:8080/api/docs` with `.env.example`). The page is
+Swagger UI, served by the API from the same document as `contracts/openapi.json`. It
+is exposed in production too, without authentication: the contract is public, the
+endpoints are protected by their own authentication (decided in #22).
+
 The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
 and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
 database. A test of `api` fails when `contracts/openapi.json` differs from the code: run
