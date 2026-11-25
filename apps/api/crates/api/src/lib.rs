@@ -2,6 +2,7 @@
 
 pub mod health;
 pub mod openapi;
+pub mod problem;
 pub mod state;
 
 use axum::Router;
