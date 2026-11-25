@@ -5,6 +5,13 @@ Decision and Consequences. An accepted ADR is not edited to change the decision;
 new ADR supersedes it. A short note under the status line says what a later ADR
 superseded or completed; the text below it stays as it was decided.
 
+An ADR is accepted when the human merges the pull request that adds it; not merging
+it is the refusal. So the author of that pull request, agent or human, writes the
+status line `Status: accepted (YYYY-MM-DD)` in it, with the date it is written. No one
+changes that line afterwards: a later ADR that supersedes or completes it adds the
+note under it. There is no "proposed" status: an ADR under discussion lives only on
+its branch. `conventions.py adrs` refuses any other status line in `docs/adr/`.
+
 Agents must not contradict an accepted ADR. When a change needs a different
 decision, they draft a new ADR and stop for the human.
 

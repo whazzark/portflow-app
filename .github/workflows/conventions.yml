@@ -64,6 +64,9 @@ jobs:
       - name: Spec structure and test reports
         run: python3 "$CHECKS/scripts/conventions.py" specs
 
+      - name: ADR status
+        run: python3 "$CHECKS/scripts/conventions.py" adrs
+
       - name: Gate - spec approved on main
         if: startsWith(github.head_ref, 'feat/') || startsWith(github.head_ref, 'design/')
         run: python3 "$CHECKS/scripts/conventions.py" spec-approved --branch "$BRANCH" --ref origin/main

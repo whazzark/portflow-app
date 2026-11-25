@@ -155,6 +155,12 @@ is a table with at least one line per functional requirement of the spec:
 `not testable` means not testable end to end: the line names the lower-level test
 that covers the requirement (not checked), and `fr-coverage` still requires one.
 
+## ADRs
+
+Every ADR in `docs/adr/` carries the status line `Status: accepted (YYYY-MM-DD)`
+before its first section (`adrs`). When an ADR becomes accepted, and who writes that
+line, is in `docs/adr/README.md`.
+
 ## Traceability
 
 A test covering functional requirement `FR-kkk` of issue `n` contains `n/FR-kkk` in
@@ -188,6 +194,7 @@ python3 scripts/conventions.py commit-msg <file>
 python3 scripts/conventions.py commits origin/main..HEAD
 python3 scripts/conventions.py pr --branch <b> --title "<t>" --body-file <f>
 python3 scripts/conventions.py specs
+python3 scripts/conventions.py adrs
 python3 scripts/conventions.py spec-approved --issue <n>
 python3 scripts/conventions.py design-approved --issue <n>
 python3 scripts/conventions.py fr-coverage --issue <n>
