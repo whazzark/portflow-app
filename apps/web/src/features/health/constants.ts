@@ -6,6 +6,4 @@ export const HEALTH_LABELS = {
   database: 'Database',
   up: 'Up',
   down: 'Down',
-  loading: 'Checking the service…',
-  retry: 'Try again',
 } as const
