@@ -30,6 +30,9 @@ class PullRequestTests(unittest.TestCase):
         with self.assertRaises(common.Failure):
             pull_requests.check_pr("spec/012-record-weighing", "feat: record a weighing", VALID_BODY)
 
+    def test_chore_pr_may_be_typed_style(self):
+        pull_requests.check_pr("chore/012-design-system", "style(design-system): add the tokens", VALID_BODY)
+
     def test_spec_pr_must_not_close(self):
         with self.assertRaises(common.Failure):
             pull_requests.check_pr("spec/012-record-weighing", "spec: record a weighing", VALID_BODY.replace("Refs #12", "Closes #12"))
