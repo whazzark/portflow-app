@@ -12,5 +12,11 @@ export const PROBLEM_LABELS: Record<ProblemCode, string> = {
   INTERNAL_ERROR: 'Something went wrong on the server. Try again in a moment.',
 }
 
+/**
+ * The label shown when the API answers a problem whose code this build does not know:
+ * a newer API, which a reload of the page catches up with.
+ */
+export const REFUSED_LABEL = 'The server refused the request. Reload the page and try again.'
+
 /** The label shown when the API cannot be reached or answers something else than a problem. */
 export const UNREACHABLE_LABEL = 'The service cannot be reached. Try again in a moment.'
