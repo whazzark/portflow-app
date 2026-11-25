@@ -52,7 +52,9 @@ The crates, their dependency direction and the bounded contexts are in
   is never renamed or removed in one issue.
 - Each operation declares, in its `#[utoipa::path]`: its success response with its
   schema (204 is the only success without one), every error it can answer with
-  `body = Problem, content_type = PROBLEM_CONTENT_TYPE`, and always the 500.
+  `body = Problem, content_type = PROBLEM_CONTENT_TYPE`, and always the 500. Each
+  error carries the problem it really answers as its example, built from the code and
+  never typed by hand: `example = json!(Problem::database_unavailable())`.
 - The errors of a context are mapped to `Problem` in `api/<context>/error_mapping.rs`.
   An unexpected error becomes `Problem::internal()`, which carries no cause.
 - A handler takes its body and its parameters through `api::extract` (`JsonBody`,
@@ -92,6 +94,14 @@ Plain `cargo` commands work too, from `apps/api/`. `DATABASE_URL` and `API_ADDRE
 from the environment or from `.env` (copy `.env.example`). The API does not apply the
 migrations when it starts: run `migrate` first. `GET /api/health` answers whether the
 API and its database are up: 200, or a 503 problem when the database is down.
+
+To browse and try the API from a browser, start it and open `/api/docs` on
+`API_ADDRESS` (`http://127.0.0.1:8080/api/docs` with `.env.example`). The page is
+Swagger UI, served by the API from the same document as `contracts/openapi.json`. It
+is exposed in production too, without authentication: the contract is public, the
+endpoints are protected by their own authentication (decided in #22). The routes of
+the page are not operations of the document; their errors are problems all the same,
+and `support::call` accepts their answers.
 
 The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
 and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
