@@ -21,8 +21,8 @@ code. Run it in a fresh session, not in the one that ran `/develop`.
 
 - `$ARGUMENTS` must be one issue number. Otherwise stop and ask for it.
 - `git status --porcelain` must be empty. Otherwise stop.
-- `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
-  and give the human the command it prints.
+- `python3 scripts/conventions.py setup --fix` must pass: it activates the git hooks of
+  this checkout, a worktree included. If not, stop and give the human what it prints.
 - `git fetch origin`, then `gh issue view $ARGUMENTS --json labels,state,title --comments`.
 - For a bug (label `fix`), read "Bugs" at the end first.
 - Switch to the work branch. Stop if it does not exist: `/develop $ARGUMENTS` comes first.

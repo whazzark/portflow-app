@@ -18,8 +18,8 @@ You run in an interactive session: ask the human instead of guessing a business 
 - `$ARGUMENTS` must be one issue number. Otherwise stop and ask for it.
 - `git status --porcelain` must be empty. Otherwise stop: do not switch branch over
   uncommitted work.
-- `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
-  and give the human the command it prints.
+- `python3 scripts/conventions.py setup --fix` must pass: it activates the git hooks of
+  this checkout, a worktree included. If not, stop and give the human what it prints.
 - `gh issue view $ARGUMENTS --json number,title,body,labels,state`. Stop if the issue
   is closed. Stop if it is not a feature (label `feat`): a bug has no spec, see
   "Bugs" in `docs/workflow.md`. If the issue has no label at all, ask the human which

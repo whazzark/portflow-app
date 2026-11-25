@@ -62,12 +62,15 @@ You need Python 3, git, the GitHub CLI signed in (`gh auth status`), and for the
 On a new clone, once:
 
 ```bash
-git config core.hooksPath .githooks              # activate the git hooks
-python3 scripts/conventions.py setup             # confirms they are active
+python3 scripts/conventions.py setup --fix       # activate the git hooks
 python3 -m unittest discover -s scripts/tests    # the checks test themselves
 cp .env.example .env                             # then choose your own values
 pnpm install
 ```
+
+In each new git worktree, run `python3 scripts/conventions.py setup --fix` again: the
+Claude desktop app points its worktrees at the hooks of the main checkout, and this
+command makes the worktree run the hooks of its own branch. The skills run it for you.
 
 Then, from the root:
 
