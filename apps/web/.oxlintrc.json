@@ -1,0 +1,226 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import", "react", "jsx-a11y", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "ignorePatterns": ["dist/**", "src/routeTree.gen.ts"],
+  "rules": {
+    "import/no-cycle": "error",
+    "react/react-in-jsx-scope": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "regex": "^(\\.\\./){2,}",
+            "message": "Import from another folder of src through the alias @/, not with ../../"
+          }
+        ]
+      }
+    ],
+    "import/no-unassigned-import": [
+      "error",
+      {
+        "allow": ["**/*.css", "@testing-library/jest-dom/vitest"]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/shared/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/(app|routes|features)(/|$)",
+                "message": "shared imports nothing above it: app, routes and features import shared, never the other way"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/shared/atoms/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/(app|routes|features)(/|$)",
+                "message": "shared imports nothing above it: app, routes and features import shared, never the other way"
+              },
+              {
+                "regex": "^@/shared/(molecules|templates|api)(/|$)",
+                "message": "Atoms import the tokens and shared/lib only (ADR 0012)"
+              }
+            ],
+            "paths": [
+              {
+                "name": "@portflow/contracts",
+                "message": "Generated API types stay in api/ and model/: components use screen types"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/shared/molecules/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/(app|routes|features)(/|$)",
+                "message": "shared imports nothing above it: app, routes and features import shared, never the other way"
+              },
+              {
+                "regex": "^@/shared/(templates|api)(/|$)",
+                "message": "Molecules import atoms, never templates or the API (ADR 0012)"
+              }
+            ],
+            "paths": [
+              {
+                "name": "@portflow/contracts",
+                "message": "Generated API types stay in api/ and model/: components use screen types"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/shared/templates/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/(app|routes|features)(/|$)",
+                "message": "shared imports nothing above it: app, routes and features import shared, never the other way"
+              },
+              {
+                "regex": "^@/shared/api(/|$)",
+                "message": "Templates have no data (ADR 0012)"
+              }
+            ],
+            "paths": [
+              {
+                "name": "@portflow/contracts",
+                "message": "Generated API types stay in api/ and model/: components use screen types"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/(app|routes|features)(/|$)",
+                "message": "A feature imports shared only, never app, routes or another feature; inside the feature, import relatively"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/*/components/**", "src/features/*/*-page.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/(app|routes|features)(/|$)",
+                "message": "A feature imports shared only, never app, routes or another feature; inside the feature, import relatively"
+              },
+              {
+                "regex": "^@/shared/api(/|$)",
+                "message": "Components reach the API through the queries of their feature"
+              }
+            ],
+            "paths": [
+              {
+                "name": "@portflow/contracts",
+                "message": "Generated API types stay in api/ and model/: components use screen types"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/routes/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(\\.\\./){2,}",
+                "message": "Import from another folder of src through the alias @/, not with ../../"
+              },
+              {
+                "regex": "^@/app(/|$)",
+                "message": "routes never import app"
+              },
+              {
+                "regex": "^@/features/[^/]+/(model|components|hooks)(/|$)",
+                "message": "A route imports the page of a feature and its queries (api/) only"
+              },
+              {
+                "regex": "^@/shared/api(/|$)",
+                "message": "Components reach the API through the queries of their feature"
+              }
+            ],
+            "paths": [
+              {
+                "name": "@portflow/contracts",
+                "message": "Generated API types stay in api/ and model/: components use screen types"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
