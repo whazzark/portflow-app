@@ -1,0 +1,16 @@
+# Use cases and query traits. Depends on the domain only.
+[package]
+name = "application"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+domain = { path = "../domain" }
+
+[dev-dependencies]
+tokio = { version = "1.54.1", features = ["macros", "rt"] }
