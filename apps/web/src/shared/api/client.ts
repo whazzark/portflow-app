@@ -16,7 +16,7 @@ export const apiClient = createClient<paths>({
 })
 
 /**
- * The data of an answer of `apiClient`, for the `queryFn` of a read. Throws an
+ * The data of an answer of `apiClient`, for a `queryFn` or a `mutationFn`. Throws an
  * `ApiError` when the API answers an error or cannot be reached; a cancelled request
  * keeps its own error, which TanStack Query expects.
  */
@@ -30,6 +30,7 @@ export async function unwrap<Data>(
     if (cause instanceof DOMException && cause.name === 'AbortError') throw cause
     throw new ApiError(null, { cause })
   }
-  if (!result.response.ok || result.data === undefined) throw toApiError(result.error)
-  return result.data
+  if (!result.response.ok) throw toApiError(result.error)
+  // A successful answer without a body (204) has no data: `Data` is then `undefined`.
+  return result.data as Data
 }
