@@ -1,0 +1,4 @@
+-- Baseline of the schema. It creates nothing: the tables arrive with the features
+-- that need them. Applying it creates the table where sqlx records the migrations.
+--
+-- A migration that is on main is never edited: add a new one.

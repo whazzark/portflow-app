@@ -1,5 +1,7 @@
-# Cargo workspace of the API. The crates domain, application, infrastructure and api
-# arrive with the walking skeleton of the back end (issue #10).
+# Cargo workspace of the API. The dependency direction of docs/architecture.md is
+# enforced by the manifests: a crate declares another crate of the workspace when it
+# first uses it, and only in that direction. `domain` and `application` stay empty
+# until the first feature.
 [workspace]
 resolver = "3"
 members = ["crates/*"]
@@ -8,3 +10,13 @@ members = ["crates/*"]
 edition = "2024"
 rust-version = "1.100"
 publish = false
+
+# The lints of ADR 0002. Every crate opts in with `[lints] workspace = true`;
+# `clippy.toml` allows `unwrap` and `expect` in tests. `cargo clippy -- -D warnings`
+# turns the remaining warnings into errors.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

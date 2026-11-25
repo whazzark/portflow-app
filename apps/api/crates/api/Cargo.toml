@@ -1,0 +1,32 @@
+# HTTP routes, DTOs, the OpenAPI document and the composition root.
+[package]
+name = "api"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+axum = "0.8.9"
+dotenvy = "0.15.7"
+infrastructure = { path = "../infrastructure" }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+tokio = { version = "1.54.1", features = ["macros", "rt-multi-thread", "net", "signal"] }
+utoipa = { version = "6.0.0", features = ["axum_extras"] }
+
+[dev-dependencies]
+http-body-util = "0.1.5"
+sqlx = { version = "0.9.1", default-features = false, features = ["runtime-tokio", "postgres", "macros", "migrate"] }
+tower = { version = "0.5.3", features = ["util"] }
+
+
+# The HTTP integration tests live in apps/api/tests/ (docs/architecture.md), outside
+# this crate's folder, so they are declared here.
+[[test]]
+name = "http"
+path = "../../tests/http/main.rs"
