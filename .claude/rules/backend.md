@@ -52,7 +52,9 @@ The crates, their dependency direction and the bounded contexts are in
   is never renamed or removed in one issue.
 - Each operation declares, in its `#[utoipa::path]`: its success response with its
   schema (204 is the only success without one), every error it can answer with
-  `body = Problem, content_type = PROBLEM_CONTENT_TYPE`, and always the 500.
+  `body = Problem, content_type = PROBLEM_CONTENT_TYPE`, and always the 500. Each
+  error carries the problem it really answers as its example, built from the code and
+  never typed by hand: `example = json!(Problem::database_unavailable())`.
 - The errors of a context are mapped to `Problem` in `api/<context>/error_mapping.rs`.
   An unexpected error becomes `Problem::internal()`, which carries no cause.
 - A handler takes its body and its parameters through `api::extract` (`JsonBody`,
