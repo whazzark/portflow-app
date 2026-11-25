@@ -2,6 +2,9 @@
 
 Status: accepted (2026-11-25)
 
+Completed by ADR 0018: the labels of the problem codes are in English. The text below
+is kept as it was decided.
+
 Completes ADR 0003, whose consequences left the response codes of an endpoint to the
 attention of the reviewer: they are now checked by tests too.
 
