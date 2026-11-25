@@ -5,8 +5,11 @@
 @import 'tw-animate-css';
 @import './tokens.css';
 
-/* The classes of the design system are scanned wherever it is used. */
+/* The classes of the components are scanned wherever they are used; not those of the
+   stories and tests, which only Storybook and Vitest need. */
 @source '../';
+@source not '../**/*.stories.tsx';
+@source not '../**/*.test.tsx';
 
 /* `dark:` follows the dark theme, not the system preference: the theme is a choice. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
