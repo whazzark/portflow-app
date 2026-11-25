@@ -59,8 +59,10 @@ pnpm test:e2e -- tests/health.spec.ts                   # one file only
 `packages/e2e/playwright.config.ts`): it applies the migrations, starts the API on
 `API_ADDRESS`, waits for `API_URL` + `/api/health`, then serves the built web app with
 `vite preview` on `http://127.0.0.1:4173`, which forwards `/api` to `API_URL`: the
-browser sees one origin, as in production. It never reuses a server already listening:
-stop your own API first, or give the suite other ports through the environment
+browser sees one origin, as in production. It also serves the built Storybook of the
+design system on `http://127.0.0.1:6007`, for `tests/design-system.spec.ts`. It never
+reuses a server already listening: stop your own API first, or give the suite other
+ports through the environment
 (`API_ADDRESS=127.0.0.1:38080 API_URL=http://127.0.0.1:38080 pnpm test:e2e`). The
 variables come from the environment, or from `.env`, which the environment overrides.
 
