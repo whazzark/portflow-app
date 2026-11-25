@@ -97,11 +97,11 @@ const SOURCES = [
   new URL('../../../../apps/web/src/', import.meta.url),
 ]
 
-const RING = /(?<![\w-])(?:[\w-]+:|\[[^\]]*\]:)*(ring|outline)-([^\s'"`;]+)/g
+const RING = /(?<![\w-])(?:[\w-]+:|\[[^\]]*\]:)*(ring|outline)-([^\s'"`;!]+)/g
 const RING_ALLOWED =
   /^(\d+(\.\d+)?|inset|offset-\d+|offset-background|ring|destructive|none|hidden)$/
 const FOCUS_BACKGROUND =
-  /(?:^|\s|['"`])(?:focus|focus-visible|data-\[highlighted\]):bg-([^\s'"`]+)/g
+  /(?:^|\s|['"`])(?:focus|focus-visible|data-\[highlighted\]):bg-([^\s'"`;!]+)/g
 const FOCUS_BACKGROUND_ALLOWED = /^primary$/
 
 test('every focus indicator is drawn with a tested token, opaque', () => {
