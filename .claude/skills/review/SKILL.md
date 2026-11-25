@@ -13,8 +13,8 @@ Run this in a fresh session, not in the one that wrote the code or the tests.
 
 - `$ARGUMENTS` must be one pull request number. Otherwise stop and ask for it.
 - `git status --porcelain` must be empty. Otherwise stop.
-- `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
-  and give the human the command it prints.
+- `python3 scripts/conventions.py setup --fix` must pass: it activates the git hooks of
+  this checkout, a worktree included. If not, stop and give the human what it prints.
 - `gh pr view $ARGUMENTS --json number,title,body,headRefName,baseRefName,files,state`.
   Stop if the pull request is not open.
 - `git fetch origin`, then `gh pr checkout $ARGUMENTS`.

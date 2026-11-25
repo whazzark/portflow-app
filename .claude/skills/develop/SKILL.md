@@ -21,8 +21,8 @@ next stages. Do not do them here.
 
 - `$ARGUMENTS` must be one issue number. Otherwise stop and ask for it.
 - `git status --porcelain` must be empty. Otherwise stop.
-- `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
-  and give the human the command it prints.
+- `python3 scripts/conventions.py setup --fix` must pass: it activates the git hooks of
+  this checkout, a worktree included. If not, stop and give the human what it prints.
 - `git fetch origin`, then `gh issue view $ARGUMENTS --json labels,state,title --comments`.
 - For a bug (label `fix`), read "Bugs" at the end first.
 - For a feature: `python3 scripts/conventions.py spec-approved --issue $ARGUMENTS`

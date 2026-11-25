@@ -16,8 +16,8 @@ request. `<NNN>` is the issue number padded to three digits (issue 12 gives `012
 
 - `$ARGUMENTS` must be one issue number. Otherwise stop and ask for it.
 - `git fetch origin`
-- `python3 scripts/conventions.py setup` must pass: the git hooks are active. If not, stop
-  and give the human the command it prints.
+- `python3 scripts/conventions.py setup --fix` must pass: it activates the git hooks of
+  this checkout, a worktree included. If not, stop and give the human what it prints.
 - `python3 scripts/conventions.py spec-approved --issue $ARGUMENTS` must pass. If not, stop.
 - Read the approved spec. If `ui_impact: no`, stop: no design gate is needed.
 - `git status --porcelain` must show nothing outside `specs/<NNN>-<slug>/design/`.
