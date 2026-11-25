@@ -41,6 +41,22 @@ export function toApiError(error: unknown): ApiError {
   return new ApiError(null, { refused: true })
 }
 
+// The problems where the server, not the request, failed.
+const TRANSIENT_CODES: ReadonlySet<ProblemCode> = new Set([
+  'DATABASE_UNAVAILABLE',
+  'INTERNAL_ERROR',
+])
+
+/**
+ * Whether a read that failed with `error` can pass if tried again: the API could not
+ * be reached, or the server failed. Never a request the API refused, nor a bug.
+ */
+export function isTransient(error: unknown): boolean {
+  if (!(error instanceof ApiError)) return false
+  if (error.code === null) return !error.refused
+  return TRANSIENT_CODES.has(error.code)
+}
+
 function hasCode(value: unknown): value is { code: string } {
   return (
     typeof value === 'object' && value !== null && 'code' in value && typeof value.code === 'string'
