@@ -9,8 +9,8 @@ use utoipa::OpenApi;
         title = "Portflow API",
         description = "Bulk discharge management for the operating organization of a port site"
     ),
-    paths(crate::status::get_status),
-    tags((name = "status", description = "Status of the service"))
+    paths(crate::health::get_health),
+    tags((name = "health", description = "Health of the service"))
 )]
 struct ApiDoc;
 

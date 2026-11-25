@@ -1,4 +1,4 @@
-use domain::status::{ComponentStatus, ServiceStatus};
+use domain::health::{ComponentStatus, ServiceHealth};
 use serde::Serialize;
 use utoipa::ToSchema;
 
@@ -11,7 +11,7 @@ pub enum ComponentStatusDto {
 }
 
 #[derive(Debug, Serialize, ToSchema)]
-pub struct ServiceStatusResponse {
+pub struct HealthResponse {
     /// `up` when every component is up.
     pub status: ComponentStatusDto,
     pub database: ComponentStatusDto,
@@ -26,8 +26,8 @@ impl From<ComponentStatus> for ComponentStatusDto {
     }
 }
 
-impl From<ServiceStatus> for ServiceStatusResponse {
-    fn from(status: ServiceStatus) -> Self {
+impl From<ServiceHealth> for HealthResponse {
+    fn from(status: ServiceHealth) -> Self {
         Self {
             status: status.overall().into(),
             database: status.database.into(),

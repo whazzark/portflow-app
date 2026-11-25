@@ -1,21 +1,21 @@
-use domain::status::{DatabaseProbe, ServiceStatus};
+use domain::health::{DatabaseProbe, ServiceHealth};
 
 /// Use case: tells whether the service and the components it depends on are up.
 ///
-/// It reads no business data, so it takes no `CurrentUser`: the status answers
+/// It reads no business data, so it takes no `CurrentUser`: the health check answers
 /// before anyone signs in.
 #[derive(Debug, Clone)]
-pub struct GetServiceStatus<P> {
+pub struct GetServiceHealth<P> {
     database: P,
 }
 
-impl<P: DatabaseProbe> GetServiceStatus<P> {
+impl<P: DatabaseProbe> GetServiceHealth<P> {
     pub fn new(database: P) -> Self {
         Self { database }
     }
 
-    pub async fn execute(&self) -> ServiceStatus {
-        ServiceStatus {
+    pub async fn execute(&self) -> ServiceHealth {
+        ServiceHealth {
             database: self.database.check().await,
         }
     }
@@ -23,7 +23,7 @@ impl<P: DatabaseProbe> GetServiceStatus<P> {
 
 #[cfg(test)]
 mod tests {
-    use domain::status::ComponentStatus;
+    use domain::health::ComponentStatus;
 
     use super::*;
 
@@ -38,7 +38,7 @@ mod tests {
 
     #[tokio::test]
     async fn the_service_is_up_when_the_database_answers() {
-        let use_case = GetServiceStatus::new(FakeDatabase(ComponentStatus::Up));
+        let use_case = GetServiceHealth::new(FakeDatabase(ComponentStatus::Up));
 
         let status = use_case.execute().await;
 
@@ -48,7 +48,7 @@ mod tests {
 
     #[tokio::test]
     async fn the_service_is_down_when_the_database_does_not_answer() {
-        let use_case = GetServiceStatus::new(FakeDatabase(ComponentStatus::Down));
+        let use_case = GetServiceHealth::new(FakeDatabase(ComponentStatus::Down));
 
         let status = use_case.execute().await;
 

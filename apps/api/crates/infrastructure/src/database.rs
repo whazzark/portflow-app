@@ -23,7 +23,7 @@ pub enum DatabaseError {
 }
 
 /// Creates the pool without connecting: the API starts even while PostgreSQL is
-/// down, and its status says so.
+/// down, and its health check says so.
 pub fn connect(database_url: &str) -> Result<PgPool, DatabaseError> {
     PgPoolOptions::new()
         .acquire_timeout(ACQUIRE_TIMEOUT)

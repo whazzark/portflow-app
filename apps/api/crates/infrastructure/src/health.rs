@@ -1,6 +1,6 @@
 //! PostgreSQL adapter of the database probe.
 
-use domain::status::{ComponentStatus, DatabaseProbe};
+use domain::health::{ComponentStatus, DatabaseProbe};
 use sqlx::PgPool;
 
 #[derive(Debug, Clone)]

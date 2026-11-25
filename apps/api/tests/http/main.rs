@@ -5,4 +5,4 @@
 // `#[test]` functions, not in the helpers they share.
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-mod status;
+mod health;

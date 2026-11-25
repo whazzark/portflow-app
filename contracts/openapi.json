@@ -6,20 +6,20 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/api/status": {
+    "/api/health": {
       "get": {
         "tags": [
-          "status"
+          "health"
         ],
-        "summary": "Status of the service and of its database.",
-        "operationId": "get_status",
+        "summary": "Health of the service and of its database.",
+        "operationId": "get_health",
         "responses": {
           "200": {
             "description": "The service and its database are up",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceStatusResponse"
+                  "$ref": "#/components/schemas/HealthResponse"
                 }
               }
             }
@@ -29,7 +29,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceStatusResponse"
+                  "$ref": "#/components/schemas/HealthResponse"
                 }
               }
             }
@@ -47,7 +47,7 @@
           "down"
         ]
       },
-      "ServiceStatusResponse": {
+      "HealthResponse": {
         "type": "object",
         "required": [
           "status",
@@ -67,8 +67,8 @@
   },
   "tags": [
     {
-      "name": "status",
-      "description": "Status of the service"
+      "name": "health",
+      "description": "Health of the service"
     }
   ]
 }

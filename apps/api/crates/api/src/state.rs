@@ -1,19 +1,19 @@
 //! Composition root: the only place that chooses the adapter of each port.
 
-use application::status::GetServiceStatus;
+use application::health::GetServiceHealth;
 use infrastructure::database::PgPool;
-use infrastructure::status::PostgresDatabaseProbe;
+use infrastructure::health::PostgresDatabaseProbe;
 
 /// The use cases the routes call, wired to their PostgreSQL adapters.
 #[derive(Debug, Clone)]
 pub struct AppState {
-    pub get_service_status: GetServiceStatus<PostgresDatabaseProbe>,
+    pub get_service_health: GetServiceHealth<PostgresDatabaseProbe>,
 }
 
 impl AppState {
     pub fn new(pool: PgPool) -> Self {
         Self {
-            get_service_status: GetServiceStatus::new(PostgresDatabaseProbe::new(pool)),
+            get_service_health: GetServiceHealth::new(PostgresDatabaseProbe::new(pool)),
         }
     }
 }

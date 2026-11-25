@@ -2,4 +2,4 @@
 //! of the application.
 
 pub mod database;
-pub mod status;
+pub mod health;
