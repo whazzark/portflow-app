@@ -7,6 +7,7 @@ use axum::Router;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::get;
+use domain::status::ComponentStatus;
 
 pub use dto::{ComponentStatusDto, ServiceStatusResponse};
 
@@ -29,5 +30,10 @@ pub fn routes() -> Router<AppState> {
 pub async fn get_status(
     State(state): State<AppState>,
 ) -> (StatusCode, Json<ServiceStatusResponse>) {
-    todo!()
+    let status = state.get_service_status.execute().await;
+    let code = match status.overall() {
+        ComponentStatus::Up => StatusCode::OK,
+        ComponentStatus::Down => StatusCode::SERVICE_UNAVAILABLE,
+    };
+    (code, Json(ServiceStatusResponse::from(status)))
 }
