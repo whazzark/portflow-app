@@ -1,0 +1,84 @@
+// @vitest-environment node
+import { readFileSync } from 'node:fs'
+
+import { describe, expect, test } from 'vitest'
+
+import { THEMES, type Theme } from '@portflow/design-system/styles/constants'
+
+/*
+ * WCAG AA in every theme: 4.5:1 for text, 3:1 for what must be seen without being read
+ * (the border of a control, the focus ring, a filled button against the page).
+ * Run `pnpm --filter @portflow/design-system test contrast` to see the ratios.
+ */
+
+const TOKENS = readFileSync(new URL('./tokens.css', import.meta.url), 'utf8')
+
+const TEXT = 4.5
+const NON_TEXT = 3
+
+/** [foreground, background, minimum ratio]: the pairs the components draw. */
+const PAIRS: [string, string, number][] = [
+  ['text', 'background', TEXT],
+  ['text', 'surface', TEXT],
+  ['text', 'surface-muted', TEXT],
+  ['text-muted', 'background', TEXT],
+  ['text-muted', 'surface', TEXT],
+  ['text-muted', 'surface-muted', TEXT],
+  ['primary', 'background', TEXT],
+  ['primary', 'surface', TEXT],
+  ['primary-text', 'primary', TEXT],
+  ['secondary-text', 'secondary', TEXT],
+  ['danger-text', 'danger', TEXT],
+  ['success-text', 'success', TEXT],
+  ['warning-text', 'warning', TEXT],
+  ['border-strong', 'background', NON_TEXT],
+  ['border-strong', 'surface', NON_TEXT],
+  ['ring', 'background', NON_TEXT],
+  ['danger', 'surface', NON_TEXT],
+]
+
+/** The colours a theme declares, the light ones under the dark and contrast ones. */
+function colours(theme: Theme): Map<string, string> {
+  const blocks = [...TOKENS.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+  const values = new Map<string, string>()
+  for (const [, selector, body] of blocks) {
+    if (!selector || !body) continue
+    const applies =
+      selector.includes(`[data-theme='${theme}']`) ||
+      (theme !== 'light' && selector.includes(`[data-theme='light']`))
+    if (!applies) continue
+    const own = selector.includes(`[data-theme='${theme}']`)
+    for (const [, name, value] of body.matchAll(/--([\w-]+):\s*(#[0-9a-f]{6})\s*;/gi)) {
+      if (name && value && (own || !values.has(name))) values.set(name, value)
+    }
+  }
+  return values
+}
+
+function luminance(hex: string): number {
+  const channels = [1, 3, 5].map((start) => {
+    const value = Number.parseInt(hex.slice(start, start + 2), 16) / 255
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+  })
+  const [red = 0, green = 0, blue = 0] = channels
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+}
+
+function contrast(foreground: string, background: string): number {
+  const [light, dark] = [luminance(foreground), luminance(background)].toSorted((a, b) => b - a)
+  return ((light ?? 0) + 0.05) / ((dark ?? 0) + 0.05)
+}
+
+describe.each(THEMES)('the %s theme', (theme) => {
+  const values = colours(theme)
+
+  test.each(PAIRS)('%s on %s reaches %s:1', (foreground, background, minimum) => {
+    const fg = values.get(foreground)
+    const bg = values.get(background)
+    expect(fg, `--${foreground} in ${theme}`).toBeDefined()
+    expect(bg, `--${background} in ${theme}`).toBeDefined()
+    const ratio = contrast(fg ?? '', bg ?? '')
+    console.info(`${theme}\t${foreground} on ${background}\t${ratio.toFixed(2)}:1`)
+    expect(ratio).toBeGreaterThanOrEqual(minimum)
+  })
+})
