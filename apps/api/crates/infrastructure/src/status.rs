@@ -16,7 +16,10 @@ impl PostgresDatabaseProbe {
 
 impl DatabaseProbe for PostgresDatabaseProbe {
     async fn check(&self) -> ComponentStatus {
-        todo!()
+        match sqlx::query("SELECT 1").execute(&self.pool).await {
+            Ok(_) => ComponentStatus::Up,
+            Err(_) => ComponentStatus::Down,
+        }
     }
 }
 
