@@ -102,6 +102,14 @@ The component layers follow atomic design (ADR 0012).
   Never mock the API client module.
 - Query by role and accessible name. Reference the requirement in the test name: `[12/FR-001] ...`.
 
+## Commands
+
+From the root of the repository, with Node from `.nvmrc` and pnpm from `packageManager`.
+The repository-wide commands are in `CLAUDE.md`; to run one workspace only, add
+`--filter <package name>` (for example `pnpm lint --filter <web package>`). The web
+app, its package name and its own commands arrive with the walking skeleton of the
+front end (#11).
+
 ## Before handing over
 
 Lint, format check, typecheck and tests pass; generated API types are up to date.
