@@ -1,14 +1,15 @@
 ---
 name: design
-description: Prepare the design brief for an approved spec with UI impact, then open the design pull request once the mock-up export is in the spec folder (human gate 2). Use when the user runs /design with an issue number.
+description: For an approved spec with UI impact, have the designer agent write the brief and draw a first mock-up from the Portflow design system in Claude Design, then open the design pull request once the export is in the spec folder (human gate 2). Use when the user runs /design with an issue number.
 argument-hint: <issue-number>
 disable-model-invocation: true
 ---
 
 # /design <issue>
 
-The mock-up itself is made by the human in Claude Design. This skill writes the brief
-before, and packages the result after. The deliverables are
+The `designer` agent writes the brief and draws a first mock-up in Claude Design, with
+the components of the Portflow design system only (ADR 0019); the human reviews it,
+changes or replaces it, and merges. The deliverables are
 `specs/<NNN>-<slug>/design/brief.md`, the export next to it, and the design pull
 request. `<NNN>` is the issue number padded to three digits (issue 12 gives `012`).
 
@@ -24,9 +25,17 @@ request. `<NNN>` is the issue number padded to three digits (issue 12 gives `012
   Otherwise stop.
 - Switch to `design/<NNN>-<slug>` if it exists, otherwise create it from `origin/main`.
 
-## 2. If `design/` holds no export yet: write the brief
+## 2. If `design/` holds no export yet: brief and first mock-up
 
-Write `specs/<NNN>-<slug>/design/brief.md`, which the human pastes into Claude Design:
+First check that the Portflow design system in Claude Design (its link is in
+`.claude/rules/design-system.md`) is synced with `main`: the `ref` of its
+`project/tokens.json` (`meta`) names the last commit of `origin/main` that changed
+`packages/design-system/` (`git log -1 --format=%h origin/main -- packages/design-system`).
+If it is older, stop and tell the human: the design system is synced first, as
+`.claude/rules/design-system.md` says.
+
+Then launch the `designer` agent with the issue. It writes
+`specs/<NNN>-<slug>/design/brief.md`:
 
 - The screens to design and, for each, every state required by the acceptance
   scenarios: nominal, empty, loading, error, refused action.
@@ -43,8 +52,21 @@ Write `specs/<NNN>-<slug>/design/brief.md`, which the human pastes into Claude D
 
 Commit `design(<context>): brief` and push. Do not open a pull request yet.
 
-Then stop and tell the human to create the mock-up, export it into
-`specs/<NNN>-<slug>/design/` on this branch, and run `/design $ARGUMENTS` again.
+Then the first mock-up, in Claude Design: a Design artifact built on the Portflow
+design system, with its components only, for every line of the table of the brief, at
+a phone width and at a desktop width. The `designer` agent draws it when its tools can
+publish an artifact; otherwise this session draws it from the brief, and the agent
+checks it against the table. Export its files into `specs/<NNN>-<slug>/design/`, next
+to the brief, and commit `design(<context>): first mock-up of <screen name>`.
+
+A state or a component the design system lacks is not invented: list it for the human
+as a design-system gap.
+
+Then stop and give the human the link of the mock-up: they review it, change or
+replace it in Claude Design, export the version they approve into
+`specs/<NNN>-<slug>/design/` on this branch, and run `/design $ARGUMENTS` again. How a
+Design artifact is exported into files is not verified yet: on the first run, say
+what was done.
 
 ## 3. If the export is present: check and open the pull request
 
