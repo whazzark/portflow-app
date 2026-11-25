@@ -1,0 +1,26 @@
+{
+  "name": "@portflow/contracts",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./generated/schema.d.ts"
+    },
+    "./openapi.json": "./openapi.json"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.ts",
+    "build": "tsc -p .",
+    "lint": "oxlint",
+    "format:check": "oxfmt --check",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.10",
+    "openapi-typescript": "7.13.0",
+    "oxfmt": "0.80.0",
+    "oxlint": "1.95.0",
+    "typescript": "5.9.3",
+    "vitest": "5.1.2"
+  }
+}
