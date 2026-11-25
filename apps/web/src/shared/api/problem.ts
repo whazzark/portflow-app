@@ -13,8 +13,8 @@ export type ProblemCode = components['schemas']['ProblemCode']
 export class ApiError extends Error {
   readonly code: ProblemCode | null
 
-  constructor(code: ProblemCode | null) {
-    super(code ?? 'UNREACHABLE')
+  constructor(code: ProblemCode | null, options?: ErrorOptions) {
+    super(code ?? 'UNREACHABLE', options)
     this.name = 'ApiError'
     this.code = code
   }
@@ -38,4 +38,11 @@ function isProblem(value: unknown): value is Problem {
     typeof value.code === 'string' &&
     Object.hasOwn(PROBLEM_LABELS, value.code)
   )
+}
+
+// Every read throws an `ApiError` (see `unwrap`): the error of a query is typed so.
+declare module '@tanstack/react-query' {
+  interface Register {
+    defaultError: ApiError
+  }
 }

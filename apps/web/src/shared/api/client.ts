@@ -8,7 +8,12 @@ import { ApiError, toApiError } from './problem'
  * The HTTP client of the API, typed by the contract (ADR 0016, 0017). The API is
  * served under the origin of the page (ADR 0004): every path starts with `/api`.
  */
-export const apiClient = createClient<paths>({ baseUrl: window.location.origin })
+export const apiClient = createClient<paths>({
+  baseUrl: window.location.origin,
+  // Reads `fetch` at each call rather than once at import: the tests replace it with
+  // the one of MSW after this module is loaded.
+  fetch: (request) => globalThis.fetch(request),
+})
 
 /**
  * The data of an answer of `apiClient`, for the `queryFn` of a read. Throws an
@@ -23,7 +28,7 @@ export async function unwrap<Data>(
     result = await call
   } catch (cause) {
     if (cause instanceof DOMException && cause.name === 'AbortError') throw cause
-    throw new ApiError(null)
+    throw new ApiError(null, { cause })
   }
   if (!result.response.ok || result.data === undefined) throw toApiError(result.error)
   return result.data

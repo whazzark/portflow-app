@@ -4,6 +4,9 @@ import { afterAll, afterEach, beforeAll } from 'vitest'
 
 import { server } from './server'
 
+// jsdom does not implement scrolling, which the scroll restoration of the router calls.
+window.scrollTo = () => {}
+
 beforeAll(() => server.listen({ onUnhandledFrame: 'error' }))
 afterEach(() => {
   cleanup()
