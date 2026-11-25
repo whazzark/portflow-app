@@ -78,8 +78,8 @@ VALID_REPORT = """# Test Report: Record a weighing
 
 | Requirement | Test | Result |
 |---|---|---|
-| FR-001 | e2e/weighing.spec.ts: [12/FR-001] stores the net tonnage | pass |
-| FR-002 | e2e/weighing.spec.ts: [12/FR-002] refuses a loaded weighing below the empty weighing | pass |
+| FR-001 | packages/e2e/weighing.spec.ts: [12/FR-001] stores the net tonnage | pass |
+| FR-002 | packages/e2e/weighing.spec.ts: [12/FR-002] refuses a loaded weighing below the empty weighing | pass |
 
 ## Gaps
 

@@ -136,7 +136,7 @@ class GuardHookTests(unittest.TestCase):
             "git reset --hard HEAD~1",
             "git push origin HEAD:feat/012-record-weighing",
             "git push origin --delete feat/012-record-weighing",
-            "git log --oneline origin/main..HEAD -- e2e/",
+            "git log --oneline origin/main..HEAD -- packages/e2e/",
             "grep -rn git .",
             "cat <<'E' > notes.txt\ngit push origin main\nE",
             "gh pr edit 12 --body-file body.md",

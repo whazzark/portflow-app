@@ -1,0 +1,10 @@
+{
+  "name": "@portflow/api",
+  "private": true,
+  "scripts": {
+    "build": "./scripts/cargo.sh build",
+    "lint": "./scripts/cargo.sh lint",
+    "format:check": "./scripts/cargo.sh format:check",
+    "test": "./scripts/cargo.sh test"
+  }
+}

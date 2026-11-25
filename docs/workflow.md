@@ -102,7 +102,7 @@ work branch (`plan.md`, `test-report.md`). No session keeps state the next one n
 | `security-reviewer` | Spec review, then review of the code pull request | Read-only |
 | `fullstack-developer` | Development, unit and integration tests first | Writes code and the tests under `apps/` |
 | `devops-engineer` | Development, when `infra_impact` is yes | Writes CI and infrastructure files |
-| `qa-engineer` | End-to-end and regression tests, from the spec and the mock-up | Writes under `e2e/` only, does not read the implementation first |
+| `qa-engineer` | End-to-end and regression tests, from the spec and the mock-up | Writes under `packages/e2e/` only, does not read the implementation first |
 | `technical-writer` | Documentation, once the tests are green | Writes documentation |
 | `code-reviewer` | Review of the code pull request | Read-only |
 

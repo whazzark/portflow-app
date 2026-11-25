@@ -1,0 +1,10 @@
+# Cargo workspace of the API. The crates domain, application, infrastructure and api
+# arrive with the walking skeleton of the back end (issue #10).
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.100"
+publish = false

@@ -124,10 +124,10 @@ class SpecTests(unittest.TestCase):
         cases = {
             "requirement without a line": VALID_REPORT.replace("| FR-002 |", "| FR-003 |"),
             "failing requirement": VALID_REPORT.replace("empty weighing | pass |", "empty weighing | fail |"),
-            "no test named": VALID_REPORT.replace("e2e/weighing.spec.ts: [12/FR-001] stores the net tonnage", " "),
+            "no test named": VALID_REPORT.replace("packages/e2e/weighing.spec.ts: [12/FR-001] stores the net tonnage", " "),
             "not testable without a reason": VALID_REPORT.replace("empty weighing | pass |", "empty weighing | not testable |"),
             "line for a requirement that is not in the spec": VALID_REPORT.replace(
-                "\n\n## Gaps", "\n| FR-009 | e2e/x.spec.ts: [12/FR-009] x | pass |\n\n## Gaps"),
+                "\n\n## Gaps", "\n| FR-009 | packages/e2e/x.spec.ts: [12/FR-009] x | pass |\n\n## Gaps"),
             "missing section": VALID_REPORT.replace("## Gaps\n\nNone.\n\n", ""),
         }
         for name, text in cases.items():

@@ -1,0 +1,119 @@
+name: Code
+
+# Builds, lints and tests the code. The jobs run only for the part a change touches:
+# a pull request that changes only specs, docs or the frame runs none of them. The
+# filter is inside the workflow, not in `on.paths`, so the `code` check always reports
+# and can be required on main.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  # On main, everything runs: it fills the caches that pull requests read.
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: code-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      api: ${{ github.event_name == 'push' || steps.filter.outputs.api == 'true' }}
+      web: ${{ github.event_name == 'push' || steps.filter.outputs.web == 'true' }}
+    steps:
+      - name: Find the parts the pull request touches
+        id: filter
+        if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+              - 'contracts/**'
+              - 'rust-toolchain.toml'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'turbo.json'
+              - '.github/workflows/code.yml'
+            web:
+              - 'apps/web/**'
+              - 'contracts/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - '.nvmrc'
+              - '.github/workflows/code.yml'
+
+  api:
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the Rust toolchain of rust-toolchain.toml
+        run: rustup toolchain install
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: apps/api -> target
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run format:check lint build test --filter=@portflow/api
+
+  # The end-to-end tests get their own job with the walking skeleton of the front end
+  # (#11): they need the API, PostgreSQL and the web app running together.
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The web app arrives with #11; until then the job checks the install only.
+      - name: Format check, lint, build and test the web app
+        if: hashFiles('apps/web/package.json') != ''
+        run: pnpm exec turbo run format:check lint build test --filter=./apps/web
+
+  # The check to require on main. A skipped job counts as passed: a pull request that
+  # touches no code gets a green check without building anything.
+  code:
+    needs: [changes, api, web]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail if a job failed or was cancelled
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Results: $RESULTS"
+          case " $RESULTS " in
+            *" failure "*|*" cancelled "*) exit 1 ;;
+          esac
