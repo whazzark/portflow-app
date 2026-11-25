@@ -142,9 +142,9 @@ handover comment on the issue. Details and status in `docs/workflow.md`.
 
 ## Changing the frame
 
-The guards, the settings, the git hooks, the convention checks, the conventions
-workflow, the templates and the issue forms change only on a `chore/` branch. It is
-the only kind of branch judged by its own checks, so review it closely.
+The files of the frame, listed in `docs/conventions.md` ("What a branch may change"),
+change only on a `chore/` branch. It is the only kind of branch judged by its own
+checks, so review it closely.
 
 ## First issues to create
 

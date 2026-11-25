@@ -68,9 +68,18 @@ Slug: lowercase kebab-case. `main` is protected: no direct commit, no direct pus
 | `fix/` | Everything except `specs/` |
 | `chore/` | Everything |
 
-On every branch but `chore/`, the frame is read-only: `.claude/hooks/`,
-`.claude/settings.json`, `.githooks/`, `scripts/`, `.github/workflows/conventions.yml`,
-`.github/CODEOWNERS`, the pull request template and the issue forms.
+On every branch but `chore/`, the frame is read-only (`paths`, from the list in
+`scripts/checks/paths.py`):
+
+- `.claude/hooks/`, `.claude/settings.json`, `.claude/settings.local.json`
+- `.githooks/`, `scripts/`
+- `.github/workflows/conventions.yml`, `.github/CODEOWNERS`,
+  `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/`
+- `specs/_TEMPLATE/`
+
+The edit guard (`.claude/hooks/guard_edit.py`) asks the human before an agent edits
+part of it, and also every CI workflow: a change to `.github/workflows/code.yml` is
+allowed on any branch, but not without the human.
 
 So an approved spec or design changes only through a spec or design pull request,
 and a pull request cannot weaken the checks that judge it.
@@ -186,6 +195,11 @@ python3 scripts/conventions.py test-report --issue <n>
 python3 scripts/conventions.py paths
 python3 scripts/conventions.py setup
 ```
+
+`spec-approved`, `design-approved`, `fr-coverage` and `test-report` take either
+`--issue <n>` or `--branch <b>` (the issue is read from the branch name); `paths`
+takes `--branch <b>` to check another branch than the current one. `/review` uses
+`--branch` with the head branch of the pull request.
 
 In CI, the checks that run are the ones of `main`, except on a `chore/` branch, which
 runs its own.

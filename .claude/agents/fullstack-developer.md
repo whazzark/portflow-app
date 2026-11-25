@@ -49,7 +49,7 @@ instances never work in the same checkout at the same time: `front` starts after
   wrong, say so in your report and leave it as it is.
 - If what you build differs from `plan.md`, say so in your report.
 - Never edit `spec.md` or the `design/` folder: if the spec is wrong, report it. Never
-  edit the frame (`.claude/hooks/`, `.githooks/`, `scripts/`, the conventions workflow).
+  edit the frame (listed in `docs/conventions.md`, "What a branch may change").
 - No change outside the issue's scope. List what you noticed in your report.
 - Run the full checks of the area you touched before reporting.
 
