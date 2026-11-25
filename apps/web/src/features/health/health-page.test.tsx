@@ -65,6 +65,15 @@ describe('the health page', () => {
     expect(await screen.findByRole('table', { name: HEALTH_LABELS.components })).toBeVisible()
   })
 
+  test('says that something went wrong when the error does not come from the API', async () => {
+    // A success without a body: TanStack Query refuses data that is undefined.
+    server.use(http.get(HEALTH_PATH, () => new HttpResponse(null, { status: 200 })))
+
+    renderApp('/')
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(PAGE_LABELS.unexpectedError)
+  })
+
   test('says that the service cannot be reached when the network fails', async () => {
     server.use(http.get(HEALTH_PATH, () => HttpResponse.error()))
 
