@@ -193,13 +193,17 @@ python3 scripts/conventions.py design-approved --issue <n>
 python3 scripts/conventions.py fr-coverage --issue <n>
 python3 scripts/conventions.py test-report --issue <n>
 python3 scripts/conventions.py paths
-python3 scripts/conventions.py setup
+python3 scripts/conventions.py setup [--fix]
 ```
 
 `spec-approved`, `design-approved`, `fr-coverage` and `test-report` take either
 `--issue <n>` or `--branch <b>` (the issue is read from the branch name); `paths`
 takes `--branch <b>` to check another branch than the current one. `/review` uses
 `--branch` with the head branch of the pull request.
+
+`setup` checks that `core.hooksPath` is `.githooks`, so that git runs the hooks of the
+checked-out branch; `--fix` sets it at the scope git reads, the worktree scope in a
+worktree that has one.
 
 In CI, the checks that run are the ones of `main`, except on a `chore/` branch, which
 runs its own.

@@ -128,7 +128,7 @@ issue number. What each pull request must contain is in `docs/conventions.md`.
     the guards, `.claude/settings.json`, `.githooks/`, the convention checks, the CI
     workflows. It does not see a file written through a shell command.
   - `.githooks/` (`pre-commit`, `commit-msg`, `pre-push`) applies to every git
-    command of the clone, once `core.hooksPath` is set. The skills check it with
-    `conventions.py setup`.
+    command of the clone, once `core.hooksPath` is set. The skills set and check it,
+    in a worktree too, with `conventions.py setup --fix`.
 - Branch protection is the real lock. Because agents push with the owner's account, a
   required approval cannot be used; switching to a bot account later would allow it.
