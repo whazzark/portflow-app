@@ -27,10 +27,16 @@ export async function unwrap<Data>(
   try {
     result = await call
   } catch (cause) {
-    if (cause instanceof DOMException && cause.name === 'AbortError') throw cause
+    if (isAbortError(cause)) throw cause
     throw new ApiError(null, { cause })
   }
   if (!result.response.ok) throw toApiError(result.error)
   // A successful answer without a body (204) has no data: `Data` is then `undefined`.
   return result.data as Data
+}
+
+// By its name, not its class: the `DOMException` of the `fetch` of Node is not the one
+// of the page under jsdom.
+function isAbortError(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError'
 }
