@@ -27,8 +27,10 @@ pub fn routes() -> Router<AppState> {
     tag = "health",
     responses(
         (status = 200, description = "The service and its database are up", body = HealthResponse),
-        (status = 500, description = "Internal error", body = Problem, content_type = PROBLEM_CONTENT_TYPE),
-        (status = 503, description = "The database does not answer", body = Problem, content_type = PROBLEM_CONTENT_TYPE),
+        (status = 500, description = "Internal error", body = Problem, content_type = PROBLEM_CONTENT_TYPE,
+            example = json!(Problem::internal())),
+        (status = 503, description = "The database does not answer", body = Problem, content_type = PROBLEM_CONTENT_TYPE,
+            example = json!(Problem::database_unavailable())),
     )
 )]
 pub async fn get_health(State(state): State<AppState>) -> Result<Json<HealthResponse>, Problem> {
