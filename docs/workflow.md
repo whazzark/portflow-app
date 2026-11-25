@@ -28,7 +28,7 @@ production deployment: started by a human
 | Design | `/design <issue>` | none: the human designs | `design/` | Design PR, merged by the human |
 | Development | `/develop <issue>` | `fullstack-developer`, `devops-engineer` | `plan.md`, code, unit and integration tests | Branch pushed |
 | Test | `/test <issue>` | `qa-engineer` | End-to-end and regression tests, `test-report.md` | Branch pushed, or back to development |
-| Documentation | `/doc <issue>` | `technical-writer` | `docs/user/` | Code PR opened |
+| Documentation | `/doc <issue>` | `technical-writer` | `packages/user-docs/` | Code PR opened |
 | Review | `/review <pr>` | `code-reviewer`, `security-reviewer` | Reports as PR comments | Code PR, merged by the human |
 
 Each skill ends with a handover comment on the issue, whose first line is
