@@ -48,6 +48,21 @@ test('the toolbar switches theme and density without reloading the story', async
   expect(await frame?.evaluate(() => 'notReloaded' in window)).toBe(true)
 })
 
+// On a touch screen the field density is the default, but a density chosen by the
+// document wins: the office density stays reachable on a tablet.
+for (const [density, height] of [
+  ['office', '36px'],
+  ['field', '44px'],
+] as const) {
+  test(`the ${density} density gives controls ${height} high`, async ({ page }) => {
+    await page.goto(
+      `${STORYBOOK_URL}/iframe.html?id=atoms-button--default&viewMode=story&globals=density:${density}`,
+    )
+    await expect(page.locator('html')).toHaveAttribute('data-density', density)
+    await expect(page.getByRole('button', { name: 'Save' })).toHaveCSS('height', height)
+  })
+}
+
 test('the office layout keeps its navigation and its content reachable', async ({ page }) => {
   await openStory(page, 'templates-office-layout--default')
 
