@@ -47,6 +47,7 @@ class CommandLineTests(unittest.TestCase):
             ["fr-coverage", "--issue", "12"],
             ["test-report", "--branch", branch],
             ["setup"],
+            ["setup", "--fix"],
             ["paths", "--branch", branch, "--base", "main"],
         ):
             code, output = self.run_cli(*argv)
