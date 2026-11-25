@@ -381,6 +381,9 @@ importers:
       '@portflow/api':
         specifier: workspace:*
         version: link:../../apps/api
+      '@portflow/design-system':
+        specifier: workspace:*
+        version: link:../design-system
       '@portflow/web':
         specifier: workspace:*
         version: link:../../apps/web
