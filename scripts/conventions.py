@@ -11,6 +11,7 @@ Usage:
   conventions.py commits RANGE
   conventions.py pr --branch NAME --title TITLE --body-file FILE [--template FILE]
   conventions.py specs [--root DIR]
+  conventions.py adrs [--root DIR]
   conventions.py spec-approved (--issue N | --branch NAME) [--ref REF]
   conventions.py design-approved (--issue N | --branch NAME) [--ref REF]
   conventions.py fr-coverage (--issue N | --branch NAME) [--dirs DIR ...]
@@ -24,6 +25,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from checks.adrs import check_adrs
 from checks.branches import PROTECTED_BRANCHES, parse_branch
 from checks.commits import check_commit_msg, check_commits
 from checks.common import Failure, git
@@ -65,6 +67,9 @@ def build_parser():
                    help="pull request template whose checklist must be kept (skipped when missing)")
 
     p = sub.add_parser("specs", help="validate every spec in specs/")
+    p.add_argument("--root", default=".")
+
+    p = sub.add_parser("adrs", help="check that every ADR in docs/adr/ is accepted")
     p.add_argument("--root", default=".")
 
     for name, text in (("spec-approved", "spec gate"), ("design-approved", "design gate")):
@@ -119,6 +124,9 @@ def main(argv=None):
         elif args.command == "specs":
             check_specs(args.root)
             print("ok: specs")
+        elif args.command == "adrs":
+            check_adrs(args.root)
+            print("ok: ADRs")
         elif args.command == "spec-approved":
             print(f"ok: spec gate passed ({check_spec_approved(issue_from_args(args), args.ref)})")
         elif args.command == "design-approved":
