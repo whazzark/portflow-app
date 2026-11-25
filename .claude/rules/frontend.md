@@ -12,7 +12,7 @@ Oxlint, Oxfmt, Vitest, Testing Library, MSW. See `docs/architecture.md`.
 
 ```
 src/
-  app/        bootstrap: providers, router, query client
+  app/        bootstrap: providers, router, query client, pending and error states of a route
   routes/     file-based routes; thin
   features/<context>/
     api/          <context>-query-keys.ts, queryOptions, mutations
@@ -141,10 +141,19 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
   ```
 
   `all()` is the prefix of the domain; the other keys take their parameters (an
-  identifier, filters). The loader prefetches with the `queryOptions`
-  (`void context.queryClient.prefetchQuery(...)`, without waiting, so the page shows its
-  loading state); a loading indicator of a domain reads
+  identifier, filters). A loading indicator of a domain reads
   `useIsFetching({ queryKey: <context>QueryKeys.all() })`; a mutation invalidates with `all()`.
+- Pages load with Suspense. The loader of the route waits for the data the page cannot
+  do without, `await context.queryClient.ensureQueryData(<read>Query())`, and the page
+  reads it with `useSuspenseQuery(<read>Query())`: `data` is always there, and the page
+  has no loading or error branch. The router shows `RoutePending` while a loader waits
+  (after `defaultPendingMs`, 1s, so a fast navigation keeps the previous page) and
+  `RouteError` when it fails, with a retry that runs the loaders again
+  (`src/app/route-states.tsx`, defaults of `createAppRouter`). A route that needs other
+  states declares its own `pendingComponent` or `errorComponent`.
+- A section the page can show without waits in its own `<Suspense>`: its loader starts
+  the read without waiting (`void context.queryClient.prefetchQuery(...)`), and the
+  section reads it with `useSuspenseQuery` inside the boundary.
 - Navigable state (filters, sort, tabs, pagination): the URL.
 - Everything else: local state. No global store. Never copy server data into `useState`.
 - `useEffect` is for synchronising with something outside React, nothing else.
@@ -173,7 +182,8 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 
 ## UX rules
 
-- Handle loading, error and empty states for every read.
+- Handle loading, error and empty states for every read: loading and error through the
+  states of the route or of a `<Suspense>` boundary, empty in the page.
 - A disabled action explains why and how to unblock it.
 - Prefer a visible correction path over a confirmation dialog.
 - Field screens: touch targets of at least 44px, one task per screen.
@@ -184,8 +194,9 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 - Mappers and rules in `model/`: unit tests without rendering.
 - Features: Testing Library through the real router, network mocked with MSW.
   Never mock the API client module. `renderApp(path)` (`src/test/render-app.tsx`)
-  renders the whole app with fresh clients; each test declares the answers it needs
-  with `server.use(...)` (`src/test/server.ts`), and a request without a handler fails.
+  renders the whole app with fresh clients, no retry, and the pending state of a route
+  shown at once; each test declares the answers it needs with `server.use(...)`
+  (`src/test/server.ts`), and a request without a handler fails.
 - Query by role and accessible name. Reference the requirement in the test name: `[12/FR-001] ...`.
 
 ## Commands
