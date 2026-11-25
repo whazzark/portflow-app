@@ -12,8 +12,9 @@ strict, checkable frame.
 Bootstrap. The repository contains the frame (conventions and their checks, guards,
 GitHub templates, agents, skills, rules, architecture decisions) and the empty
 monorepo: workspaces, pinned toolchains, a local PostgreSQL, and CI for conventions
-and for code. There is no application code yet: the crates of the API, the web app,
-the end-to-end suite and `contracts/` arrive with the walking skeletons (#10, #11).
+and for code. The API is a walking skeleton (#10): its four crates, one health
+endpoint, the migrations and the generated contract, with no feature yet. The web app
+and the end-to-end suite arrive with the walking skeleton of the front end (#11).
 
 ## Where things are
 
