@@ -3,9 +3,9 @@ import { expect, type Page, test } from '@playwright/test'
 import { STORYBOOK_URL } from '../constants.ts'
 import { expectNoHorizontalScroll } from '../support/layout.ts'
 
-// The design system (#14, ADR 0019), through its built Storybook: the showcase and the
-// templates are usable at a phone width and at a desktop width. Chore, so no requirement
-// to reference.
+// The design system (#14, ADR 0019), through its built Storybook: the toolbar switches
+// the theme and the density of a story without reloading it, and the templates are
+// usable at a phone width and at a desktop width. Chore, so no requirement to reference.
 
 /** Opens one story alone, as the iframe of Storybook shows it. */
 async function openStory(page: Page, id: string): Promise<void> {
@@ -13,38 +13,39 @@ async function openStory(page: Page, id: string): Promise<void> {
   await expect(page.getByRole('main')).toBeVisible()
 }
 
-test('the showcase shows every part and switches theme and density without reloading', async ({
+test('the toolbar switches theme and density without reloading the story', async ({
   page,
-}) => {
-  await openStory(page, 'showcase-overview--overview')
+}, testInfo) => {
+  // The toolbar is the one of Storybook, not a screen of Portflow: at a phone width
+  // Storybook folds it away. The stories themselves are checked at both widths below.
+  test.skip(testInfo.project.name === 'phone', 'the toolbar of Storybook is a desktop tool')
 
-  for (const section of [
-    'Buttons and badges',
-    'Form controls',
-    'Overlays',
-    'Tabs',
-    'States',
-    'Responsive table',
-  ]) {
-    await expect(page.getByRole('region', { name: section })).toBeVisible()
-  }
-  await expectNoHorizontalScroll(page)
+  await page.goto(`${STORYBOOK_URL}/?path=/story/atoms-button--default`)
+  const story = page.frameLocator('#storybook-preview-iframe')
+  const button = story.getByRole('button', { name: 'Save' })
+  await expect(button).toBeVisible()
 
-  // A mark on the window survives only if the page is not loaded again.
-  await page.evaluate(() => Object.assign(window, { notReloaded: true }))
-  const html = page.locator('html')
+  // A mark on the window of the story survives only if the story is not loaded again.
+  const frame = page.frame({ url: /iframe\.html/ })
+  await frame?.evaluate(() => Object.assign(window, { notReloaded: true }))
+  const html = story.locator('html')
 
-  await page.getByRole('combobox', { name: 'Theme' }).click()
-  await page.getByRole('option', { name: 'contrast' }).click()
+  await page.getByRole('button', { name: /^Theme of the tokens/ }).click()
+  await page
+    .getByRole('listbox', { name: 'Theme of the tokens' })
+    .getByRole('option', { name: 'contrast' })
+    .click()
   await expect(html).toHaveAttribute('data-theme', 'contrast')
 
-  await page.getByRole('combobox', { name: 'Density' }).click()
-  await page.getByRole('option', { name: 'field' }).click()
+  await page.getByRole('button', { name: /^Density of the controls/ }).click()
+  await page
+    .getByRole('listbox', { name: 'Density of the controls' })
+    .getByRole('option', { name: 'field' })
+    .click()
   await expect(html).toHaveAttribute('data-density', 'field')
-  await expect(page.getByRole('button', { name: 'Primary' })).toHaveCSS('height', '44px')
+  await expect(button).toHaveCSS('height', '44px')
 
-  expect(await page.evaluate(() => 'notReloaded' in window)).toBe(true)
-  await expectNoHorizontalScroll(page)
+  expect(await frame?.evaluate(() => 'notReloaded' in window)).toBe(true)
 })
 
 test('the office layout keeps its navigation and its content reachable', async ({ page }) => {

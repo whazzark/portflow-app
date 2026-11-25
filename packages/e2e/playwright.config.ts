@@ -57,7 +57,7 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 60_000,
     },
-    // The built Storybook of the design system (ADR 0019): its templates and showcase.
+    // The built Storybook of the design system (ADR 0019): its toolbar and its templates.
     {
       command: `pnpm --filter @portflow/design-system exec vite preview --outDir storybook-static --host 127.0.0.1 --port ${STORYBOOK_PORT} --strictPort`,
       cwd: REPOSITORY_ROOT,
