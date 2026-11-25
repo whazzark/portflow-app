@@ -54,6 +54,15 @@ These rules are checked by Oxlint (`no-restricted-imports` per folder, in
 `apps/web/.oxlintrc.json`), with `import/no-cycle`. Oxfmt sorts the imports: external
 packages, then `@portflow/*`, then `@/`, then relative.
 
+## Types
+
+- Declare object types with `type`, never `interface`: props, screen types, contexts
+  (`type HealthTableProps = { status: HealthStatus }`).
+- The one exception is a module augmentation (`declare module` ... `interface Register`),
+  which only an interface can merge: disable the rule on that line and say why.
+
+Checked by Oxlint (`typescript/consistent-type-definitions`).
+
 ## Constants
 
 - A fixed value that several files share goes in a `constants.ts`, as an
@@ -78,8 +87,6 @@ packages, then `@portflow/*`, then `@/`, then relative.
   screen needs it and its domain vocabulary can be removed.
 - Pages and large sections connect to data. Leaf components are pure.
 - Do not wrap every `useQuery` in a custom hook. Create a hook when there is logic.
-- The props of a component are a `type`, never an `interface`:
-  `type HealthTableProps = { status: HealthStatus }`.
 
 ## State
 

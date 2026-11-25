@@ -16,6 +16,8 @@ export function createAppRouter(queryClient: QueryClient) {
 }
 
 declare module '@tanstack/react-router' {
+  // Module augmentation merges declarations, which only an interface does.
+  // oxlint-disable-next-line typescript/consistent-type-definitions
   interface Register {
     router: ReturnType<typeof createAppRouter>
   }

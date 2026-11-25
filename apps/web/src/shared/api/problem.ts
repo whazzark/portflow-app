@@ -42,6 +42,8 @@ function isProblem(value: unknown): value is Problem {
 
 // Every read throws an `ApiError` (see `unwrap`): the error of a query is typed so.
 declare module '@tanstack/react-query' {
+  // Module augmentation merges declarations, which only an interface does.
+  // oxlint-disable-next-line typescript/consistent-type-definitions
   interface Register {
     defaultError: ApiError
   }
