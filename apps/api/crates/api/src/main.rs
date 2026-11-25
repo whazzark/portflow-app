@@ -6,12 +6,14 @@
 //! api openapi <file>   write the OpenAPI document to <file>
 //! ```
 //!
-//! Reads `DATABASE_URL` and `API_ADDRESS` from the environment, or from the `.env`
-//! file of the repository.
+//! Reads `DATABASE_URL`, `API_ADDRESS`, `LOG_FORMAT` and `RUST_LOG` from the
+//! environment, or from the `.env` file of the repository. Everything it says goes
+//! through the logs, on the standard output.
 
 use std::env;
 use std::process::ExitCode;
 
+use api::logging::{self, LogFormat};
 use api::state::AppState;
 use infrastructure::database::{self, DatabaseError};
 
@@ -36,6 +38,18 @@ async fn main() -> ExitCode {
     // A missing .env is not an error: the variables may come from the environment.
     let _ = dotenvy::dotenv();
 
+    match LogFormat::from_variable(env::var("LOG_FORMAT").ok().as_deref()) {
+        Ok(format) => logging::init(format),
+        Err(error) => {
+            // The one message that cannot be logged: the logs are not started yet.
+            #[allow(clippy::print_stderr)]
+            {
+                eprintln!("error: {error}");
+            }
+            return ExitCode::FAILURE;
+        }
+    }
+
     let args: Vec<String> = env::args().skip(1).collect();
     let args: Vec<&str> = args.iter().map(String::as_str).collect();
     let result = match args.as_slice() {
@@ -48,7 +62,7 @@ async fn main() -> ExitCode {
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
-            eprintln!("error: {error}");
+            tracing::error!(%error, "command failed");
             ExitCode::FAILURE
         }
     }
@@ -59,7 +73,7 @@ async fn serve() -> Result<(), CommandError> {
     let address = env::var("API_ADDRESS").unwrap_or_else(|_| DEFAULT_ADDRESS.to_owned());
 
     let listener = tokio::net::TcpListener::bind(&address).await?;
-    println!("API listening on http://{address}");
+    tracing::info!(%address, "API listening");
     axum::serve(listener, api::router(AppState::new(pool)))
         .with_graceful_shutdown(shutdown_signal())
         .await?;
@@ -69,13 +83,13 @@ async fn serve() -> Result<(), CommandError> {
 async fn migrate() -> Result<(), CommandError> {
     let pool = database::connect(&database_url()?)?;
     database::migrate(&pool).await?;
-    println!("Migrations applied");
+    tracing::info!("migrations applied");
     Ok(())
 }
 
 fn write_openapi(file: &str) -> Result<(), CommandError> {
     std::fs::write(file, api::openapi::to_json()?)?;
-    println!("OpenAPI document written to {file}");
+    tracing::info!(file, "OpenAPI document written");
     Ok(())
 }
 

@@ -13,6 +13,7 @@ use tower_http::request_id::{
 };
 use tower_http::trace::TraceLayer;
 use tracing::Span;
+use tracing_subscriber::EnvFilter;
 
 /// The header that carries the identifier of a request, in the response.
 const REQUEST_ID: HeaderName = HeaderName::from_static("x-request-id");
@@ -41,7 +42,9 @@ pub fn log_requests(routes: Router) -> Router {
                 .on_failure(()),
         )
         .layer(SetRequestIdLayer::new(REQUEST_ID, MakeRequestUuid))
-        .layer(axum::middleware::map_request(drop_the_identifier_of_the_client))
+        .layer(axum::middleware::map_request(
+            drop_the_identifier_of_the_client,
+        ))
 }
 
 async fn drop_the_identifier_of_the_client(mut request: Request) -> Request {
@@ -80,5 +83,71 @@ fn log_response(response: &Response, duration: Duration, _span: &Span) {
         tracing::error!(status, duration_ms, "request completed");
     } else {
         tracing::info!(status, duration_ms, "request completed");
+    }
+}
+
+/// The level of the logs when `RUST_LOG` is not set, or cannot be read.
+const DEFAULT_LEVEL: &str = "info";
+
+/// How the logs are written: for a person in local development, for a machine elsewhere.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LogFormat {
+    /// One readable line per event.
+    Pretty,
+    /// One JSON object per line.
+    Json,
+}
+
+#[derive(Debug, PartialEq, Eq, thiserror::Error)]
+#[error("LOG_FORMAT is `{0}`: it must be `pretty` or `json`")]
+pub struct UnknownLogFormat(String);
+
+impl LogFormat {
+    /// Reads the value of `LOG_FORMAT`. Without a value the format is JSON: only a
+    /// developer's `.env` asks for the readable one.
+    pub fn from_variable(value: Option<&str>) -> Result<Self, UnknownLogFormat> {
+        match value {
+            None | Some("json") => Ok(Self::Json),
+            Some("pretty") => Ok(Self::Pretty),
+            Some(other) => Err(UnknownLogFormat(other.to_owned())),
+        }
+    }
+}
+
+/// Starts writing the logs to the standard output, at the level of `RUST_LOG`. Call
+/// it once, when the binary starts.
+pub fn init(format: LogFormat) {
+    let level = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(DEFAULT_LEVEL));
+    let logs = tracing_subscriber::fmt().with_env_filter(level);
+
+    match format {
+        LogFormat::Pretty => logs.init(),
+        // The fields of an event at the top of the object, and its request under `span`.
+        LogFormat::Json => logs.json().flatten_event(true).with_span_list(false).init(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_format_is_json_unless_the_variable_asks_for_the_readable_one() {
+        assert_eq!(LogFormat::from_variable(None), Ok(LogFormat::Json));
+        assert_eq!(LogFormat::from_variable(Some("json")), Ok(LogFormat::Json));
+        assert_eq!(
+            LogFormat::from_variable(Some("pretty")),
+            Ok(LogFormat::Pretty)
+        );
+    }
+
+    #[test]
+    fn an_unknown_format_is_refused() {
+        let error = LogFormat::from_variable(Some("xml")).unwrap_err();
+
+        assert_eq!(
+            error.to_string(),
+            "LOG_FORMAT is `xml`: it must be `pretty` or `json`"
+        );
     }
 }
