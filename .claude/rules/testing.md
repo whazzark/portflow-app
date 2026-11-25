@@ -13,6 +13,8 @@ paths:
   agent's, written from the spec and the approved mock-up without reading the
   implementation. They assert what the user sees, through roles and accessible names.
   A regression test reproduces a bug or a gap and stays in the suite.
+- **The end-to-end test of the design system**, `packages/e2e/tests/design-system.spec.ts`,
+  is the `designer` agent's: the design system has no spec to test from.
 - Never change a test you do not own. If a test is wrong, say so in your report.
 
 ## Rules
