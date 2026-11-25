@@ -1,15 +1,31 @@
 import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 import { type ErrorComponentProps, Link, useRouter } from '@tanstack/react-router'
 
+import { Button, buttonVariants } from '@portflow/design-system/atoms/button'
+import {
+  ErrorState,
+  ErrorStateActions,
+  ErrorStateMessage,
+} from '@portflow/design-system/molecules/error-state'
+import {
+  LoadingState,
+  LoadingStateLabel,
+  LoadingStatePlaceholder,
+} from '@portflow/design-system/molecules/loading-state'
+import { PageLayout, PageLayoutTitle } from '@portflow/design-system/templates/page-layout'
+
 import { ApiError } from '@/shared/api/problem'
 import { PAGE_LABELS } from '@/shared/lib/constants'
 
 /** What a route shows while its loader waits for the data of the page. */
 export function RoutePending() {
   return (
-    <main className="mx-auto max-w-xl p-4">
-      <output className="block">{PAGE_LABELS.loading}</output>
-    </main>
+    <PageLayout>
+      <LoadingState>
+        <LoadingStateLabel>{PAGE_LABELS.loading}</LoadingStateLabel>
+        <LoadingStatePlaceholder />
+      </LoadingState>
+    </PageLayout>
   )
 }
 
@@ -28,25 +44,29 @@ export function RouteError({ error }: ErrorComponentProps) {
   }
 
   return (
-    <main className="mx-auto max-w-xl p-4">
-      <div role="alert" className="flex flex-col items-start gap-2">
-        <p>{error instanceof ApiError ? error.label : PAGE_LABELS.unexpectedError}</p>
-        <button type="button" className="min-h-11 rounded border px-4" onClick={retry}>
-          {PAGE_LABELS.retry}
-        </button>
-      </div>
-    </main>
+    <PageLayout>
+      <ErrorState>
+        <ErrorStateMessage>
+          {error instanceof ApiError ? error.label : PAGE_LABELS.unexpectedError}
+        </ErrorStateMessage>
+        <ErrorStateActions>
+          <Button variant="outline" onClick={retry}>
+            {PAGE_LABELS.retry}
+          </Button>
+        </ErrorStateActions>
+      </ErrorState>
+    </PageLayout>
   )
 }
 
 /** What the router shows for a path that matches no route. */
 export function RouteNotFound() {
   return (
-    <main className="mx-auto flex max-w-xl flex-col items-start gap-4 p-4">
-      <h1 className="text-2xl font-semibold">{PAGE_LABELS.notFound}</h1>
-      <Link to="/" className="underline">
+    <PageLayout>
+      <PageLayoutTitle>{PAGE_LABELS.notFound}</PageLayoutTitle>
+      <Link to="/" className={buttonVariants({ variant: 'outline' })}>
         {PAGE_LABELS.home}
       </Link>
-    </main>
+    </PageLayout>
   )
 }

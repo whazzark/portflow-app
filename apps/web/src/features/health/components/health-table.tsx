@@ -1,3 +1,12 @@
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@portflow/design-system/atoms/table'
+
 import { HEALTH_LABELS } from '../constants'
 import type { HealthStatus } from '../model/health'
 
@@ -7,24 +16,28 @@ type HealthTableProps = {
 
 /** Whether each component of the service is up. */
 export function HealthTable({ status }: HealthTableProps) {
-  const rows = [
-    { name: HEALTH_LABELS.service, up: status.serviceUp },
-    { name: HEALTH_LABELS.database, up: status.databaseUp },
-  ]
-
   return (
-    <table className="w-full text-left">
-      <caption className="sr-only">{HEALTH_LABELS.components}</caption>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={row.name} className="border-b last:border-b-0">
-            <th scope="row" className="py-2 pr-4 font-medium">
-              {row.name}
-            </th>
-            <td className="py-2">{row.up ? HEALTH_LABELS.up : HEALTH_LABELS.down}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Table>
+      <TableCaption className="sr-only">{HEALTH_LABELS.components}</TableCaption>
+      <TableBody>
+        <HealthRow name={HEALTH_LABELS.service} up={status.serviceUp} />
+        <HealthRow name={HEALTH_LABELS.database} up={status.databaseUp} />
+      </TableBody>
+    </Table>
+  )
+}
+
+type HealthRowProps = {
+  name: string
+  up: boolean
+}
+
+/** One component of the service and whether it is up. */
+function HealthRow({ name, up }: HealthRowProps) {
+  return (
+    <TableRow>
+      <TableHead scope="row">{name}</TableHead>
+      <TableCell>{up ? HEALTH_LABELS.up : HEALTH_LABELS.down}</TableCell>
+    </TableRow>
   )
 }

@@ -1,5 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 
+import { PageLayout, PageLayoutTitle } from '@portflow/design-system/templates/page-layout'
+
 import { healthQuery } from './api/health-query'
 import { HealthTable } from './components/health-table'
 import { HEALTH_LABELS } from './constants'
@@ -12,9 +14,9 @@ export function HealthPage() {
   const { data: status } = useSuspenseQuery(healthQuery())
 
   return (
-    <main className="mx-auto flex max-w-xl flex-col gap-4 p-4">
-      <h1 className="text-2xl font-semibold">{HEALTH_LABELS.title}</h1>
+    <PageLayout>
+      <PageLayoutTitle>{HEALTH_LABELS.title}</PageLayoutTitle>
       <HealthTable status={status} />
-    </main>
+    </PageLayout>
   )
 }
