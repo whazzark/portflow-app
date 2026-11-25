@@ -94,7 +94,7 @@ Run these yourself; do not rely on the reports of the agents:
 - `python3 scripts/conventions.py paths`: the branch changed only what it may;
 - `git log --oneline origin/main..HEAD`: every `feat(...)` or `fix(...)` commit comes
   after the `test(...)` commit that covers it;
-- no commit of this run touches `e2e/` (`git log --oneline -- e2e/`);
+- no commit of this run touches `packages/e2e/` (`git log --oneline -- packages/e2e/`);
 - `python3 scripts/conventions.py fr-coverage --issue $ARGUMENTS`. A failure does not
   block this stage: list the requirements not covered yet in the handover.
 

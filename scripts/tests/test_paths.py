@@ -19,7 +19,7 @@ class PathTests(unittest.TestCase):
 
     def test_spec_branch(self):
         self.assert_allowed("spec/012-record-weighing", SPEC + "spec.md", "CONTEXT.md", "specs/007-login/spec.md")
-        self.assert_refused("spec/012-record-weighing", SPEC + "spec.md", "apps/api/src/main.rs", "e2e/x.spec.ts", count=2)
+        self.assert_refused("spec/012-record-weighing", SPEC + "spec.md", "apps/api/src/main.rs", "packages/e2e/x.spec.ts", count=2)
         self.assert_refused("spec/012-record-weighing", "docs/workflow.md")
 
     def test_design_branch(self):
@@ -33,7 +33,7 @@ class PathTests(unittest.TestCase):
         self.assert_refused("docs/003-product-discovery", SPEC + "spec.md")
 
     def test_feat_branch_cannot_change_what_was_approved(self):
-        self.assert_allowed("feat/012-record-weighing", "apps/api/src/main.rs", "e2e/weighing.spec.ts",
+        self.assert_allowed("feat/012-record-weighing", "apps/api/src/main.rs", "packages/e2e/weighing.spec.ts",
                             SPEC + "plan.md", SPEC + "test-report.md", "docs/user/pesee.md", "README.md",
                             "contracts/openapi.json", ".github/workflows/ci.yml")
         self.assert_refused("feat/012-record-weighing", SPEC + "spec.md")
@@ -42,7 +42,7 @@ class PathTests(unittest.TestCase):
         self.assert_refused("feat/012-record-weighing", "specs/007-login/spec.md")
 
     def test_fix_branch_has_no_spec_folder(self):
-        self.assert_allowed("fix/031-negative-weight", "apps/api/src/main.rs", "e2e/weighing.spec.ts", "docs/user/pesee.md")
+        self.assert_allowed("fix/031-negative-weight", "apps/api/src/main.rs", "packages/e2e/weighing.spec.ts", "docs/user/pesee.md")
         self.assert_refused("fix/031-negative-weight", SPEC + "spec.md")
         self.assert_refused("fix/031-negative-weight", "specs/031-negative-weight/plan.md")
 

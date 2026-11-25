@@ -1,6 +1,6 @@
 ---
 paths:
-  - "e2e/**"
+  - "packages/e2e/**"
   - "apps/**"
 ---
 
@@ -16,7 +16,7 @@ paths:
   it. `python3 scripts/conventions.py fr-coverage --issue N` must pass on the code
   pull request.
 - **Unit and integration tests** (under `apps/`) are written by the developer.
-- **End-to-end and regression tests** (Playwright, `e2e/`) are written by the QA agent
+- **End-to-end and regression tests** (Playwright, `packages/e2e/`) are written by the QA agent
   from the spec and the approved mock-up, without reading the implementation. They
   assert what the user sees, through roles and accessible names. A regression test
   reproduces a bug or a gap and stays in the suite.
@@ -24,7 +24,7 @@ paths:
   phone width (below the `sm` breakpoint of Tailwind) and at a desktop width (`lg` or
   above), and assert at both that the actions of the
   scenario are reachable and that the page does not scroll horizontally.
-- The developer never changes a file under `e2e/`; the QA agent never changes a test
+- The developer never changes a file under `packages/e2e/`; the QA agent never changes a test
   under `apps/`.
 - **Every requirement has a test at some level.** One that cannot be tested end to end
   (hardware, third party) is covered by a unit or integration test and marked
@@ -33,3 +33,14 @@ paths:
 - **Deterministic.** Unit tests use no real clock, no network and no database.
   Integration and end-to-end tests do, so each one creates the data it needs and
   depends on no other test and on no order.
+
+## Commands
+
+```
+pnpm test                 # every test of every workspace
+pnpm db:up                # local PostgreSQL, for the tests that need it (copy .env.example to .env first)
+pnpm db:down
+```
+
+How to start the whole application for the end-to-end tests, and how a test creates
+its data, arrive with the walking skeleton of the front end (#11).

@@ -15,7 +15,7 @@ spec says, not what the code does.
   requirement: do not test it, report it as a spec problem if the feature needs it.
 - Do NOT read the implementation under `apps/api/crates/` or `apps/web/src/features/`
   before your tests are written. You may read existing tests and test helpers.
-- You write only under `e2e/`. You never modify application code, nor the unit and
+- You write only under `packages/e2e/`. You never modify application code, nor the unit and
   integration tests under `apps/`, which belong to the developer. If the application is wrong, you
   report it; the developer fixes it.
 
@@ -23,13 +23,13 @@ spec says, not what the code does.
 
 1. Derive test cases from every functional requirement, acceptance scenario and edge case
    of the spec. One requirement may need several cases.
-2. End-to-end tests: Playwright tests in `e2e/`, named `[<issue>/FR-<kkk>] <behaviour>`.
+2. End-to-end tests: Playwright tests in `packages/e2e/`, named `[<issue>/FR-<kkk>] <behaviour>`.
    Select elements by role and accessible name, the way a user perceives the screen.
 3. Regression tests: when the work fixes a bug, or when you find a gap, write the
    end-to-end test that reproduces it, named after the requirement it protects. It
    stays in the suite.
 4. Commit your tests (`test(<context>): ...`) before running them.
-5. Run your tests, then the whole existing `e2e/` suite, against the running
+5. Run your tests, then the whole existing `packages/e2e/` suite, against the running
    application. A test of another feature that now fails is a regression: report it
    as a gap, do not touch that test.
 6. A requirement with nothing to see on screen has no end-to-end test. Find the
@@ -46,7 +46,7 @@ line per test. `/test` turns it into `specs/<NNN>-<slug>/test-report.md`. Then:
 - Spec problems: requirements or scenarios that are ambiguous, untestable or contradict each other.
 - What you did not test and why.
 
-On a later run, when tests of the issue already exist under `e2e/`, run them as they
+On a later run, when tests of the issue already exist under `packages/e2e/`, run them as they
 are. Add a test only for a requirement that has none or to reproduce a new gap; do
 not rewrite a test that failed.
 

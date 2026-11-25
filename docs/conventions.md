@@ -157,7 +157,7 @@ fn refuses_a_loaded_weighing_below_the_empty_weighing() { ... }
 test('[12/FR-002] refuses a loaded weighing below the empty weighing', async ({ page }) => { ... })
 ```
 
-Only test files count: everything under `e2e/`, any `tests/` folder, `*.test.ts(x)` and
+Only test files count: everything under `packages/e2e/`, any `tests/` folder, `*.test.ts(x)` and
 `*.spec.ts(x)` files, and Rust files that contain test code (`#[test]`,
 `#[cfg(test)]`). A reference in application code is ignored.
 

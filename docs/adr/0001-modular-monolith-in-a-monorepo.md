@@ -2,6 +2,10 @@
 
 Status: accepted (2026-11-24)
 
+Completed by ADR 0013: `apps/` holds what is deployed, `packages/` the other
+workspaces (end-to-end tests, later the user documentation). The text below is kept
+as it was decided.
+
 ## Context
 
 One developer, one back end, one front end, one site and one operator to serve. A

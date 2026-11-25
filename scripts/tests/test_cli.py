@@ -28,8 +28,8 @@ class CommandLineTests(unittest.TestCase):
         (spec_dir / "spec.md").write_text(support.VALID_SPEC, encoding="utf-8")
         (spec_dir / "design" / "weighing.html").write_text("<html></html>")
         (spec_dir / "test-report.md").write_text(support.VALID_REPORT, encoding="utf-8")
-        e2e = repo / "e2e"
-        e2e.mkdir()
+        e2e = repo / "packages" / "e2e"
+        e2e.mkdir(parents=True)
         (e2e / "weighing.spec.ts").write_text("test('[12/FR-001] a', () => {})\ntest('[12/FR-002] b', () => {})\n")
         (repo / "body.md").write_text(support.VALID_BODY, encoding="utf-8")
         (repo / "msg").write_text("spec(discharges): record a weighing\n")
