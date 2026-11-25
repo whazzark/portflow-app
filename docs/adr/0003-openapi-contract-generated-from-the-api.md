@@ -7,6 +7,9 @@ back-end pull request to merge alone. Contract changes stay backward compatible 
 another reason: a browser tab opened before a deployment runs the previous front end
 against the new API. The text below is kept as it was decided.
 
+Completed by ADR 0015: errors are problems (RFC 9457), and tests check that each
+endpoint documents its responses.
+
 ## Context
 
 The web app must never drift from the API. With two languages there is no shared
