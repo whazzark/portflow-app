@@ -11,6 +11,9 @@ use tower::ServiceExt;
 /// The contract the web app generates its types from.
 const COMMITTED_CONTRACT: &str = include_str!("../../../../contracts/openapi.json");
 
+/// Calls the router directly, not through `support::call`: the routes of the page are
+/// not operations of the OpenAPI document, and the page is HTML, so `call` has no
+/// declared answer to check them against.
 async fn get(pool: PgPool, path: &str) -> Response {
     let request = Request::get(path).body(Body::empty()).unwrap();
     api::router(AppState::new(pool))
