@@ -97,7 +97,9 @@ To browse and try the API from a browser, start it and open `/api/docs` on
 `API_ADDRESS` (`http://127.0.0.1:8080/api/docs` with `.env.example`). The page is
 Swagger UI, served by the API from the same document as `contracts/openapi.json`. It
 is exposed in production too, without authentication: the contract is public, the
-endpoints are protected by their own authentication (decided in #22).
+endpoints are protected by their own authentication (decided in #22). The routes of
+the page are not operations of the document; their errors are problems all the same,
+and `support::call` accepts their answers.
 
 The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
 and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
