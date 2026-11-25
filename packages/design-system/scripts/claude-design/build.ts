@@ -35,7 +35,16 @@ function write(path: string, content: string): void {
 }
 
 function git(...gitArgs: string[]): string {
-  return execFileSync('git', gitArgs, { cwd: PACKAGE, encoding: 'utf8' }).trim()
+  return execFileSync('git', gitArgs, { cwd: PACKAGE, encoding: 'utf8', stdio: 'pipe' }).trim()
+}
+
+/** A git value that may be missing (no user name, no remote): the fallback then. */
+function gitOr(fallback: string, ...gitArgs: string[]): string {
+  try {
+    return git(...gitArgs) || fallback
+  } catch {
+    return fallback
+  }
 }
 
 // --- Tokens -------------------------------------------------------------------------
@@ -293,7 +302,7 @@ function index(via: string, note: string) {
     // Synced from code: read-only in Claude Design, changed through the package.
     editing: 'code',
     lastChange: {
-      by: git('config', 'user.name') || 'Claude',
+      by: gitOr('Claude', 'config', 'user.name'),
       at: new Date().toISOString(),
       via,
       note,
@@ -303,13 +312,24 @@ function index(via: string, note: string) {
 
 // --- Write ----------------------------------------------------------------------------
 
-const repo = git('remote', 'get-url', 'origin')
+const repo = gitOr('portflow', 'remote', 'get-url', 'origin')
   .replace(/^.*github\.com[:/]/, '')
   .replace(/\.git$/, '')
 // The system says which commit of the package it shows: a change not committed would
 // make that a lie.
 if (git('status', '--porcelain', '--', '.') !== '') {
   throw new Error('packages/design-system has changes not committed: commit them, then sync')
+}
+// The published system follows main: with --index (the publishing path), the package must
+// be the one of origin/main. Without it, the build only checks that the files can be made.
+if (args.index) {
+  try {
+    git('diff', '--quiet', 'origin/main', '--', '.')
+  } catch {
+    throw new Error(
+      'packages/design-system differs from origin/main: sync from main (git fetch first)',
+    )
+  }
 }
 const ref = `${git('rev-parse', '--abbrev-ref', 'HEAD')}@${git('rev-parse', '--short', 'HEAD')}`
 const packageRef = git('log', '-1', '--format=%h', '--', '.')
