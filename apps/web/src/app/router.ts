@@ -3,7 +3,7 @@ import { createRouter } from '@tanstack/react-router'
 
 import { routeTree } from '@/routeTree.gen'
 
-import { RouteError, RoutePending } from './route-states'
+import { RouteError, RouteNotFound, RoutePending } from './route-states'
 
 /** The router of the app; the loaders reach the query client through its context. */
 export function createAppRouter(queryClient: QueryClient) {
@@ -15,6 +15,7 @@ export function createAppRouter(queryClient: QueryClient) {
     // with `useSuspenseQuery`: the route shows these states meanwhile and on failure.
     defaultPendingComponent: RoutePending,
     defaultErrorComponent: RouteError,
+    defaultNotFoundComponent: RouteNotFound,
     // A preload, on hovering a link, always runs the loader: `ensureQueryData` then
     // reads the cache of TanStack Query, which decides what is fresh.
     defaultPreloadStaleTime: 0,
