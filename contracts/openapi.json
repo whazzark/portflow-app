@@ -30,6 +30,13 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "code": "INTERNAL_ERROR",
+                  "detail": "The server could not handle the request",
+                  "status": 500,
+                  "title": "Internal Server Error",
+                  "type": "about:blank"
                 }
               }
             }
@@ -40,6 +47,13 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "code": "DATABASE_UNAVAILABLE",
+                  "detail": "The database does not answer",
+                  "status": 503,
+                  "title": "Service Unavailable",
+                  "type": "about:blank"
                 }
               }
             }
