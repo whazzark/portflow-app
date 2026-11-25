@@ -37,8 +37,13 @@ you never approve or merge.
    `#[utoipa::path]` declare the success response with its schema and every error the
    code can answer, each as a problem (ADR 0015)? The tests only see the errors a test
    triggers: an error path without a test and without a declared response is a blocker.
+   Does each declared error carry as its example the problem the handler really
+   answers, built from the code (`example = json!(Problem::...())`) and not typed by
+   hand? The test of the document checks the status code of the example, not its
+   `code`: compare it with what the handler returns.
    Does every HTTP test go through `support::call`, and every handler through the
-   extractors of `api::extract`?
+   extractors of `api::extract`? The routes of the page of `/api/docs` are the only
+   ones served outside the document: a new route that is not an operation is a blocker.
 
 ## Report format
 
