@@ -2,6 +2,9 @@
 
 Status: accepted (2026-11-25)
 
+Completed by ADR 0018: the user documentation is in English. The text below is kept as
+it was decided.
+
 Changes one detail of ADR 0010: the documentation stage writes the user documentation
 in `packages/user-docs/`, not `docs/user/`. Completes ADR 0013, which planned the move
 without naming the folder.

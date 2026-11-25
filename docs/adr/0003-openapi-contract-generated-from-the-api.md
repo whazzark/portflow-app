@@ -15,6 +15,12 @@ The check is a test of each app, run by CI with the other tests: in the API, a t
 compares `contracts/openapi.json` with the code; in the web app, a test regenerates the
 types from the contract and compares them with the committed ones (#11).
 
+Completed by ADR 0016: the contract and the generated types live in the workspace
+`packages/contracts`, and the test of the types belongs to it.
+
+Completed by ADR 0017: the web app uses `openapi-fetch` without `openapi-react-query`,
+with one query key factory per domain.
+
 ## Context
 
 The web app must never drift from the API. With two languages there is no shared

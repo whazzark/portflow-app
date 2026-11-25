@@ -2,8 +2,9 @@
 
 Status: accepted (2026-11-25)
 
-Completed by ADR 0014: the user documentation is in `packages/user-docs/`. The text
-below is kept as it was decided.
+Completed by ADR 0014: the user documentation is in `packages/user-docs/`. Completed
+by ADR 0016: the contract is the workspace `packages/contracts`. The text below is kept
+as it was decided.
 
 Completes ADR 0001, which sets the monorepo and its workspaces without saying where
 the parts that are not an application live, and changes one detail of ADR 0010: the

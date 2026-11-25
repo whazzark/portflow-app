@@ -27,16 +27,16 @@ their own steps, and the documents below are read when the task calls for them.
    front-end work when the spec has `ui_impact: yes`.
 3. **One source of truth.** Behaviour lives in the spec, decisions in ADRs, names in
    `CONTEXT.md`, user-facing labels in the approved mock-ups, the API in
-   `contracts/openapi.json`. Do not duplicate them, and never settle a business rule
-   yourself: ask the human.
+   `packages/contracts/openapi.json`. Do not duplicate them, and never settle a business
+   rule yourself: ask the human.
 4. **Stay in scope.** Change only what the issue asks. Report anything else you notice
    instead of fixing it.
 5. **Say what you did not verify.** Never claim a check passed if you did not run it.
 6. **The frame is not yours to change.** The files of the frame, listed in
    `docs/conventions.md`, change only on a `chore/` branch, on request. Never edit them
    to get past a check.
-7. **Languages.** Everything written to the repository and to GitHub is in English.
-   Two exceptions are in French: the labels the user sees, and `packages/user-docs/`.
-   Talk to the human in French.
+7. **Languages.** Everything written to the repository and to GitHub is in English,
+   the labels the user sees and `packages/user-docs/` included (ADR 0018). Talk to the
+   human in French.
 8. **Small commits.** Commit each change on its own, as you go; never squash or rewrite
    a branch: the pull request is merged by squash.

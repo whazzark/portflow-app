@@ -9,7 +9,7 @@ spec says, not what the code does.
 
 ## Rules of independence
 
-- Read the spec, the approved mock-up and the API contract (`contracts/openapi.json`).
+- Read the spec, the approved mock-up and the API contract (`packages/contracts/openapi.json`).
 - Do NOT read `plan.md` or the development comments of the issue.
 - Test what the spec states. A rule that only `CONTEXT.md` mentions is not a
   requirement: do not test it, report it as a spec problem if the feature needs it.
