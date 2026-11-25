@@ -17,7 +17,7 @@ Usage:
   conventions.py fr-coverage (--issue N | --branch NAME) [--dirs DIR ...]
   conventions.py test-report (--issue N | --branch NAME)
   conventions.py paths [--branch NAME] [--base REF]
-  conventions.py setup
+  conventions.py setup [--fix]
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ from checks.coverage import DEFAULT_TEST_DIRS, check_fr_coverage
 from checks.gates import check_design_approved, check_spec_approved
 from checks.paths import changed_files, check_paths
 from checks.pull_requests import check_pr
-from checks.setup import check_setup
+from checks.setup import HOOKS_PATH, check_setup, fix_setup
 from checks.specs import check_specs, check_test_report_present
 
 
@@ -96,7 +96,9 @@ def build_parser():
     p.add_argument("--branch")
     p.add_argument("--base", default="origin/main")
 
-    sub.add_parser("setup", help="check that the git hooks of the repository are active")
+    p = sub.add_parser("setup", help="check that the git hooks of the repository are active")
+    p.add_argument("--fix", action="store_true",
+                   help=f"set core.hooksPath to {HOOKS_PATH} at the scope git reads, worktree included")
     return parser
 
 
@@ -140,6 +142,10 @@ def main(argv=None):
             count = check_paths(branch, changed_files(args.base))
             print(f"ok: {count} changed file(s) allowed on '{branch}'")
         elif args.command == "setup":
+            if args.fix:
+                scope = fix_setup()
+                if scope:
+                    print(f"fixed: core.hooksPath set to {HOOKS_PATH} at the {scope} scope")
             print(f"ok: git hooks active ({check_setup()})")
         elif args.command == "test-report":
             print(f"ok: {check_test_report_present(args.root, issue_from_args(args))}")
