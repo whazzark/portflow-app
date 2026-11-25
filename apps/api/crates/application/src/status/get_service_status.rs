@@ -15,7 +15,9 @@ impl<P: DatabaseProbe> GetServiceStatus<P> {
     }
 
     pub async fn execute(&self) -> ServiceStatus {
-        todo!()
+        ServiceStatus {
+            database: self.database.check().await,
+        }
     }
 }
 
