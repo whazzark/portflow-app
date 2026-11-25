@@ -7,7 +7,7 @@ from .common import Failure, git
 
 COMMIT_TYPES = (
     "feat", "fix", "spec", "design", "docs", "test",
-    "refactor", "perf", "chore", "ci", "build",
+    "refactor", "perf", "chore", "ci", "build", "style",
 )
 HEADER_RE = re.compile(
     r"^(?P<type>%s)(?:\((?P<scope>[a-z0-9]+(?:-[a-z0-9]+)*)\))?: (?P<desc>\S.*)$"
