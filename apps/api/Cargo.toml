@@ -1,5 +1,7 @@
 # Cargo workspace of the API. The dependency direction of docs/architecture.md is
-# enforced here: each crate declares only the crates it may use.
+# enforced by the manifests: a crate declares another crate of the workspace when it
+# first uses it, and only in that direction. `domain` and `application` stay empty
+# until the first feature.
 [workspace]
 resolver = "3"
 members = ["crates/*"]

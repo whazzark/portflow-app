@@ -10,9 +10,7 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
-application = { path = "../application" }
 axum = "0.8.9"
-domain = { path = "../domain" }
 dotenvy = "0.15.7"
 infrastructure = { path = "../infrastructure" }
 serde = { version = "1.0.229", features = ["derive"] }

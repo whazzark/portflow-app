@@ -1,4 +1,7 @@
 //! `GET /api/health`: whether the service and its database are up.
+//!
+//! A health check has no rule of the business, so it calls `infrastructure`
+//! directly, without a use case or a port.
 
 mod dto;
 
@@ -7,7 +10,7 @@ use axum::Router;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::get;
-use domain::health::ComponentStatus;
+use infrastructure::database;
 
 pub use dto::{ComponentStatusDto, HealthResponse};
 
@@ -28,10 +31,11 @@ pub fn routes() -> Router<AppState> {
     )
 )]
 pub async fn get_health(State(state): State<AppState>) -> (StatusCode, Json<HealthResponse>) {
-    let status = state.get_service_health.execute().await;
-    let code = match status.overall() {
-        ComponentStatus::Up => StatusCode::OK,
-        ComponentStatus::Down => StatusCode::SERVICE_UNAVAILABLE,
+    let database_up = database::ping(&state.pool).await;
+    let code = if database_up {
+        StatusCode::OK
+    } else {
+        StatusCode::SERVICE_UNAVAILABLE
     };
-    (code, Json(HealthResponse::from(status)))
+    (code, Json(HealthResponse::new(database_up)))
 }

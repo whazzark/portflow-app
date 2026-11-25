@@ -21,9 +21,7 @@ checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
 name = "api"
 version = "0.1.0"
 dependencies = [
- "application",
  "axum",
- "domain",
  "dotenvy",
  "http-body-util",
  "infrastructure",
@@ -39,10 +37,6 @@ dependencies = [
 [[package]]
 name = "application"
 version = "0.1.0"
-dependencies = [
- "domain",
- "tokio",
-]
 
 [[package]]
 name = "atoi"
@@ -699,7 +693,6 @@ dependencies = [
 name = "infrastructure"
 version = "0.1.0"
 dependencies = [
- "domain",
  "sqlx",
  "thiserror",
  "tokio",

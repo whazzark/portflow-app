@@ -1,4 +1,3 @@
-use domain::health::{ComponentStatus, ServiceHealth};
 use serde::Serialize;
 use utoipa::ToSchema;
 
@@ -17,20 +16,18 @@ pub struct HealthResponse {
     pub database: ComponentStatusDto,
 }
 
-impl From<ComponentStatus> for ComponentStatusDto {
-    fn from(status: ComponentStatus) -> Self {
-        match status {
-            ComponentStatus::Up => Self::Up,
-            ComponentStatus::Down => Self::Down,
+impl HealthResponse {
+    /// The database is the only component the service depends on, for now.
+    pub fn new(database_up: bool) -> Self {
+        Self {
+            status: ComponentStatusDto::from_up(database_up),
+            database: ComponentStatusDto::from_up(database_up),
         }
     }
 }
 
-impl From<ServiceHealth> for HealthResponse {
-    fn from(status: ServiceHealth) -> Self {
-        Self {
-            status: status.overall().into(),
-            database: status.database.into(),
-        }
+impl ComponentStatusDto {
+    fn from_up(up: bool) -> Self {
+        if up { Self::Up } else { Self::Down }
     }
 }

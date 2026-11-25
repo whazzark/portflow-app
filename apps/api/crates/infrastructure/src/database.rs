@@ -35,3 +35,26 @@ pub fn connect(database_url: &str) -> Result<PgPool, DatabaseError> {
 pub async fn migrate(pool: &PgPool) -> Result<(), DatabaseError> {
     MIGRATOR.run(pool).await.map_err(DatabaseError::Migration)
 }
+
+/// Whether PostgreSQL answers a query. A failure is an answer, not an error: the
+/// health check reports it.
+pub async fn ping(pool: &PgPool) -> bool {
+    sqlx::query("SELECT 1").execute(pool).await.is_ok()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[sqlx::test(migrator = "crate::database::MIGRATOR")]
+    async fn ping_succeeds_when_postgresql_answers(pool: PgPool) {
+        assert!(ping(&pool).await);
+    }
+
+    #[sqlx::test(migrator = "crate::database::MIGRATOR")]
+    async fn ping_fails_when_no_connection_can_be_made(pool: PgPool) {
+        pool.close().await;
+
+        assert!(!ping(&pool).await);
+    }
+}
