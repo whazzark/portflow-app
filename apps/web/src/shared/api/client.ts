@@ -38,5 +38,7 @@ export async function unwrap<Data>(
 // By its name, not its class: the `DOMException` of the `fetch` of Node is not the one
 // of the page under jsdom.
 function isAbortError(error: unknown): boolean {
-  return typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError'
+  return (
+    typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError'
+  )
 }
