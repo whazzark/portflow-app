@@ -113,9 +113,11 @@ never from a branch that changes the package.
    every key of it.
 2. Build, with the path where the read saved it:
    `pnpm --filter @portflow/design-system run build:claude-design --index <path>`.
-   It refuses a package with changes not committed and, with `--index`, a package that
-   differs from `origin/main`: fetch first. It writes
-   `packages/design-system/claude-design/project/` (not committed).
+   It checks before it builds: no change left uncommitted in the package, `origin/main`
+   up to date with GitHub (fetch first), and the package the same as on `origin/main`.
+   Then it empties `packages/design-system/claude-design/` and writes `project/` there
+   (not committed). Without `--index` it builds the same files as a check, with no
+   index: that folder is not published.
 3. Publish that folder to the system's url in one Artifact call: `root` the
    `claude-design` folder, `file_path` its `project/design-system.json`, `files` every
    other file under `project/`, with `contentType` `text/plain` for
