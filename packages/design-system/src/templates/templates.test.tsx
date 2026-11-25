@@ -55,6 +55,20 @@ test('the field layout has the task as its heading and sets the field density', 
   expect(container.firstElementChild).toHaveAttribute('data-density', 'field')
 })
 
+test('the field layout sets the field density on the document while it is shown', () => {
+  // Selects, dialogs and toasts render at the root of the document, outside the layout.
+  document.documentElement.dataset.density = 'office'
+  const { unmount } = render(
+    <FieldLayout>
+      <FieldLayoutContent>Form</FieldLayoutContent>
+    </FieldLayout>,
+  )
+
+  expect(document.documentElement).toHaveAttribute('data-density', 'field')
+  unmount()
+  expect(document.documentElement).toHaveAttribute('data-density', 'office')
+})
+
 test('the page layout is the main content with its heading', () => {
   render(
     <PageLayout>
