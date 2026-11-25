@@ -22,3 +22,16 @@ test('the undo toast says what was done and is undone with the keyboard', async 
   await userEvent.keyboard('{Enter}')
   expect(onUndo).toHaveBeenCalledOnce()
 })
+
+test('options given to the toaster keep the classes of its toasts and of their action', async () => {
+  render(<Toaster toastOptions={{ duration: 60_000 }} />)
+
+  act(() => {
+    showUndoToast({ message: 'Hold closed', undoLabel: 'Undo', onUndo: () => {} })
+  })
+
+  expect(await screen.findByRole('button', { name: 'Undo' })).toHaveClass('h-control!')
+  expect(screen.getByText('Hold closed').closest('[data-sonner-toast]')).toHaveClass(
+    'focus-visible:ring-ring!',
+  )
+})

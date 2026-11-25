@@ -100,8 +100,10 @@ const SOURCES = [
 const RING = /(?<![\w-])(?:[\w-]+:|\[[^\]]*\]:)*(ring|outline)-([^\s'"`;!]+)/g
 const RING_ALLOWED =
   /^(\d+(\.\d+)?|inset|offset-\d+|offset-background|ring|destructive|none|hidden)$/
+// Any chain of variants that holds a focus or highlight state: `focus:`, `dark:focus:`,
+// `group-focus:`, `focus-within:`, `data-highlighted:`, `data-[highlighted]:`, `[&:focus]:`.
 const FOCUS_BACKGROUND =
-  /(?:^|\s|['"`])(?:focus|focus-visible|data-\[highlighted\]):bg-([^\s'"`;!]+)/g
+  /(?:^|\s|['"`])(?:[\w-]+:|\[[^\]]*\]:)*?(?:[\w-]*focus[\w-]*|data-\[?highlighted\]?|\[&:focus[^\]]*\]):(?:[\w-]+:|\[[^\]]*\]:)*bg-([^\s'"`;!]+)/g
 const FOCUS_BACKGROUND_ALLOWED = /^primary$/
 
 test('every focus indicator is drawn with a tested token, opaque', () => {
