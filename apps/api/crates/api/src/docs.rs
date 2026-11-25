@@ -2,7 +2,7 @@
 //! the API from a browser.
 //!
 //! The page reads `/api/docs/openapi.json`, built from the same document as
-//! `contracts/openapi.json`. These routes are not part of the contract.
+//! `packages/contracts/openapi.json`. These routes are not part of the contract.
 
 use axum::Router;
 use axum::http::StatusCode;
