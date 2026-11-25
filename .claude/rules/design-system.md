@@ -19,7 +19,6 @@ src/
   molecules/  generic composites of atoms, with no domain vocabulary
   templates/  page layouts with slots, no data
   lib/        cn
-  showcase.stories.tsx   the overview: every atom and molecule on one page
 scripts/claude-design/   what the sync with Claude Design builds and publishes
 ```
 
@@ -86,8 +85,7 @@ components draw: a new colour adds its pairs there.
 4. Adapt it once: heights on the density tokens (`h-control`), semantic colours, no
    arbitrary value where a token or a step of the scale exists, `type` and function
    declarations (Oxlint), no `"use client"`.
-5. Its tests, its stories, its place in the overview, and its entry for Claude Design
-   (below).
+5. Its tests, its stories, and its entry for Claude Design (below).
 
 ## Claude Design
 
@@ -132,5 +130,7 @@ pnpm --filter @portflow/design-system storybook      # http://127.0.0.1:6006
 pnpm --filter @portflow/design-system run build:claude-design [--index <path>]
 ```
 
-The end-to-end test of the overview and the templates is
-`packages/e2e/tests/design-system.spec.ts`: Playwright serves the built Storybook.
+Storybook is the showcase: its sidebar lists every component, its toolbar switches
+the theme and the density without reloading. The end-to-end test of that toolbar and of
+the templates is `packages/e2e/tests/design-system.spec.ts`: Playwright serves the
+built Storybook.

@@ -28,13 +28,12 @@ A token, a theme, a density, an atom, a molecule or a template to add or change.
 1. Tokens: values in `src/styles/tokens.css`, names in `src/styles/theme.css`, the
    new colour pairs in `src/styles/contrast.test.ts`.
 2. Components, from atoms to templates. For each: its failing test (keyboard, role,
-   accessible name) first, then the component, then its stories, then its place in
-   the overview when it fits on one page.
+   accessible name) first, then the component, then its stories.
 3. Claude Design: the entry of each new or renamed component in
    `scripts/claude-design/entry.ts` and `scripts/claude-design/content.ts`, then
    `build:claude-design` must run without error. You do not publish: the design system
    in Claude Design follows `main`, and `/design` syncs it (`.claude/rules/design-system.md`).
-4. `packages/e2e/tests/design-system.spec.ts` when a template or the overview changes.
+4. `packages/e2e/tests/design-system.spec.ts` when a template is added or changes.
 
 ### Scope
 
