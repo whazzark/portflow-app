@@ -3,15 +3,96 @@ import { expect, type Page, test } from '@playwright/test'
 import { STORYBOOK_URL } from '../constants.ts'
 import { expectNoHorizontalScroll } from '../support/layout.ts'
 
-// The design system (#14, ADR 0019), through its built Storybook: the toolbar switches
-// the theme and the density of a story without reloading it, and the templates are
-// usable at a phone width and at a desktop width. Chore, so no requirement to reference.
+// The design system (#14, ADR 0019), through its built Storybook: every story is usable
+// at a phone width and at a desktop width, the toolbar switches the theme and the
+// density without reloading, and what has the keyboard focus can be seen. Chore, so no
+// requirement to reference.
 
 /** Opens one story alone, as the iframe of Storybook shows it. */
 async function openStory(page: Page, id: string): Promise<void> {
-  await page.goto(`${STORYBOOK_URL}/iframe.html?id=${id}&viewMode=story`)
+  await gotoStory(page, id)
   await expect(page.getByRole('main')).toBeVisible()
 }
+
+async function gotoStory(page: Page, id: string): Promise<void> {
+  await page.goto(`${STORYBOOK_URL}/iframe.html?id=${id}&viewMode=story`)
+}
+
+/** The relative luminance of a computed colour, `rgb(r, g, b)`. */
+function luminance(colour: string): number {
+  const [red = 0, green = 0, blue = 0] = (colour.match(/[\d.]+/g) ?? []).map((value) => {
+    const channel = Number(value) / 255
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+}
+
+/** The WCAG contrast ratio of two computed colours. */
+function contrast(first: string, second: string): number {
+  const [light, dark] = [luminance(first), luminance(second)].toSorted((a, b) => b - a)
+  return ((light ?? 0) + 0.05) / ((dark ?? 0) + 0.05)
+}
+
+test('every story fits the width of the window', async ({ page }) => {
+  const index = await (await page.request.get(`${STORYBOOK_URL}/index.json`)).json()
+  const stories = Object.values(index.entries as Record<string, { id: string; type: string }>)
+    .filter((entry) => entry.type === 'story')
+    .map((entry) => entry.id)
+  expect(stories.length).toBeGreaterThan(0)
+
+  for (const id of stories) {
+    await gotoStory(page, id)
+    await expect(page.locator('#storybook-root')).not.toBeEmpty()
+    await expectNoHorizontalScroll(page)
+  }
+})
+
+test('the option that has the focus in a select can be seen', async ({ page }) => {
+  await gotoStory(page, 'atoms-select--with-label')
+  await page.getByRole('combobox', { name: 'Berth' }).focus()
+  await page.keyboard.press('Enter')
+  await page.keyboard.press('ArrowDown')
+
+  const focused = page.locator('[role=option][data-highlighted]')
+  await expect(focused).toHaveText('South quay')
+  const [option, list] = await focused.evaluate((element) => [
+    getComputedStyle(element).backgroundColor,
+    getComputedStyle(element.closest('[data-slot=select-content]') ?? element).backgroundColor,
+  ])
+  expect(contrast(option ?? '', list ?? '')).toBeGreaterThanOrEqual(3)
+})
+
+test('a tab panel that has the focus shows it', async ({ page }) => {
+  await gotoStory(page, 'atoms-tabs--default')
+  await page.getByRole('tab', { name: 'Holds' }).focus()
+  await page.keyboard.press('Tab')
+
+  const panel = page.getByRole('tabpanel', { name: 'Holds' })
+  await expect(panel).toBeFocused()
+  const style = await panel.evaluate((element) => {
+    const computed = getComputedStyle(element)
+    return { shadow: computed.boxShadow, outline: computed.outlineStyle }
+  })
+  expect(style.shadow !== 'none' || style.outline !== 'none').toBe(true)
+})
+
+test('the action of a toast takes the height of a control', async ({ page }) => {
+  await page.goto(
+    `${STORYBOOK_URL}/iframe.html?id=molecules-undo-toast--default&viewMode=story&globals=density:field`,
+  )
+  await page.getByRole('button', { name: 'Delete the weighing' }).click()
+  await expect(page.getByRole('button', { name: 'Undo' })).toHaveCSS('height', '44px')
+})
+
+// A document that chose no density takes the one of its pointer: the web app sets none.
+test('a page with no density takes the one of the pointer', async ({ page }, testInfo) => {
+  await page.goto('/')
+  await expect(page.locator('html')).not.toHaveAttribute('data-density')
+  const height = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--control-height').trim(),
+  )
+  expect(height).toBe(testInfo.project.name === 'phone' ? '2.75rem' : '2.25rem')
+})
 
 test('the toolbar switches theme and density without reloading the story', async ({
   page,
