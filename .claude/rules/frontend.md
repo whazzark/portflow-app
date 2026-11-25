@@ -87,6 +87,15 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
   screen needs it and its domain vocabulary can be removed.
 - Pages and large sections connect to data. Leaf components are pure.
 - Do not wrap every `useQuery` in a custom hook. Create a hook when there is logic.
+- A component is a function declaration, never an arrow function or a class, and
+  destructures its props in its signature:
+
+  ```tsx
+  export function HealthTable({ status }: HealthTableProps) {
+  ```
+
+  Oxlint checks the declaration (`react/function-component-definition`,
+  `react/prefer-function-component`); the destructuring is checked in review.
 
 ## State
 
