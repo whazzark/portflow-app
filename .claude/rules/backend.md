@@ -42,8 +42,9 @@ The crates, their dependency direction and the bounded contexts are in
 
 ## Contract
 
-- The OpenAPI document is generated from the code into `contracts/openapi.json` and
-  committed. Never edit it by hand.
+- The OpenAPI document is generated from the code into `packages/contracts/openapi.json`
+  (ADR 0016) and committed. Never edit it by hand. After writing it, regenerate the
+  TypeScript types with `pnpm --filter @portflow/contracts generate` and commit them too.
 - A change is backward compatible: a browser tab opened before a deployment still
   runs the previous front end against the new API. Removing or renaming a field takes
   two issues.
@@ -135,7 +136,7 @@ pnpm build --filter @portflow/api          # cargo build --all-targets
 pnpm test --filter @portflow/api           # cargo test; needs pnpm db:up
 pnpm db:up                                 # local PostgreSQL
 pnpm --filter @portflow/api migrate        # apply the pending migrations
-pnpm --filter @portflow/api openapi        # write contracts/openapi.json from the code
+pnpm --filter @portflow/api openapi        # write packages/contracts/openapi.json from the code
 pnpm --filter @portflow/api start          # serve the API on API_ADDRESS
 ```
 
@@ -146,11 +147,12 @@ API and its database are up: 200, or a 503 problem when the database is down.
 
 To browse and try the API from a browser, start it and open `/api/docs` on
 `API_ADDRESS` (`http://127.0.0.1:8080/api/docs` with `.env.example`). The page is
-Swagger UI, served by the API from the same document as `contracts/openapi.json`. It
-is exposed in production too, without authentication: the contract is public, the
-endpoints are protected by their own authentication (decided in #22). The routes of
-the page are not operations of the document; their errors are problems all the same,
-and `support::call` accepts their answers.
+Swagger UI, served by the API from the same document as
+`packages/contracts/openapi.json`. It is exposed in production too, without
+authentication: the contract is public, the endpoints are protected by their own
+authentication (decided in #22). The routes of the page are not operations of the
+document; their errors are problems all the same, and `support::call` accepts their
+answers.
 
 The logs go to the standard output. `LOG_FORMAT` chooses how they are written:
 `pretty`, one readable line per event, which `.env.example` sets for local development;
@@ -162,10 +164,12 @@ response carries the identifier of its request in `x-request-id`: search the log
 
 The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
 and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
-database. A test of `api` fails when `contracts/openapi.json` differs from the code: run
-`openapi` and commit the file. Another one fails when an operation of the document breaks
-the rules of the contract above.
+database. A test of `api` fails when `packages/contracts/openapi.json` differs from the
+code: run `openapi` and commit the file. A test of `@portflow/contracts` then fails until
+the types are generated again. Another one fails when an operation of the document
+breaks the rules of the contract above.
 
 ## Before handing over
 
-Format check, lint and tests pass, and the OpenAPI export produces no diff.
+Format check, lint and tests pass, and neither the OpenAPI export nor the generation
+of the types produces a diff.

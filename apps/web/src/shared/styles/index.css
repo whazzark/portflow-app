@@ -1,0 +1,3 @@
+/* The tokens of the design system (colours, spacing, type, themes, densities) arrive
+   with its foundation (#14). Until then the default theme of Tailwind applies. */
+@import 'tailwindcss';

@@ -19,7 +19,7 @@ spec says, following `.claude/rules/` and the ADRs.
 
 ## Order of work
 
-1. API contract: types and OpenAPI annotations, then regenerate `contracts/openapi.json`.
+1. API contract: types and OpenAPI annotations, then regenerate `packages/contracts/openapi.json`.
 2. Domain: failing tests, then entities, value objects and transitions.
 3. Use cases: failing tests with in-memory fakes, then the orchestration.
 4. Adapters: repository tests against PostgreSQL, then SQL and migrations.

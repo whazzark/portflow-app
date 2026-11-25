@@ -1,5 +1,5 @@
 //! The OpenAPI document, generated from the annotations of the routes (ADR 0003).
-//! `contracts/openapi.json` is its committed copy: `api openapi <file>` writes it.
+//! `packages/contracts/openapi.json` is its committed copy: `api openapi <file>` writes it.
 
 use utoipa::OpenApi;
 
@@ -14,7 +14,7 @@ use utoipa::OpenApi;
 )]
 struct ApiDoc;
 
-/// The OpenAPI document of the API: the one source of `contracts/openapi.json` and of
+/// The OpenAPI document of the API: the one source of `packages/contracts/openapi.json` and of
 /// the page of `/api/docs`. The tests read it to know what each operation declares.
 pub fn document() -> utoipa::openapi::OpenApi {
     let mut document = ApiDoc::openapi();
@@ -23,7 +23,7 @@ pub fn document() -> utoipa::openapi::OpenApi {
     document
 }
 
-/// The OpenAPI document as committed in `contracts/openapi.json`.
+/// The OpenAPI document as committed in `packages/contracts/openapi.json`.
 pub fn to_json() -> Result<String, serde_json::Error> {
     let mut json = document().to_pretty_json()?;
     json.push('\n');
@@ -37,7 +37,7 @@ mod tests {
     use super::*;
     use crate::problem::PROBLEM_CONTENT_TYPE;
 
-    const COMMITTED: &str = include_str!("../../../../../contracts/openapi.json");
+    const COMMITTED: &str = include_str!("../../../../../packages/contracts/openapi.json");
 
     const METHODS: [&str; 8] = [
         "get", "put", "post", "delete", "patch", "head", "options", "trace",
@@ -49,7 +49,7 @@ mod tests {
     fn the_committed_contract_matches_the_code() {
         assert!(
             to_json().unwrap() == COMMITTED,
-            "contracts/openapi.json differs from the code: \
+            "packages/contracts/openapi.json differs from the code: \
              run `pnpm --filter @portflow/api openapi` and commit the result"
         );
     }

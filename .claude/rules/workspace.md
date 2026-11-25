@@ -2,7 +2,8 @@
 paths:
   - "apps/**"
   - "packages/**"
-  - "contracts/**"
+  - ".oxfmtrc.json"
+  - ".env.example"
   - "package.json"
   - "pnpm-workspace.yaml"
   - "turbo.json"
@@ -23,8 +24,9 @@ every workspace.
 pnpm install                         # dependencies of every workspace
 pnpm build
 pnpm lint
-pnpm format:check
+pnpm format:check                    # oxfmt for TypeScript, one config: .oxfmtrc.json
 pnpm test                            # tests that need PostgreSQL read DATABASE_URL
+pnpm test:e2e                        # end-to-end suite: starts the API and the web app
 pnpm db:up                           # local PostgreSQL; copy .env.example to .env first
 pnpm db:down                         # stop it; the data stays in a Docker volume
 pnpm <task> --filter <package>       # one workspace only, e.g. --filter @portflow/api

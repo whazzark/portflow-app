@@ -9,7 +9,7 @@ case "$1" in
   format:check) cargo fmt --all --check ;;
   test) cargo test ;;
   migrate) cargo run --quiet --package api -- migrate ;;
-  openapi) cargo run --quiet --package api -- openapi ../../contracts/openapi.json ;;
+  openapi) cargo run --quiet --package api -- openapi ../../packages/contracts/openapi.json ;;
   start) cargo run --quiet --package api -- serve ;;
   *) echo "apps/api: unknown task $1" >&2; exit 2 ;;
 esac

@@ -7,7 +7,7 @@ use serde_json::Value;
 use crate::support::{Answer, call};
 
 /// The contract the web app generates its types from.
-const COMMITTED_CONTRACT: &str = include_str!("../../../../contracts/openapi.json");
+const COMMITTED_CONTRACT: &str = include_str!("../../../../packages/contracts/openapi.json");
 
 async fn get(pool: PgPool, path: &str) -> Answer {
     call(pool, Request::get(path).body(Body::empty()).unwrap()).await

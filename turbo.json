@@ -11,6 +11,11 @@
     "test": {
       "dependsOn": ["^build"],
       "passThroughEnv": ["DATABASE_URL"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "passThroughEnv": ["DATABASE_URL", "API_ADDRESS", "API_URL", "LOG_FORMAT", "RUST_LOG", "CI"]
     }
   }
 }

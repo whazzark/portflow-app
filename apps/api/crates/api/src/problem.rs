@@ -15,7 +15,7 @@ const ABOUT_BLANK: &str = "about:blank";
 /// The only detail an internal error gives: never its cause.
 const INTERNAL_DETAIL: &str = "The server could not handle the request";
 
-/// The stable identifier of an error. The web app maps each value to a French label:
+/// The stable identifier of an error. The web app maps each value to a label:
 /// a value is never renamed or removed without the two issues of a contract change.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]

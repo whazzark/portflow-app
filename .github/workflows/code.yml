@@ -27,6 +27,7 @@ jobs:
     outputs:
       api: ${{ github.event_name == 'push' || steps.filter.outputs.api == 'true' }}
       web: ${{ github.event_name == 'push' || steps.filter.outputs.web == 'true' }}
+      e2e: ${{ github.event_name == 'push' || steps.filter.outputs.e2e == 'true' }}
     steps:
       - name: Find the parts the pull request touches
         id: filter
@@ -36,7 +37,7 @@ jobs:
           filters: |
             api:
               - 'apps/api/**'
-              - 'contracts/**'
+              - 'packages/contracts/**'
               - 'rust-toolchain.toml'
               - 'package.json'
               - 'pnpm-lock.yaml'
@@ -44,11 +45,24 @@ jobs:
               - '.github/workflows/code.yml'
             web:
               - 'apps/web/**'
-              - 'contracts/**'
+              - 'packages/contracts/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
               - 'turbo.json'
+              - '.oxfmtrc.json'
+              - '.nvmrc'
+              - '.github/workflows/code.yml'
+            e2e:
+              - 'apps/**'
+              - 'packages/contracts/**'
+              - 'packages/e2e/**'
+              - 'rust-toolchain.toml'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - '.oxfmtrc.json'
               - '.nvmrc'
               - '.github/workflows/code.yml'
 
@@ -95,8 +109,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec turbo run format:check lint build test --filter=@portflow/api
 
-  # The end-to-end tests get their own job with the walking skeleton of the front end
-  # (#11): they need the API, PostgreSQL and the web app running together.
+  # The web app and the contract it depends on (`@portflow/web...` takes its dependencies).
   web:
     needs: changes
     if: needs.changes.outputs.web == 'true'
@@ -114,15 +127,63 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # The web app arrives with #11; until then the job checks the install only.
-      - name: Format check, lint, build and test the web app
-        if: hashFiles('apps/web/package.json') != ''
-        run: pnpm exec turbo run format:check lint build test --filter=./apps/web
+      - run: pnpm exec turbo run format:check lint build test --filter=@portflow/web...
+
+  # The end-to-end suite: Playwright starts the API on PostgreSQL and the built web app,
+  # under one origin (packages/e2e/playwright.config.ts).
+  e2e:
+    needs: changes
+    if: needs.changes.outputs.e2e == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The image and the credentials are the ones of the api job: they are not secrets.
+    services:
+      postgres:
+        image: postgres:19.0-alpine
+        env:
+          POSTGRES_USER: portflow
+          POSTGRES_PASSWORD: portflow
+          POSTGRES_DB: portflow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U portflow -d portflow"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+    env:
+      DATABASE_URL: postgres://portflow:portflow@localhost:5432/portflow
+      API_ADDRESS: 127.0.0.1:8080
+      API_URL: http://127.0.0.1:8080
+      LOG_FORMAT: pretty
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the Rust toolchain of rust-toolchain.toml
+        run: rustup toolchain install
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: apps/api -> target
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install the browser of Playwright
+        run: pnpm --filter @portflow/e2e exec playwright install --with-deps chromium
+
+      - run: pnpm exec turbo run format:check lint build test:e2e --filter=@portflow/e2e
 
   # The check to require on main. A skipped job counts as passed: a pull request that
   # touches no code gets a green check without building anything.
   code:
-    needs: [changes, api, web]
+    needs: [changes, api, web, e2e]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

@@ -8,7 +8,7 @@ disable-model-invocation: true
 # /develop <issue>
 
 The deliverables are, on the work branch: `specs/<NNN>-<slug>/plan.md`, the code, its
-unit and integration tests committed before it, and `contracts/openapi.json` up to
+unit and integration tests committed before it, and `packages/contracts/openapi.json` up to
 date. `<NNN>` is the issue number padded to three digits (issue 12 gives `012`).
 
 The work branch is named after the label of the issue: `feat/<NNN>-<slug>` for a

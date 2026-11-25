@@ -10,6 +10,7 @@
     "lint": "turbo run lint",
     "format:check": "turbo run format:check",
     "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
     "db:up": "docker compose up --detach --wait postgres",
     "db:down": "docker compose down"
   },

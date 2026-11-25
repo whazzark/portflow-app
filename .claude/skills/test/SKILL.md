@@ -36,7 +36,7 @@ code. Run it in a fresh session, not in the one that ran `/develop`.
 ## 2. Write and run the tests
 
 Launch the `qa-engineer` agent. Give it the issue number, the spec, the mock-up
-folder when there is one, and `contracts/openapi.json`. Do not give it `plan.md`, the
+folder when there is one, and `packages/contracts/openapi.json`. Do not give it `plan.md`, the
 development comments, or anything you know about the implementation.
 
 - **First run**: it derives the cases from every requirement, acceptance scenario and
