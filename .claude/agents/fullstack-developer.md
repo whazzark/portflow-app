@@ -39,7 +39,8 @@ instances never work in the same checkout at the same time: `front` starts after
 
 ## Hard rules
 
-- Never weaken or delete an existing test to make the build pass. Report it instead.
+- Never weaken or delete an existing test without a reason: give it in your report, for
+  the "Tests" section of the pull request.
 - Reference each covered requirement as `<issue>/FR-<kkk>` in the test.
 - Unit and integration tests under `apps/` are yours, at every layer: domain, use
   cases, repositories against PostgreSQL, HTTP routes, front-end components.

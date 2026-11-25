@@ -165,6 +165,9 @@ Only test files count: everything under `packages/e2e/`, any `tests/` folder, `*
 `*.spec.ts(x)` files, and Rust files that contain test code (`#[test]`,
 `#[cfg(test)]`). A reference in application code is ignored.
 
+`fr-coverage` checks that some test references each requirement, wherever it is. The
+rule that one of them is under `apps/` is in `.claude/rules/testing.md` (not checked).
+
 The code pull request of a feature must cover every functional requirement of its
 spec (`fr-coverage`) and contain the test report (`test-report`).
 
