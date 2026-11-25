@@ -1,7 +1,7 @@
 import { HEALTH_LABELS } from '../constants'
 import type { HealthStatus } from '../model/health'
 
-interface HealthTableProps {
+type HealthTableProps = {
   status: HealthStatus
 }
 

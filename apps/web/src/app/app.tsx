@@ -3,7 +3,7 @@ import { RouterProvider } from '@tanstack/react-router'
 
 import type { createAppRouter } from './router'
 
-interface AppProps {
+type AppProps = {
   queryClient: QueryClient
   router: ReturnType<typeof createAppRouter>
 }

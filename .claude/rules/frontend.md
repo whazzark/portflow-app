@@ -78,6 +78,8 @@ packages, then `@portflow/*`, then `@/`, then relative.
   screen needs it and its domain vocabulary can be removed.
 - Pages and large sections connect to data. Leaf components are pure.
 - Do not wrap every `useQuery` in a custom hook. Create a hook when there is logic.
+- The props of a component are a `type`, never an `interface`:
+  `type HealthTableProps = { status: HealthStatus }`.
 
 ## State
 
