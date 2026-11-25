@@ -117,7 +117,8 @@ PostgreSQL in `compose.yaml`. A local PostgreSQL runs in Docker (`pnpm db:up`).
 - PDF generation in Rust (no ADR yet).
 - Where automated runs execute: the developer's machine or the cloud.
 - Exact crate and library versions; verify maintenance status before pinning.
-- Whether Oxlint's plugin support and Oxfmt are mature enough for the import-boundary
-  rules of ADR 0004.
+- Oxlint and Oxfmt are chosen (ADR 0004); open is whether Oxlint's plugin support
+  can check the import-boundary rules of ADR 0004, and whether Oxfmt is mature
+  enough to rely on. Checked in #11.
 - Hosting, environments and how a deployment is started (no ADR yet).
 - File storage for reports and sending e-mail (no ADR yet).
