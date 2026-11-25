@@ -38,8 +38,9 @@ scripts/claude-design/   what the sync with Claude Design builds and publishes
 
 Semantic names only. Three themes, chosen by `data-theme`: `light` (the default),
 `dark`, and `contrast` for sunlight. Two densities, chosen by `data-density`: `office`
-(the default with a fine pointer) and `field` (the default with a coarse pointer, and
-always inside `FieldLayout`).
+(the default with a fine pointer) and `field` (the default with a coarse pointer when the
+document chose none, and always while a `FieldLayout` is shown: it sets it on the
+document, for the overlays too).
 
 | Token (CSS variable) | Tailwind utility | Use |
 |---|---|---|
@@ -55,6 +56,7 @@ always inside `FieldLayout`).
 | `--control-height` | `h-control`, `size-control` | 36px office, 44px field |
 | `--control-padding-x` | `px-control-x` | Inner padding of a control |
 | `--cell-padding-y` | `py-cell` | Padding of a table cell |
+| (computed) | `-inset-hit` | Hit area of a control smaller than the control height (the checkbox) |
 
 The names shadcn/ui uses (`foreground`, `muted`, `accent`, `destructive`, `input`,
 `card`, `popover`) are bound to these in `theme.css`. The type scale (`text-xs` to
@@ -64,7 +66,8 @@ Tailwind, unchanged.
 
 **Contrast.** In each theme, every text pair reaches 4.5:1, and every control border,
 focus ring and error border 3:1. `src/styles/contrast.test.ts` measures each pair the
-components draw: a new colour adds its pairs there.
+components draw (a new colour adds its pairs there) and refuses a ring drawn with an
+alpha, which would blend below 3:1.
 
 ## Components
 
@@ -95,8 +98,8 @@ private to its owner until shared from its page.
 
 **What it holds.** `scripts/claude-design/` builds it from the package: `tokens.json`
 from the CSS of `src/styles/`, the brand book and one guideline and live preview per
-component (`content.ts`), the cover, an IIFE bundle that assigns `window.Portflow` over
-React 18 (`entry.ts`), its stylesheet and types, and the index. A component added or
+component (`content.ts`), the cover, an IIFE bundle that carries React 19 and assigns
+`window.Portflow` (`entry.ts`), its stylesheet and types, and the index. A component added or
 renamed gets its entry in `content.ts` and `entry.ts`.
 
 **When it is synced.** It follows `main`: `/design` syncs it before drawing a mock-up,
@@ -110,7 +113,8 @@ never from a branch that changes the package.
    every key of it.
 2. Build, with the path where the read saved it:
    `pnpm --filter @portflow/design-system run build:claude-design --index <path>`.
-   It refuses a package with changes not committed. It writes
+   It refuses a package with changes not committed and, with `--index`, a package that
+   differs from `origin/main`: fetch first. It writes
    `packages/design-system/claude-design/project/` (not committed).
 3. Publish that folder to the system's url in one Artifact call: `root` the
    `claude-design` folder, `file_path` its `project/design-system.json`, `files` every
