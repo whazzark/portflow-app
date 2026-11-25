@@ -15,7 +15,8 @@ export function createAppRouter(queryClient: QueryClient) {
     // with `useSuspenseQuery`: the route shows these states meanwhile and on failure.
     defaultPendingComponent: RoutePending,
     defaultErrorComponent: RouteError,
-    // The loaders only prefetch: the cache of TanStack Query decides what is fresh.
+    // A preload, on hovering a link, always runs the loader: `ensureQueryData` then
+    // reads the cache of TanStack Query, which decides what is fresh.
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
   })
