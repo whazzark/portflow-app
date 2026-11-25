@@ -98,6 +98,9 @@ The others (`commits`, `pr`, `test-report`) are in `docs/conventions.md`.
 9. **Languages.** Everything written to the repository and to GitHub is in English:
    code, specs, docs, commits, pull requests, issue comments. Two exceptions are in
    French: the labels the user sees, and `docs/user/`. Talk to the human in French.
+10. **Small commits.** Commit each change on its own, as you go: a rename, a test, a
+    step of the implementation. Never gather a branch into one commit or rewrite its
+    history: the pull request is merged by squash. See `docs/conventions.md`.
 
 ## Workflow entry points
 
