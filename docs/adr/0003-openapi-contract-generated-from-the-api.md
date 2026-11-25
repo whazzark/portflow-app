@@ -10,6 +10,11 @@ against the new API. The text below is kept as it was decided.
 Completed by ADR 0015: errors are problems (RFC 9457), and tests check that each
 endpoint documents its responses.
 
+Completed by #28: CI has no separate step that regenerates the contract and the types.
+The check is a test of each app, run by CI with the other tests: in the API, a test
+compares `contracts/openapi.json` with the code; in the web app, a test regenerates the
+types from the contract and compares them with the committed ones (#11).
+
 ## Context
 
 The web app must never drift from the API. With two languages there is no shared
