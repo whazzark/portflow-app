@@ -123,7 +123,7 @@
       },
       "ProblemCode": {
         "type": "string",
-        "description": "The stable identifier of an error. The web app maps each value to a French label:\na value is never renamed or removed without the two issues of a contract change.",
+        "description": "The stable identifier of an error. The web app maps each value to a label:\na value is never renamed or removed without the two issues of a contract change.",
         "enum": [
           "NOT_FOUND",
           "METHOD_NOT_ALLOWED",

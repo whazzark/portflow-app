@@ -2,8 +2,7 @@ import type { ProblemCode } from './problem'
 
 /**
  * The label shown for each error of the API, keyed by its stable code (ADR 0015): the
- * build breaks when a code of the contract has no label. English for now; the labels
- * of the product come from the approved mock-ups.
+ * build breaks when a code of the contract has no label.
  */
 export const PROBLEM_LABELS: Record<ProblemCode, string> = {
   NOT_FOUND: 'What you asked for does not exist.',

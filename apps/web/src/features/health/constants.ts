@@ -1,4 +1,4 @@
-/** The labels of the health screen. English for now: this screen fixes no product label. */
+/** The labels of the health screen, a technical screen without a mock-up. */
 export const HEALTH_LABELS = {
   title: 'Service health',
   components: 'Components',

@@ -1,4 +1,4 @@
-/** The labels of the states every page shares. English for now: no product label yet. */
+/** The labels of the states every page shares. */
 export const PAGE_LABELS = {
   loading: 'Loading…',
   retry: 'Try again',

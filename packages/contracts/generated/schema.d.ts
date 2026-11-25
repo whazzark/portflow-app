@@ -46,7 +46,7 @@ export interface components {
             type: string;
         };
         /**
-         * @description The stable identifier of an error. The web app maps each value to a French label:
+         * @description The stable identifier of an error. The web app maps each value to a label:
          *     a value is never renamed or removed without the two issues of a contract change.
          * @enum {string}
          */
