@@ -102,9 +102,9 @@ as another adapter next to the session cookie.
 
 Cargo workspaces and pnpm workspaces, orchestrated by Turborepo through thin
 `package.json` scripts. rustfmt and Clippy for Rust; Oxlint and Oxfmt for TypeScript.
-CI filters by path and caches Rust builds: `.github/workflows/code.yml` runs the API
-job and the Node job only for the part a pull request touches, and its `code` check
-always reports.
+CI filters by path and caches Rust builds: `.github/workflows/code.yml` runs the `api`
+and `web` jobs only for the part a pull request touches (an `e2e` job joins them with
+the end-to-end suite), and its `code` check always reports.
 
 The toolchains are pinned in the repository: Rust in `rust-toolchain.toml`, Node in
 `.nvmrc` and `engines`, pnpm in `packageManager`, Turborepo in `package.json`,

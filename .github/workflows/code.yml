@@ -26,7 +26,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       api: ${{ github.event_name == 'push' || steps.filter.outputs.api == 'true' }}
-      node: ${{ github.event_name == 'push' || steps.filter.outputs.node == 'true' }}
+      web: ${{ github.event_name == 'push' || steps.filter.outputs.web == 'true' }}
     steps:
       - name: Find the parts the pull request touches
         id: filter
@@ -42,9 +42,8 @@ jobs:
               - 'pnpm-lock.yaml'
               - 'turbo.json'
               - '.github/workflows/code.yml'
-            node:
+            web:
               - 'apps/web/**'
-              - 'packages/e2e/**'
               - 'contracts/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
@@ -78,9 +77,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec turbo run format:check lint build test --filter=@portflow/api
 
-  node:
+  # The end-to-end tests get their own job with the walking skeleton of the front end
+  # (#11): they need the API, PostgreSQL and the web app running together.
+  web:
     needs: changes
-    if: needs.changes.outputs.node == 'true'
+    if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -94,12 +95,16 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec turbo run format:check lint build test --filter='!@portflow/api'
+
+      # The web app arrives with #11; until then the job checks the install only.
+      - name: Format check, lint, build and test the web app
+        if: hashFiles('apps/web/package.json') != ''
+        run: pnpm exec turbo run format:check lint build test --filter=./apps/web
 
   # The check to require on main. A skipped job counts as passed: a pull request that
   # touches no code gets a green check without building anything.
   code:
-    needs: [changes, api, node]
+    needs: [changes, api, web]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
