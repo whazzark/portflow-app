@@ -8,9 +8,9 @@ import {
 import type { CSSProperties } from 'react'
 import { Toaster as Sonner, type ToasterProps } from 'sonner'
 
+import { cn } from '@portflow/design-system/lib/utils'
+
 // The toasts take the colours of the tokens, so they follow the theme of the page.
-// Sonner styles its action button itself, with a higher specificity: the classes of a
-// control win with `!`, so the action follows the density and draws the focus ring.
 const TOKEN_STYLE = {
   '--normal-bg': 'var(--surface)',
   '--normal-text': 'var(--text)',
@@ -18,11 +18,20 @@ const TOKEN_STYLE = {
   '--border-radius': 'var(--radius-md)',
 } as CSSProperties
 
+// Sonner's stylesheet is outside any CSS layer, so it wins over the layered utilities of
+// Tailwind: these classes are marked `!`. A toast and its list take the focus ring (sonner
+// draws a 20% black band), and the action follows the density.
+const FOCUS_RING = 'focus-visible:ring-3! focus-visible:ring-ring!'
+const CLASS_NAMES = {
+  toast: FOCUS_RING,
+  actionButton: `h-control! rounded-md! bg-primary! px-control-x! text-primary-foreground! ${FOCUS_RING}`,
+}
+
 /** Where the toasts of the app appear: rendered once, near the root. */
-export function Toaster({ ...props }: ToasterProps) {
+export function Toaster({ className, toastOptions, ...props }: ToasterProps) {
   return (
     <Sonner
-      className="toaster group"
+      className={cn('toaster group', FOCUS_RING, className)}
       icons={{
         success: <CircleCheckIcon className="size-4" />,
         info: <InfoIcon className="size-4" />,
@@ -32,9 +41,11 @@ export function Toaster({ ...props }: ToasterProps) {
       }}
       style={TOKEN_STYLE}
       toastOptions={{
+        ...toastOptions,
         classNames: {
-          actionButton:
-            'h-control! rounded-md! bg-primary! px-control-x! text-primary-foreground! focus-visible:ring-3! focus-visible:ring-ring!',
+          ...toastOptions?.classNames,
+          toast: cn(CLASS_NAMES.toast, toastOptions?.classNames?.toast),
+          actionButton: cn(CLASS_NAMES.actionButton, toastOptions?.classNames?.actionButton),
         },
       }}
       {...props}
