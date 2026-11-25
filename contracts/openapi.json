@@ -24,12 +24,22 @@
               }
             }
           },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
           "503": {
             "description": "The database does not answer",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthResponse"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -62,6 +72,51 @@
             "description": "`up` when every component is up."
           }
         }
+      },
+      "Problem": {
+        "type": "object",
+        "description": "The body of every error response of the API.",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ProblemCode"
+          },
+          "detail": {
+            "type": "string",
+            "description": "An explanation in English for the developer, never shown to the user."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The HTTP status code of the response.",
+            "minimum": 0
+          },
+          "title": {
+            "type": "string",
+            "description": "The reason phrase of the status code."
+          },
+          "type": {
+            "type": "string",
+            "description": "Always `about:blank`: `code` identifies the error."
+          }
+        }
+      },
+      "ProblemCode": {
+        "type": "string",
+        "description": "The stable identifier of an error. The web app maps each value to a French label:\na value is never renamed or removed without the two issues of a contract change.",
+        "enum": [
+          "NOT_FOUND",
+          "METHOD_NOT_ALLOWED",
+          "INVALID_REQUEST",
+          "DATABASE_UNAVAILABLE",
+          "INTERNAL_ERROR"
+        ]
       }
     }
   },

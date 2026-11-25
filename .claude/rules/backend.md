@@ -47,12 +47,25 @@ The crates, their dependency direction and the bounded contexts are in
 - A change is backward compatible: a browser tab opened before a deployment still
   runs the previous front end against the new API. Removing or renaming a field takes
   two issues.
+- Every error is a problem (RFC 9457, ADR 0015), built with `api::problem::Problem`
+  and never with another body. A new error gets a new value of `ProblemCode`; a value
+  is never renamed or removed in one issue.
+- Each operation declares, in its `#[utoipa::path]`: its success response with its
+  schema (204 is the only success without one), every error it can answer with
+  `body = Problem, content_type = PROBLEM_CONTENT_TYPE`, and always the 500.
+- The errors of a context are mapped to `Problem` in `api/<context>/error_mapping.rs`.
+  An unexpected error becomes `Problem::internal()`, which carries no cause.
+- A handler takes its body and its parameters through `api::extract` (`JsonBody`,
+  `PathParams`, `QueryParams`), never through the extractors of Axum, whose rejection
+  is plain text.
 
 ## Tests
 
 - Domain and use cases: plain unit tests with in-memory fakes of the ports. No database.
 - Repositories: tests against real PostgreSQL.
-- HTTP: integration tests of the whole router in `apps/api/tests/`.
+- HTTP: integration tests of the whole router in `apps/api/tests/`. Each one calls the
+  API through `support::call`, never the router directly: it fails when the status
+  code is not declared by the operation, or when an error is not a problem.
 - Reference the covered requirement: `// covers 12/FR-001` above the test.
 
 ## Migrations
@@ -78,7 +91,7 @@ pnpm --filter @portflow/api start          # serve the API on API_ADDRESS
 Plain `cargo` commands work too, from `apps/api/`. `DATABASE_URL` and `API_ADDRESS` come
 from the environment or from `.env` (copy `.env.example`). The API does not apply the
 migrations when it starts: run `migrate` first. `GET /api/health` answers whether the
-API and its database are up.
+API and its database are up: 200, or a 503 problem when the database is down.
 
 To browse and try the API from a browser, start it and open `/api/docs` on
 `API_ADDRESS` (`http://127.0.0.1:8080/api/docs` with `.env.example`). The page is
@@ -89,7 +102,8 @@ endpoints are protected by their own authentication (decided in #22).
 The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
 and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
 database. A test of `api` fails when `contracts/openapi.json` differs from the code: run
-`openapi` and commit the file.
+`openapi` and commit the file. Another one fails when an operation of the document breaks
+the rules of the contract above.
 
 ## Before handing over
 
