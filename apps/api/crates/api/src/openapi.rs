@@ -131,7 +131,10 @@ mod tests {
     /// status code and a `code`, not the values a tool invents from the schema.
     fn has_an_example_of_its_problem(status: &str, response: &Value) -> bool {
         let example = &response["content"][PROBLEM_CONTENT_TYPE]["example"];
-        example["status"].to_string() == status && example["code"].is_string()
+        let shows_its_status = example["status"]
+            .as_u64()
+            .is_some_and(|value| Ok(value) == status.parse());
+        shows_its_status && example["code"].is_string()
     }
 
     /// A document with one operation, `GET /trucks`, and the given responses.
