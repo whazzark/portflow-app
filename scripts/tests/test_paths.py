@@ -37,7 +37,7 @@ class PathTests(unittest.TestCase):
     def test_feat_branch_cannot_change_what_was_approved(self):
         self.assert_allowed("feat/012-record-weighing", "apps/api/src/main.rs", "packages/e2e/weighing.spec.ts",
                             SPEC + "plan.md", SPEC + "test-report.md", "packages/user-docs/pesee.md", "README.md",
-                            "contracts/openapi.json", ".github/workflows/ci.yml")
+                            "packages/contracts/openapi.json", ".github/workflows/ci.yml")
         self.assert_refused("feat/012-record-weighing", SPEC + "spec.md")
         self.assert_refused("feat/012-record-weighing", SPEC + "design/a.html")
         self.assert_refused("feat/012-record-weighing", "specs/007-login/plan.md")

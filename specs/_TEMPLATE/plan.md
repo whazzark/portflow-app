@@ -18,7 +18,7 @@
 
 ## Contract
 
-[The changes to `contracts/openapi.json`, and why they are backward compatible. "No change" otherwise.]
+[The changes to `packages/contracts/openapi.json`, and why they are backward compatible. "No change" otherwise.]
 
 ## Decisions
 
