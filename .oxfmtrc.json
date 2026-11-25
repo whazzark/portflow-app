@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/.pnpm/oxfmt@0.80.0/node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "semi": false,
+  "singleQuote": true,
+  "sortImports": {
+    "customGroups": [{ "groupName": "workspace", "elementNamePattern": ["@portflow/**"] }],
+    "groups": [
+      ["builtin", "type-builtin"],
+      ["external", "type-external"],
+      ["workspace"],
+      ["internal", "type-internal"],
+      ["parent", "sibling", "index", "type-parent", "type-sibling", "type-index"],
+      "style",
+      "unknown"
+    ]
+  },
+  "ignorePatterns": [
+    "apps/api/**",
+    "packages/contracts/openapi.json",
+    "packages/contracts/generated/**",
+    "apps/web/src/routeTree.gen.ts",
+    "pnpm-lock.yaml"
+  ]
+}
