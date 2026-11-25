@@ -1,14 +1,25 @@
-import type { ComponentProps } from 'react'
+import { type ComponentProps, useEffect } from 'react'
 
 import { cn } from '@portflow/design-system/lib/utils'
 
 /*
  * The layout of the field screens: one task per screen, its actions kept in reach at
- * the bottom. It sets the field density, so every control inside is a touch target of
- * at least 44px whatever the device.
+ * the bottom. It sets the field density, so every control is a touch target of at least
+ * 44px whatever the device: on its own element, and on the document while it is shown,
+ * for the selects, dialogs and toasts that render at the root.
  */
 
 export function FieldLayout({ className, ...props }: ComponentProps<'div'>) {
+  useEffect(() => {
+    const root = document.documentElement
+    const previous = root.dataset.density
+    root.dataset.density = 'field'
+    return () => {
+      if (previous === undefined) delete root.dataset.density
+      else root.dataset.density = previous
+    }
+  }, [])
+
   return (
     <div
       data-density="field"

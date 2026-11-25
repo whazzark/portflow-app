@@ -22,6 +22,8 @@ const meta = {
   title: 'Templates/Field layout',
   component: FieldLayout,
   parameters: { layout: 'fullscreen' },
+  // The template sets the field density itself; the toolbar shows the same.
+  globals: { density: 'field' },
 } satisfies Meta<typeof FieldLayout>
 
 export default meta
