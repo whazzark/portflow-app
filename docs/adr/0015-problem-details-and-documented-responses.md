@@ -59,5 +59,9 @@ body) were plain text.
   through those of Axum, so that a rejection is a problem.
 - Unknown routes and wrong methods belong to no operation: their 404 and 405 are
   problems, but they are documented nowhere in the OpenAPI document.
+- The routes of the page of `/api/docs`, which shows the document in a browser, belong
+  to no operation either: the page and its files are not part of the contract. Their
+  errors are problems all the same, and the helper of the HTTP tests accepts their
+  other answers. No other route is served outside the document.
 - Adding an error to an endpoint is a change of the annotation, of the contract and of
   the labels of the web app, in the same pull request.
