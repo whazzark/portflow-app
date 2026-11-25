@@ -307,31 +307,58 @@ function index(via: string, note: string) {
   }
 }
 
-// --- Write ----------------------------------------------------------------------------
+// --- Checks, then build -------------------------------------------------------------
 
+// The path of the repository on its host, never the user or the token a remote URL can
+// carry: `https://user:token@host/owner/name.git` and `git@host:owner/name.git` give
+// `owner/name`.
 const repo = gitOr('portflow', 'remote', 'get-url', 'origin')
-  .replace(/^.*github\.com[:/]/, '')
+  .replace(/^[a-z+]+:\/\/(?:[^@/]+@)?[^/]+\//i, '')
+  .replace(/^[^@/]+@[^:]+:/, '')
   .replace(/\.git$/, '')
+
 // The system says which commit of the package it shows: a change not committed would
 // make that a lie.
 if (git('status', '--porcelain', '--', '.') !== '') {
   throw new Error('packages/design-system has changes not committed: commit them, then sync')
 }
+
 // The published system follows main: with --index (the publishing path), the package must
-// be the one of origin/main. Without it, the build only checks that the files can be made.
+// be the one of origin/main, and origin/main the one of GitHub. Without --index, the
+// build only checks that the files can be made, and writes no index: nothing to publish.
 if (args.index) {
+  const remoteMain = gitOr('', 'ls-remote', 'origin', 'refs/heads/main').split(/\s/)[0]
+  if (!remoteMain || remoteMain !== gitOr('', 'rev-parse', 'origin/main')) {
+    throw new Error('origin/main is not the main of GitHub: git fetch origin, then sync')
+  }
   try {
     git('diff', '--quiet', 'origin/main', '--', '.')
   } catch {
-    throw new Error(
-      'packages/design-system differs from origin/main: sync from main (git fetch first)',
-    )
+    throw new Error('packages/design-system differs from origin/main: sync from main')
   }
 }
+
+// Nothing of an earlier build may reach this one: the bundle, the types and the files
+// are made again from an empty folder.
+rmSync(OUT, { recursive: true, force: true })
+execFileSync('pnpm', ['exec', 'vite', 'build', '-c', 'scripts/claude-design/vite.config.ts'], {
+  cwd: PACKAGE,
+  stdio: 'inherit',
+})
+execFileSync(
+  'pnpm',
+  ['exec', 'tsc', '-p', '.', '--noEmit', 'false', '--declaration', '--emitDeclarationOnly'].concat([
+    '--outDir',
+    'claude-design/types',
+  ]),
+  { cwd: PACKAGE, stdio: 'inherit' },
+)
+
+// --- Write ----------------------------------------------------------------------------
+
 const ref = `${git('rev-parse', '--abbrev-ref', 'HEAD')}@${git('rev-parse', '--short', 'HEAD')}`
 const packageRef = git('log', '-1', '--format=%h', '--', '.')
 
-rmSync(PROJECT, { recursive: true, force: true })
 write('README.md', README)
 write('tokens.json', `${JSON.stringify(tokens(ref, packageRef, repo), null, 2)}\n`)
 for (const component of COMPONENTS) {
@@ -342,9 +369,12 @@ write('components/Cover/preview.html', COVER)
 write('components/bundle.js', bundle())
 write('components/bundle.css', readFileSync(join(OUT, 'build', 'bundle.css'), 'utf8'))
 write('components/index.d.ts', declarationsFile())
-write(
-  'design-system.json',
-  `${JSON.stringify(index(`Claude Code · ${repo}@${ref.split('@')[1]}`, `synced from ${ref}, package at ${packageRef}`), null, 2)}\n`,
-)
 
-console.info(`claude-design/project written from ${repo} ${ref}`)
+if (args.index) {
+  const note = `synced from ${ref}, package at ${packageRef}`
+  const published = index(`Claude Code · ${repo}@${ref.split('@')[1]}`, note)
+  write('design-system.json', `${JSON.stringify(published, null, 2)}\n`)
+  console.info(`claude-design/project written from ${repo} ${ref}: ready to publish`)
+} else {
+  console.info(`claude-design/project built from ${ref} as a check: no index, not to publish`)
+}

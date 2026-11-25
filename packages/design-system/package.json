@@ -17,7 +17,7 @@
     "format:check": "oxfmt --check",
     "test": "vitest run",
     "storybook": "storybook dev --port 6006",
-    "build:claude-design": "vite build -c scripts/claude-design/vite.config.ts && tsc -p . --noEmit false --declaration --emitDeclarationOnly --outDir claude-design/types && node scripts/claude-design/build.ts"
+    "build:claude-design": "node scripts/claude-design/build.ts"
   },
   "dependencies": {
     "class-variance-authority": "0.7.1",
