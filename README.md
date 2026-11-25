@@ -37,13 +37,13 @@ scripts/               convention checks and their tests
 | `package.json`, `pnpm-workspace.yaml`, `turbo.json` | The workspaces and the commands that run on all of them |
 | `rust-toolchain.toml`, `.nvmrc` | Pinned versions of Rust and Node; pnpm is pinned in `package.json` |
 | `compose.yaml`, `.env.example` | The local PostgreSQL and the variables it needs |
-| `CLAUDE.md` | What every agent reads first: layout, commands, the rules that always apply |
+| `CLAUDE.md` | What every session loads: the rules that always apply and where to read the others |
 | `CONTEXT.md` | The vocabulary of the domain. Its names are decided; the rules it mentions are notes |
 | `docs/workflow.md` | How an issue goes from spec to merged code, the gates, going back, bugs |
 | `docs/conventions.md` | Branches, commits, pull requests, specs, and how each rule is checked |
 | `docs/architecture.md`, `docs/adr/` | Structure and decisions |
 | `specs/` | One folder per issue; the templates are in `specs/_TEMPLATE/` |
-| `.claude/` | Agents, skills, rules, the two guards and the settings |
+| `.claude/` | Agents, skills, rules (loaded by the files they cover), the two guards and the settings |
 | `.githooks/`, `scripts/`, `.github/` | Git hooks, convention checks and their tests, CI and templates |
 
 ## Setup
@@ -142,9 +142,9 @@ handover comment on the issue. Details and status in `docs/workflow.md`.
 
 ## Changing the frame
 
-The guards, the settings, the git hooks, the convention checks, the conventions
-workflow, the templates and the issue forms change only on a `chore/` branch. It is
-the only kind of branch judged by its own checks, so review it closely.
+The files of the frame, listed in `docs/conventions.md` ("What a branch may change"),
+change only on a `chore/` branch. It is the only kind of branch judged by its own
+checks, so review it closely.
 
 ## First issues to create
 

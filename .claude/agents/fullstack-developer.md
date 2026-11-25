@@ -39,7 +39,8 @@ instances never work in the same checkout at the same time: `front` starts after
 
 ## Hard rules
 
-- Never weaken or delete an existing test to make the build pass. Report it instead.
+- Never weaken or delete an existing test without a reason: give it in your report, for
+  the "Tests" section of the pull request.
 - Reference each covered requirement as `<issue>/FR-<kkk>` in the test.
 - Unit and integration tests under `apps/` are yours, at every layer: domain, use
   cases, repositories against PostgreSQL, HTTP routes, front-end components.
@@ -48,7 +49,7 @@ instances never work in the same checkout at the same time: `front` starts after
   wrong, say so in your report and leave it as it is.
 - If what you build differs from `plan.md`, say so in your report.
 - Never edit `spec.md` or the `design/` folder: if the spec is wrong, report it. Never
-  edit the frame (`.claude/hooks/`, `.githooks/`, `scripts/`, the conventions workflow).
+  edit the frame (listed in `docs/conventions.md`, "What a branch may change").
 - No change outside the issue's scope. List what you noticed in your report.
 - Run the full checks of the area you touched before reporting.
 

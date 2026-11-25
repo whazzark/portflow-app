@@ -98,8 +98,8 @@ Run these yourself; do not rely on the reports of the agents:
 - `python3 scripts/conventions.py fr-coverage --issue $ARGUMENTS`. A failure does not
   block this stage: list the requirements not covered yet in the handover.
 
-If a check fails, send the agent back with the output. Never weaken a test to get
-green. Update `plan.md` when what was built differs from what was planned.
+If a check fails, send the agent back with the output. A test is never weakened to
+get green without a reason written in the handover, for the pull request. Update `plan.md` when what was built differs from what was planned.
 
 ## 5. Hand over
 

@@ -64,8 +64,8 @@ A bug (issue form "Bug", label `fix`) has no spec of its own. Its branch is `fix
 5. `/review <pr>`, then the human reviews and merges.
 
 Chores have no skill: they are done on a `chore/` branch, by hand or on request. It is
-the only kind of branch that may change the frame (guards, checks, conventions
-workflow), and the only one whose own checks run in CI: review it accordingly.
+the only kind of branch that may change the frame (listed in `docs/conventions.md`),
+and the only one whose own checks run in CI: review it accordingly.
 
 ## Status
 
@@ -111,16 +111,14 @@ packages the export.
 
 ## Pull requests of an issue
 
-- Spec and design pull requests use `Refs #12`. The code pull request uses `Closes #12`.
-- The code is one branch and one pull request, `feat/<NNN>-<slug>`, back end and front
-  end together. It is not split: the skills find the work branch from the issue number.
-- The code pull request of a feature contains `test-report.md` and covers every
-  functional requirement. CI checks both.
+Up to three: spec, design, code. The code is one branch and one pull request, back
+end and front end together, never split: the skills find the work branch from the
+issue number. What each pull request must contain is in `docs/conventions.md`.
 
 ## Limits
 
 - Keep at most two features waiting for human review.
-- Three local guards catch mistakes; none is a security boundary:
+- Two Claude Code guards and the git hooks catch mistakes; none is a security boundary:
   - `.claude/hooks/guard_git.py` blocks, in Claude Code sessions, the git and gh
     commands that cross a gate: merging, approving, pushing to or rewriting `main`,
     force pushing, skipping or disabling hooks, starting a workflow, changing
