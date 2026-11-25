@@ -111,11 +111,9 @@ packages the export.
 
 ## Pull requests of an issue
 
-- Spec and design pull requests use `Refs #12`. The code pull request uses `Closes #12`.
-- The code is one branch and one pull request, `feat/<NNN>-<slug>`, back end and front
-  end together. It is not split: the skills find the work branch from the issue number.
-- The code pull request of a feature contains `test-report.md` and covers every
-  functional requirement. CI checks both.
+Up to three: spec, design, code. The code is one branch and one pull request, back
+end and front end together, never split: the skills find the work branch from the
+issue number. What each pull request must contain is in `docs/conventions.md`.
 
 ## Limits
 
