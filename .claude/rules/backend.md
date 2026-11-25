@@ -62,19 +62,28 @@ The crates, their dependency direction and the bounded contexts are in
 ## Commands
 
 From the root of the repository. The toolchain is pinned in `rust-toolchain.toml`.
-Each script runs `apps/api/scripts/cargo.sh`, which skips cargo while the workspace has
-no crate.
+Each script runs `apps/api/scripts/cargo.sh`.
 
 ```
 pnpm format:check --filter @portflow/api   # cargo fmt --all --check
 pnpm lint --filter @portflow/api           # cargo clippy --all-targets -- -D warnings
 pnpm build --filter @portflow/api          # cargo build --all-targets
-pnpm test --filter @portflow/api           # cargo test
-pnpm db:up                                 # local PostgreSQL for the repository tests
+pnpm test --filter @portflow/api           # cargo test; needs pnpm db:up
+pnpm db:up                                 # local PostgreSQL
+pnpm --filter @portflow/api migrate        # apply the pending migrations
+pnpm --filter @portflow/api openapi        # write contracts/openapi.json from the code
+pnpm --filter @portflow/api start          # serve the API on API_ADDRESS
 ```
 
-Plain `cargo` commands work too, from `apps/api/`. The tests that need PostgreSQL read
-`DATABASE_URL` from the environment (see `.env.example`).
+Plain `cargo` commands work too, from `apps/api/`. `DATABASE_URL` and `API_ADDRESS` come
+from the environment or from `.env` (copy `.env.example`). The API does not apply the
+migrations when it starts: run `migrate` first. `GET /api/health` answers whether the
+API and its database are up.
+
+The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
+and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
+database. A test of `api` fails when `contracts/openapi.json` differs from the code: run
+`openapi` and commit the file.
 
 ## Before handing over
 

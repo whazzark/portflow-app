@@ -5,6 +5,9 @@
     "build": "./scripts/cargo.sh build",
     "lint": "./scripts/cargo.sh lint",
     "format:check": "./scripts/cargo.sh format:check",
-    "test": "./scripts/cargo.sh test"
+    "test": "./scripts/cargo.sh test",
+    "migrate": "./scripts/cargo.sh migrate",
+    "openapi": "./scripts/cargo.sh openapi",
+    "start": "./scripts/cargo.sh start"
   }
 }
