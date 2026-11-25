@@ -70,6 +70,55 @@ The crates, their dependency direction and the bounded contexts are in
   code is not declared by the operation, or when an error is not a problem.
 - Reference the covered requirement: `// covers 12/FR-001` above the test.
 
+## Logging
+
+The API logs with `tracing`, on its standard output; whoever hosts it stores the lines.
+The request line is the log of a feature: **a feature adds no log as long as everything
+goes as expected.**
+
+What an event is made of, in both formats:
+
+| Field | Comes from | Content |
+|---|---|---|
+| `timestamp`, `level`, `target` | `tracing` | UTC date, level, Rust module that logs |
+| `message` | the event | A fixed sentence in English, lowercase, with no value in it: `"database ping failed"` |
+| `method`, `path`, `request_id` | the span `request` of `api::logging` | Inherited by every event logged while a request is handled; never repeated by hand. In JSON they are under `span` |
+| `status`, `duration_ms` | the request line only | |
+| `error` | an error event | The `Display` of the error: `tracing::error!(%error, "...")` |
+| anything else | the event | `snake_case`, an identifier named with the words of `CONTEXT.md` (`discharge_id`), never a whole object |
+
+A value goes in a field, never in the message, so that the lines can be filtered and
+counted.
+
+Who writes at each level:
+
+| Level | Means | Written by |
+|---|---|---|
+| `error` | Someone must look: an unexpected technical error | The place where the error stops, once (see below) |
+| `warn` | Abnormal, but absorbed: the user got an answer | The edges only: an adapter of `infrastructure` (a retry, a call slower than a threshold, a fallback), an extractor or a middleware of `api` |
+| `info` | What happened, one line per unit of work | The frame only: the request line (`api::logging`) and the life of the binary (`main.rs`). Never a feature |
+| `debug` | Diagnosis, off by default | Anyone in `api` and `infrastructure` |
+
+Rules:
+
+- A feature never logs a request, or the start or the end of a use case: the request
+  line says it.
+- An expected refusal (validation, policy, illegal state: a 4xx) is not logged: the
+  status code of the request line is enough.
+- An unexpected technical error is logged once, where it stops travelling: in
+  `api/<context>/error_mapping.rs` when it becomes a 5xx, or in the adapter that
+  absorbs it instead of returning it (`database::ping`). The layers it goes through
+  log nothing.
+- What a user did belongs to the activity log of `reporting`, not to these logs.
+- `domain` and `application` do not log and do not depend on `tracing`: they return errors.
+- Never log a credential, a cookie, a header, a query string, a body of a request or
+  of a response, or personal data.
+
+Checked by clippy: `println!`, `eprintln!` and `dbg!` are refused outside tests. Checked
+by `apps/api/tests/http/logging.rs`: the request line, its identifier, and that no
+header, query string or body reaches the logs. The rest is checked by `/review` and by
+the human.
+
 ## Migrations
 
 - A migration that is on `main` is never edited: add a new one.
@@ -102,6 +151,14 @@ is exposed in production too, without authentication: the contract is public, th
 endpoints are protected by their own authentication (decided in #22). The routes of
 the page are not operations of the document; their errors are problems all the same,
 and `support::call` accepts their answers.
+
+The logs go to the standard output. `LOG_FORMAT` chooses how they are written:
+`pretty`, one readable line per event, which `.env.example` sets for local development;
+`json`, one object per line, which is also the format when the variable is not set. Any
+other value stops the API when it starts. `RUST_LOG` sets the level (`error`, `warn`,
+`info`, `debug`) and takes the filters of `tracing`: `RUST_LOG=info,sqlx=debug` shows
+each SQL statement with the identifier of its request. It is `info` when not set. Each
+response carries the identifier of its request in `x-request-id`: search the logs for it.
 
 The migrations are in `apps/api/migrations/`, named `<timestamp>_<description>.sql`,
 and embedded in the binary. Each test marked `#[sqlx::test]` gets a fresh, migrated
