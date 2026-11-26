@@ -52,7 +52,10 @@ export class ApiError extends Error {
 
   /** The text to show to the user. */
   get label(): string {
-    if (this.code !== null) return PROBLEM_LABELS[this.code]
+    if (this.code !== null) {
+      return PROBLEM_LABELS[this.code]
+    }
+
     return this.refused ? REFUSED_LABEL : UNREACHABLE_LABEL
   }
 }
@@ -110,12 +113,20 @@ const TRANSIENT_CODES: ReadonlySet<ProblemCode> = new Set([
  * be reached, or the server failed. Never a request the API refused, nor a bug.
  */
 export function isTransient(error: unknown): boolean {
-  if (!(error instanceof ApiError)) return false
-  if (error.code === null) return !error.refused
+  if (!(error instanceof ApiError)) {
+    return false
+  }
+  if (error.code === null) {
+    return !error.refused
+  }
+
   return TRANSIENT_CODES.has(error.code)
 }
 
-function hasCode(value: unknown): value is { code: string } {
+/** An error body that carries a `code`, known to this build or not. */
+type ErrorWithCode = { code: string }
+
+function hasCode(value: unknown): value is ErrorWithCode {
   return (
     typeof value === 'object' && value !== null && 'code' in value && typeof value.code === 'string'
   )
