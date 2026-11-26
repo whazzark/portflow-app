@@ -2,9 +2,10 @@
 
 Status: accepted (2026-11-26)
 
-Completes ADR 0004 (the web app), ADR 0012 and 0019 (the design system), ADR 0015
-(problem details): a problem can now name the fields of the request it refuses, and
-ADR 0020, which parses the responses with Zod: the forms use the same Zod.
+Completes ADR 0004 (the web app), ADR 0015 (problem details): a problem can now name
+the fields of the request it refuses, and ADR 0020, which parses the responses with
+Zod: the forms use the same Zod. Changes ADR 0012 and 0019 (the design system) on what
+makes a component an atom or a molecule; the rest of those ADRs stands.
 
 ## Context
 
@@ -71,11 +72,10 @@ about an error or a success in its own place. Three things were missing:
   An error set by the API on a field goes away when that field changes.
 - **Success is shown in a toast**, after a form and after an action button alike. Its
   text comes from the approved mock-up.
-- **Toasts** are the `sonner` atom: its `Toaster`, mounted once in `apps/web/src/app/`,
-  and its `showSuccessToast` and `showErrorToast`, which call that one primitive and so
-  belong to its atom, not to a molecule. The web app does not import `sonner`. A
-  success and an error stay the same time, the default of sonner. The toast with undo,
-  `showUndoToast`, moves to the same atom for the same reason.
+- **Toasts** are the `Toaster` of the `sonner` atom, mounted once in
+  `apps/web/src/app/`, and the `toasts` atom: `showSuccessToast`, `showErrorToast` and
+  `showUndoToast`. The web app does not import `sonner`. A success and an error stay
+  the same time, the default of sonner.
 - **Pending state.** While a form is submitted or an action runs, its button is
   disabled, shows a spinner and carries `aria-busy`, so that an action is never sent
   twice (`PendingButton`). The values the user typed stay after a failure.
@@ -92,6 +92,14 @@ about an error or a success in its own place. Three things were missing:
   checks that each refusal of a field it can produce has a code that says it precisely,
   and adds the code in the same pull request otherwise. A business refusal gets its
   own code, not a generic one. A code is never renamed or removed (ADR 0015).
+- **An atom or a molecule.** A component built on one shadcn/ui primitive, or on plain
+  elements, is an atom; a component that assembles several primitives is a molecule.
+  So `pending-button` and `toasts` are atoms, and the former molecules `loading-state`,
+  `empty-state`, `error-state` (plain elements, or the skeleton alone),
+  `responsive-table` (the table alone) and `undo-toast` (sonner alone) become atoms;
+  the form is the one molecule. This changes the levels ADR 0012 and 0019 gave those
+  components, not the rest of those ADRs. What we build on a primitive lives in a file
+  of its own, never in the file the shadcn CLI writes, which can be generated again.
 - **Versions:** `@tanstack/react-form` 1.33.5, pinned, released weeks before this
   decision and maintained; `zod` and `sonner` stay at the versions ADR 0020 and the
   design system pinned.

@@ -115,7 +115,7 @@ pending state of its request.
 
 - \`pending\`: while the action runs, the button is disabled, shows a spinner and says it
   is busy (\`aria-busy\`), so that the action is never sent twice. It keeps its label.
-- Takes the \`variant\` and the \`size\` of \`Button\`, whose atom it belongs to.
+- Takes the \`variant\` and the \`size\` of \`Button\`, which it is built on.
 `,
     `h('div', { className: 'flex flex-wrap gap-2' },
       h(P.PendingButton, { pending: false }, 'Close the hold'),

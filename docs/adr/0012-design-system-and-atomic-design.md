@@ -4,8 +4,9 @@ Status: accepted (2026-11-24)
 
 Changed by ADR 0019: the tokens, atoms, molecules and templates are in the workspace
 `packages/design-system`, not in `apps/web/src/shared/`; Storybook shows them, and the
-design system in Claude Design is generated from that package. The text below is kept
-as it was decided.
+design system in Claude Design is generated from that package. Changed by ADR 0021: a
+component built on one shadcn/ui primitive, or on plain elements, is an atom; a molecule
+assembles several primitives. The text below is kept as it was decided.
 
 Completes ADR 0004, which chooses shadcn/ui and a feature-sliced structure without
 saying how components are layered or where the visual language is decided.
