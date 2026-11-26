@@ -20,7 +20,10 @@ const { fieldContext, formContext, useFieldContext, useFormContext } = createFor
 
 /** Whether the field shows its errors: once it lost the focus, or the form was submitted. */
 function showsErrors(meta: AnyFieldMeta | undefined, submissionAttempts: number): boolean {
-  if (meta === undefined || meta.errors.length === 0) return false
+  if (meta === undefined || meta.errors.length === 0) {
+    return false
+  }
+
   return meta.isBlurred || submissionAttempts > 0
 }
 
@@ -35,6 +38,7 @@ const formValidationLogic: ValidationLogicFn = ({ event, form, validators, runVa
     cause: 'dynamic' as const,
   }
   const clearServerErrors = { fn: () => undefined, cause: 'server' as const }
+
   switch (event.type) {
     case 'blur':
       return runValidation({ form, validators: [schema] })
@@ -46,6 +50,7 @@ const formValidationLogic: ValidationLogicFn = ({ event, form, validators, runVa
     case 'change': {
       const meta = event.fieldName === undefined ? undefined : form.getFieldMeta(event.fieldName)
       const shown = showsErrors(meta, form.state.submissionAttempts)
+
       return runValidation({ form, validators: shown ? [schema] : [] })
     }
     default:
@@ -56,12 +61,27 @@ const formValidationLogic: ValidationLogicFn = ({ event, form, validators, runVa
 /** The text of the first error of a field: a message of the schema, or a label of the API. */
 function firstMessage(errors: Readonly<unknown[]>): string | undefined {
   for (const error of errors.flat()) {
-    if (typeof error === 'string') return error
-    if (typeof error === 'object' && error !== null && 'message' in error) {
-      if (typeof error.message === 'string') return error.message
+    if (typeof error === 'string') {
+      return error
+    }
+    if (hasMessage(error)) {
+      return error.message
     }
   }
+
   return undefined
+}
+
+/** An issue of a Standard Schema, as TanStack Form keeps it: only its message is read. */
+type SchemaIssue = { message: string }
+
+function hasMessage(error: unknown): error is SchemaIssue {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string'
+  )
 }
 
 /** The error the field shows now, if any. */
@@ -69,6 +89,7 @@ function useShownError(): string | undefined {
   const field = useFieldContext<unknown>()
   const meta = useStore(field.store, (state) => state.meta)
   const submissionAttempts = useStore(field.form.store, (state) => state.submissionAttempts)
+
   return showsErrors(meta, submissionAttempts) ? firstMessage(meta.errors) : undefined
 }
 
@@ -78,13 +99,19 @@ const FieldIdsContext = createContext<FieldIds | null>(null)
 
 function useFieldIds(): FieldIds {
   const ids = use(FieldIdsContext)
-  if (ids === null) throw new Error('A part of a field is rendered outside its <field.Field>')
+  if (ids === null) {
+    throw new Error('A part of a field is rendered outside its <field.Field>')
+  }
+
   return ids
 }
 
 /** One field of a form: its label, its input and its error, one under the other. */
-function Field({ className, ...props }: ComponentProps<'div'>) {
+type FieldProps = ComponentProps<'div'>
+
+function Field({ className, ...props }: FieldProps) {
   const id = useId()
+
   return (
     <FieldIdsContext value={{ input: `${id}-input`, error: `${id}-error` }}>
       <div className={cn('flex flex-col gap-2', className)} {...props} />
@@ -93,15 +120,21 @@ function Field({ className, ...props }: ComponentProps<'div'>) {
 }
 
 /** The label of the field, bound to its input. */
-function FieldLabel(props: ComponentProps<typeof Label>) {
+type FieldLabelProps = ComponentProps<typeof Label>
+
+function FieldLabel(props: FieldLabelProps) {
   const { input } = useFieldIds()
+
   return <Label htmlFor={input} {...props} />
 }
 
 // An error the server set on a field is about the value it was sent: it goes away as
 // soon as the value changes.
 function clearServerError(field: AnyFieldApi) {
-  if (field.state.meta.errorMap.onServer === undefined) return
+  if (field.state.meta.errorMap.onServer === undefined) {
+    return
+  }
+
   field.setMeta((meta) => ({ ...meta, errorMap: { ...meta.errorMap, onServer: undefined } }))
 }
 
@@ -111,6 +144,7 @@ function FieldInput({ className, ...props }: FieldInputProps) {
   const field = useFieldContext<string>()
   const ids = useFieldIds()
   const error = useShownError()
+
   return (
     <Input
       id={ids.input}
@@ -143,9 +177,12 @@ function NumberInput(props: FieldInputProps) {
 }
 
 /** The error of the field, under it, read out when it appears. Empty while there is none. */
-function FieldError({ className, ...props }: Omit<ComponentProps<'p'>, 'children'>) {
+type FieldErrorProps = Omit<ComponentProps<'p'>, 'children'>
+
+function FieldError({ className, ...props }: FieldErrorProps) {
   const { error } = useFieldIds()
   const message = useShownError()
+
   return (
     <p
       id={error}
@@ -162,13 +199,17 @@ function FieldError({ className, ...props }: Omit<ComponentProps<'p'>, 'children
  * The form element. Submitting runs the schema, then the `onSubmit` of the form; the
  * browser does not validate on its own.
  */
-function Form({ className, ...props }: Omit<ComponentProps<'form'>, 'onSubmit'>) {
+type FormProps = Omit<ComponentProps<'form'>, 'onSubmit'>
+
+function Form({ className, ...props }: FormProps) {
   const form = useFormContext()
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     event.stopPropagation()
     void form.handleSubmit()
   }
+
   return (
     <form
       noValidate
@@ -180,9 +221,12 @@ function Form({ className, ...props }: Omit<ComponentProps<'form'>, 'onSubmit'>)
 }
 
 /** The button that submits the form: disabled, with a spinner, while the form is sent. */
-function SubmitButton(props: Omit<ComponentProps<typeof PendingButton>, 'pending' | 'type'>) {
+type SubmitButtonProps = Omit<ComponentProps<typeof PendingButton>, 'pending' | 'type'>
+
+function SubmitButton(props: SubmitButtonProps) {
   const form = useFormContext()
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting)
+
   return <PendingButton type="submit" pending={isSubmitting} {...props} />
 }
 

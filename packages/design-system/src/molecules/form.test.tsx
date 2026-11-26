@@ -18,16 +18,23 @@ const schema = z.object({
 
 type Values = z.input<typeof schema>
 
-type SubmitProps = {
-  onSubmit: (props: { value: Values; formApi: { setErrorMap: (map: object) => void } }) => unknown
+/** What the test reads of the form when it is submitted. */
+type SubmittedForm = {
+  value: Values
+  formApi: { setErrorMap: (map: object) => void }
 }
 
-function TestForm({ onSubmit }: SubmitProps) {
+type SubmitHandler = (form: SubmittedForm) => unknown
+
+type TestFormProps = { onSubmit: SubmitHandler }
+
+function TestForm({ onSubmit }: TestFormProps) {
   const form = useAppForm({
     defaultValues: { name: '', tonnage: '' } satisfies Values,
     validators: { onDynamic: schema },
     onSubmit,
   })
+
   return (
     <form.AppForm>
       <form.Form aria-label="Weighing">
@@ -55,8 +62,9 @@ function TestForm({ onSubmit }: SubmitProps) {
   )
 }
 
-function renderForm(onSubmit: SubmitProps['onSubmit'] = () => {}) {
+function renderForm(onSubmit: SubmitHandler = () => {}) {
   render(<TestForm onSubmit={onSubmit} />)
+
   return {
     name: screen.getByRole('textbox', { name: 'Name' }),
     tonnage: screen.getByRole('textbox', { name: 'Tonnage' }),
@@ -103,7 +111,7 @@ test('an error goes away as soon as the field is corrected', async () => {
 
 test('submitting shows the errors of every field and sends nothing', async () => {
   const user = userEvent.setup()
-  const onSubmit = vi.fn<SubmitProps['onSubmit']>()
+  const onSubmit = vi.fn<SubmitHandler>()
   const { name, tonnage, save } = renderForm(onSubmit)
 
   await user.click(save)
@@ -119,7 +127,7 @@ test('the submit button cannot be pressed again while the form is sent', async (
   const sent = new Promise<void>((done) => {
     resolve = done
   })
-  const onSubmit = vi.fn<SubmitProps['onSubmit']>(() => sent)
+  const onSubmit = vi.fn<SubmitHandler>(() => sent)
   const { name, tonnage, save } = renderForm(onSubmit)
   await user.type(name, 'Hold 1')
   await user.type(tonnage, '12')

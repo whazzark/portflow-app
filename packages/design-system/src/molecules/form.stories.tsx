@@ -16,15 +16,18 @@ const schema = z.object({
     .pipe(z.number({ error: 'Enter a number' }).positive('Enter a weight above zero')),
 })
 
+type WeighingValues = z.input<typeof schema>
+
 function WeighingForm() {
   const form = useAppForm({
-    defaultValues: { truck: '', tonnage: '' } satisfies z.input<typeof schema>,
+    defaultValues: { truck: '', tonnage: '' } satisfies WeighingValues,
     validators: { onDynamic: schema },
     onSubmit: async () => {
       await new Promise((done) => setTimeout(done, 1500))
       showSuccessToast('Weighing recorded')
     },
   })
+
   return (
     <form.AppForm>
       <form.Form aria-label="Weighing" className="max-w-sm">
