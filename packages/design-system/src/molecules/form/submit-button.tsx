@@ -1,7 +1,7 @@
 import { useStore } from '@tanstack/react-form'
 import type { ComponentProps } from 'react'
 
-import { PendingButton } from '@portflow/design-system/molecules/pending-button'
+import { PendingButton } from '@portflow/design-system/atoms/button'
 
 import { useFormContext } from './contexts'
 

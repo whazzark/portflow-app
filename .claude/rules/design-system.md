@@ -78,8 +78,8 @@ alpha, which would blend below 3:1.
 
 | Level | Files |
 |---|---|
-| Atoms | `button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`, `showSuccessToast`, `showErrorToast`), `skeleton`, `badge`, `table`, `tabs`, `tooltip` |
-| Molecules | `loading-state`, `empty-state`, `error-state`, `undo-toast`, `pending-button`, `form/` (`use-app-form`: `useAppForm` and its field family, ADR 0021), `responsive-table` |
+| Atoms | `button` (and `PendingButton`), `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`, `showSuccessToast`, `showErrorToast`), `skeleton`, `badge`, `table`, `tabs`, `tooltip` |
+| Molecules | `loading-state`, `empty-state`, `error-state`, `undo-toast`, `form/` (`use-app-form`: `useAppForm` and its field family, ADR 0021), `responsive-table` |
 | Templates | `page-layout`, `office-layout`, `field-layout` |
 
 ## Adding or changing an atom
