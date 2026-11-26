@@ -84,7 +84,8 @@ breaks the build.
 
 The web app calls the API through `openapi-fetch`, typed by those types, and reads it
 with TanStack Query: one `queryOptions` per read, its key from the key factory of its
-domain (ADR 0017).
+domain (ADR 0017). Each read parses the answer with a Zod schema written by hand, whose
+input is bound to the generated type, so the cache holds parsed values (ADR 0019).
 
 Every error is a problem (RFC 9457) with a stable `code`, and each endpoint documents
 its success response and every error it can answer (ADR 0015).
