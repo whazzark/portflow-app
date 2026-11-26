@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Title: `Design system: <result>`, for example `Design system: review the UI of the button`. No type prefix: the label carries it.
-        A style issue is worked by `/style` on a `style/` branch, which may change only `packages/design-system/`, its end-to-end test `packages/e2e/tests/design-system.spec.ts`, `pnpm-lock.yaml`, and the imports of `apps/web/` when a public name changes. Anything else is a chore or a feature.
+        A style issue is worked by `/style` on a `style/` branch, which may change only `packages/design-system/`, its end-to-end test `packages/e2e/tests/design-system.spec.ts` and `pnpm-lock.yaml`. Anything else, the consumers of a renamed public name in `apps/web/` included, is a chore or a feature.
   - type: input
     id: subject
     attributes:
