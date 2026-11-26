@@ -37,7 +37,7 @@ A failure is a blocker. Continue the review anyway.
 
 - **`spec/` or `design/`**: stop here. Report the result of the conventions. The spec
   was already challenged and reviewed for security by `/spec`; the human reviews it.
-- **`feat/`, `fix/` or `chore/`**: continue.
+- **`feat/`, `fix/`, `style/` or `chore/`**: continue.
 
 ## 4. Test report
 
