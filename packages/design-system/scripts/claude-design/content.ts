@@ -23,7 +23,9 @@ again. When the two differ, the code is right.
 ## Principles
 
 - **Semantic tokens only.** A component names what a colour is for (\`surface\`,
-  \`text-muted\`, \`primary\`, \`danger\`), never a raw colour, spacing or font size.
+  \`text-muted\`, \`primary\`, \`danger\`), and the role of a type, radius or shadow
+  (\`text-section-title\`, \`rounded-card\`, \`shadow-overlay\`), never a raw colour or a
+  step of a scale. The raw scales stay only until every component has moved.
 - **Three themes, one set of names.** \`light\` is the default, \`dark\` for dim rooms,
   \`contrast\` for field screens in sunlight: black on white, strong borders. A theme
   changes values, never components.
@@ -42,12 +44,17 @@ again. When the two differ, the code is right.
 ## Visual foundations
 
 - **Colour.** Neutral slate surfaces and ink; one blue for primary actions and links;
-  red, green and amber only for danger, success and warning. Every text pair reaches
-  4.5:1 and every control border and focus ring 3:1, in the three themes.
+  red, green and amber only for danger, success and warning; a cyan for neutral
+  information, never read as an action. Every text pair reaches 4.5:1 and every control
+  border and focus ring 3:1, in the three themes.
 - **Type.** The system typeface of the device, no web font to load on a weak network.
-  Body text 16px (14px in dense tables), headings semibold.
-- **Shape.** Small radii (4 to 8px), hairline borders between rows, soft shadows only on
-  what floats (dialogs, menus, toasts).
+  Eight roles, each with its size, line height and weight: \`page-title\`,
+  \`task-title\` and \`section-title\` (semibold); \`body\`, \`control\` and \`label\`
+  (medium), 14px in the office density and 16px in the field density; \`caption\` and
+  \`badge\` (medium), 12px.
+- **Shape.** Small radii by role (\`item\` 4px, \`control\` and \`overlay\` 6px, \`card\`
+  8px, \`pill\` for badges), hairline borders between rows, soft shadows only on what
+  stands above the page (\`control\`, \`raised\`, \`overlay\`, \`dialog\`).
 - **Spacing.** The 4px scale of Tailwind. Control heights and table row padding come
   from the density.
 
