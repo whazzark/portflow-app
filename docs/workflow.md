@@ -9,7 +9,7 @@ issue
   |  spec, security review of the spec
   v
 spec PR        spec/<NNN>-<slug>        -- gate 1: human merges -->  spec approved
-  |  /design (only if ui_impact: yes), run by the human
+  |  /design (only if ui_impact: yes): brief and mock-up by the designer agent
   v
 design PR      design/<NNN>-<slug>      -- gate 2: human merges -->  design approved
   |  development, tests, documentation, review
@@ -25,7 +25,7 @@ production deployment: started by a human
 | Stage | Skill | Agents | Deliverable | Ends with |
 |---|---|---|---|---|
 | Spec | `/spec <issue>` | `product-owner`, `security-reviewer` | `spec.md` | Spec PR, merged by the human |
-| Design | `/design <issue>` | none: the human designs | `design/` | Design PR, merged by the human |
+| Design | `/design <issue>` | `designer` | `brief.md`, the mock-up in Claude Design and its export in `design/` | Design PR, merged by the human |
 | Development | `/develop <issue>` | `fullstack-developer`, `devops-engineer` | `plan.md`, code, unit and integration tests | Branch pushed |
 | Test | `/test <issue>` | `qa-engineer` | End-to-end and regression tests, `test-report.md` | Branch pushed, or back to development |
 | Documentation | `/doc <issue>` | `technical-writer` | `packages/user-docs/` | Code PR opened |
@@ -100,14 +100,16 @@ work branch (`plan.md`, `test-report.md`). No session keeps state the next one n
 |---|---|---|
 | `product-owner` | Discovery and spec | Read-only |
 | `security-reviewer` | Spec review, then review of the code pull request | Read-only |
-| `fullstack-developer` | Development, unit and integration tests first | Writes code and the tests under `apps/` |
+| `designer` | Design stage, and design-system issues | Writes `packages/design-system/` and its end-to-end test, and the brief and the mock-up export in `specs/<NNN>-<slug>/design/` |
+| `fullstack-developer` | Development, unit and integration tests first | Writes code and the tests under `apps/`; uses the design system, never edits it |
 | `devops-engineer` | Development, when `infra_impact` is yes | Writes CI and infrastructure files |
 | `qa-engineer` | End-to-end and regression tests, from the spec and the mock-up | Writes under `packages/e2e/` only, does not read the implementation first |
 | `technical-writer` | Documentation, once the tests are green | Writes documentation |
 | `code-reviewer` | Review of the code pull request | Read-only |
 
-Mock-ups are made by the human in Claude Design; `/design` prepares the brief and
-packages the export.
+The `designer` agent draws the mock-up in Claude Design, from the Portflow design
+system, which is generated from `packages/design-system` (ADR 0019). The human reviews
+it, asks for changes or makes them, and merges the design pull request: gate 2 is theirs.
 
 ## Pull requests of an issue
 

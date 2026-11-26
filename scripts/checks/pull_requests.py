@@ -16,7 +16,7 @@ TITLE_TYPES_BY_BRANCH = {
     "feat": {"feat"},
     "fix": {"fix"},
     "docs": {"docs"},
-    "chore": {"chore", "ci", "build", "refactor", "test", "perf"},
+    "chore": {"chore", "ci", "build", "refactor", "test", "perf", "style"},
 }
 
 PR_SECTIONS = [

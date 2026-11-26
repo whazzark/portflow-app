@@ -3,3 +3,7 @@ packages:
   - packages/*
 
 engineStrict: true
+
+# esbuild (through Storybook) works from its platform package: its install script is not run.
+allowBuilds:
+  esbuild: false

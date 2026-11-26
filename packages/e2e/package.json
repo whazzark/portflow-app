@@ -11,6 +11,7 @@
   "devDependencies": {
     "@playwright/test": "1.65.1",
     "@portflow/api": "workspace:*",
+    "@portflow/design-system": "workspace:*",
     "@portflow/web": "workspace:*",
     "@types/node": "26.6.6",
     "oxfmt": "0.80.0",

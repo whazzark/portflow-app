@@ -1,0 +1,93 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import", "react", "jsx-a11y", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "ignorePatterns": ["storybook-static/**", "claude-design/**"],
+  "rules": {
+    "import/no-cycle": "error",
+    "react/react-in-jsx-scope": "off",
+    "import/no-unassigned-import": [
+      "error",
+      {
+        "allow": ["**/*.css", "@testing-library/jest-dom/vitest"]
+      }
+    ],
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "function-declaration",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "react/prefer-function-component": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "regex": "^\\.\\./",
+            "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../"
+          },
+          {
+            "regex": "^@portflow/(web|api|contracts|e2e)(/|$)",
+            "message": "The design system imports no other workspace of Portflow: it carries no data and no domain vocabulary (ADR 0012, ADR 0019)"
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/atoms/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^\\.\\./",
+                "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../"
+              },
+              {
+                "regex": "^@portflow/(web|api|contracts|e2e)(/|$)",
+                "message": "The design system imports no other workspace of Portflow: it carries no data and no domain vocabulary (ADR 0012, ADR 0019)"
+              },
+              {
+                "regex": "^@portflow/design-system/(molecules|templates)(/|$)",
+                "message": "Atoms import the tokens and lib only (ADR 0012)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/molecules/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^\\.\\./",
+                "message": "Import another folder of the package by its name, @portflow/design-system/..., not with ../"
+              },
+              {
+                "regex": "^@portflow/(web|api|contracts|e2e)(/|$)",
+                "message": "The design system imports no other workspace of Portflow: it carries no data and no domain vocabulary (ADR 0012, ADR 0019)"
+              },
+              {
+                "regex": "^@portflow/design-system/templates(/|$)",
+                "message": "Molecules import atoms, never templates (ADR 0012)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
