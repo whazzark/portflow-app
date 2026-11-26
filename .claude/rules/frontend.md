@@ -65,7 +65,9 @@ packages, then `@portflow/*`, then `@/`, then relative.
 - A read-only array is `ReadonlyArray<T>`, never `readonly T[]`; a mutable one is `T[]`,
   never `Array<T>`.
 
-Checked by Oxlint (`typescript/consistent-type-definitions`, `typescript/array-type`).
+Checked by Oxlint (`typescript/consistent-type-definitions`, `typescript/array-type`;
+the second one in every TypeScript workspace, the end-to-end tests and the contracts
+included).
 
 ## Constants
 
