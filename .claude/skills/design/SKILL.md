@@ -86,10 +86,11 @@ commits on the branch:
   - the UX rules of `.claude/rules/frontend.md` that apply.
 - the mock-up, a Design artifact in Claude Design, exported into
   `specs/<NNN>-<slug>/design/mockup/`.
-- the review of the mock-up, before it is delivered: `impeccable critique` and
-  `ux-copy` on the export (`.claude/agents/designer.md`, "UX review skills"). The agent
-  changes the mock-up for what needs no decision and reports the other findings, each
-  with its severity. They propose, the human decides.
+- the review of the mock-up, before it is delivered: `ui-consistency`, `impeccable
+  critique` and `ux-copy` on the export (`.claude/agents/designer.md`, "UX review
+  skills"). The agent changes the mock-up for what needs no decision and reports the
+  other findings, each with its severity, and the questions `ui-consistency` raises on
+  patterns that are not written down. They propose, the human decides.
 
 ## 4. Check
 
@@ -102,10 +103,10 @@ Run these yourself; do not rely on the report of the agent:
   the merge.
 - `python3 scripts/conventions.py specs` and `python3 scripts/conventions.py paths`.
 - No commit of this run touches anything outside `specs/<NNN>-<slug>/`.
-- Review: the report of the agent gives the findings of `impeccable critique` and of
-  `ux-copy` on the latest export, those it fixed and those left to the human. If the
-  review did not run, or ran before the last export, send the agent back: the pull
-  request is not opened before the review.
+- Review: the report of the agent gives the findings of `ui-consistency`, of
+  `impeccable critique` and of `ux-copy` on the latest export, those it fixed and those
+  left to the human. If the review did not run, or ran before the last export, send the
+  agent back: the pull request is not opened before the review.
 
 If a check fails, send the agent back with the output.
 
@@ -120,7 +121,7 @@ at the end of the section. Commit `design(<context>): link the mock-up`.
 - Push. Title `design(<context>): <screen name>`, without any number, body from
   `.github/pull_request_template.md` with `Refs #$ARGUMENTS`. The summary gives the link
   of the mock-up, the labels to confirm, the gaps of the design system and the
-  findings of the review left to the human. Sections
+  findings of the review and the questions of `ui-consistency` left to the human. Sections
   that do not apply contain `N/A`. In the checklist, the two items about tests are
   ticked: a design pull request changes no test and no code.
 - Validate title and body with `python3 scripts/conventions.py pr`, then create the
@@ -135,8 +136,9 @@ at the end of the section. Commit `design(<context>): link the mock-up`.
 Post one comment on the issue with `gh issue comment`. Its first line is
 `## Handover: design`. Then: the link of the pull request and of the mock-up, the
 scenario-to-artboard table, the labels to confirm, the gaps of the design system, the
-findings of the review (`impeccable critique` and `ux-copy`: those fixed, and those left
-to the human with their severity), any change made to the spec, the scenarios with no matching state, and the commands run
+findings of the review (`ui-consistency`, `impeccable critique` and `ux-copy`: those
+fixed, and those left to the human with their severity, with where each is and the
+rule it breaks), the questions of `ui-consistency` on patterns not written down, any change made to the spec, the scenarios with no matching state, and the commands run
 with their real result.
 
 Then stop and report the same to the human, who reviews the mock-up and merges, or asks

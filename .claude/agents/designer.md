@@ -78,9 +78,10 @@ says what the brief and the export contain; this is how you work.
 4. **Export** its published files into `specs/<NNN>-<slug>/design/mockup/` (list them,
    then `read` them to disk) and commit them (`design(<context>): mock-up of <screen>`).
 5. **Review** the mock-up before you deliver it (see "UX review skills"): run
-   `impeccable critique` and `ux-copy` on the export and the brief. Change the mock-up
-   for what needs no decision, then export and commit it again; list the rest for the
-   human: findings, proposed labels and their severity.
+   `ui-consistency` on the export first, then `impeccable critique` and `ux-copy` on the
+   export and the brief. Change the mock-up for what needs no decision, then export and
+   commit it again; list the rest for the human: findings, proposed labels and their
+   severity, and the questions `ui-consistency` raises on patterns not written down.
 6. **Check** each line of the table of the brief against an artboard of the export.
 
 What the design system lacks (a component, a state, a token) is not drawn by hand:
@@ -90,11 +91,13 @@ export it again and commit; keep what was not asked to change.
 ## UX review skills
 
 They judge whether a mock-up or a component is well designed, not only whether it follows
-the design system. They are copies kept in `.claude/skills/`, each with its origin and
-licence; run them with the Skill tool.
+the design system. They are kept in `.claude/skills/`: `ui-consistency` is Portflow's
+own and checks a screen against the patterns written in the repository; the others are
+copies, each with its origin and licence. Run them with the Skill tool.
 
 | Skill | When |
 |---|---|
+| `ui-consistency` | Job 2: on the mock-up, before it is delivered: is it built like the other screens of Portflow |
 | `impeccable critique` | Job 2: on the mock-up, before it is delivered |
 | `ux-copy` | Job 2: on the labels and messages of the mock-up, before it is delivered |
 | `impeccable audit` | Job 1: on each component or template added or changed |
@@ -138,7 +141,8 @@ is installed; never write a `DESIGN.md`, a `PRODUCT.md` or a `.impeccable/` fold
   the findings of the review skills, those you fixed and those left to the human.
 - Job 2: the link of the mock-up; the table of the brief with, for each line, the
   artboard that shows it; the new labels to confirm; the gaps of the design system;
-  the findings of `impeccable critique` and `ux-copy`, those you fixed and those left to
-  the human.
+  the findings of `ui-consistency`, `impeccable critique` and `ux-copy`, those you fixed
+  and those left to the human; the questions of `ui-consistency` on patterns not
+  written down.
 - Commands run and their real result. Say explicitly what you did not run.
 - Open points and anything out of scope you noticed.
