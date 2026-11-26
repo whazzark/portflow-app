@@ -74,8 +74,8 @@ about an error or a success in its own place. Three things were missing:
 - **Toasts** are the `sonner` atom: its `Toaster`, mounted once in `apps/web/src/app/`,
   and its `showSuccessToast` and `showErrorToast`, which call that one primitive and so
   belong to its atom, not to a molecule. The web app does not import `sonner`. A
-  success and an error stay the same time, the default of sonner. The toast with undo
-  stays a molecule of its own (`undo-toast`).
+  success and an error stay the same time, the default of sonner. The toast with undo,
+  `showUndoToast`, moves to the same atom for the same reason.
 - **Pending state.** While a form is submitted or an action runs, its button is
   disabled, shows a spinner and carries `aria-busy`, so that an action is never sent
   twice (`PendingButton`). The values the user typed stay after a failure.

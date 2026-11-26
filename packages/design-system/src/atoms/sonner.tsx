@@ -56,6 +56,23 @@ export function Toaster({ className, style, toastOptions, ...props }: ToasterPro
   )
 }
 
+type UndoToast = {
+  /** What was just done, such as "Weighing deleted". */
+  message: string
+  /** The label of the action, such as "Undo". */
+  undoLabel: string
+  onUndo: () => void
+}
+
+/**
+ * Tells that an action was done and offers to undo it for a few seconds: a visible
+ * correction path rather than a confirmation dialog. Needs the `Toaster`, rendered once
+ * near the root.
+ */
+export function showUndoToast({ message, undoLabel, onUndo }: UndoToast) {
+  return toast(message, { action: { label: undoLabel, onClick: onUndo } })
+}
+
 /**
  * Tells that an action went well: a form was saved, an action button did its job. The
  * text comes from the approved mock-up. Needs the `Toaster`, rendered once near the root.

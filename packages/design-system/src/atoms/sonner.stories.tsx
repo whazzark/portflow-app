@@ -2,7 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { toast } from 'sonner'
 
 import { Button } from '@portflow/design-system/atoms/button'
-import { showErrorToast, showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
+import {
+  showErrorToast,
+  showSuccessToast,
+  showUndoToast,
+  Toaster,
+} from '@portflow/design-system/atoms/sonner'
 
 const meta = {
   title: 'Atoms/Toast',
@@ -29,5 +34,21 @@ export const Kinds: Story = {
         Error
       </Button>
     </div>
+  ),
+}
+
+export const Undo: Story = {
+  render: (args) => (
+    <>
+      <Toaster {...args} />
+      <Button
+        variant="destructive"
+        onClick={() =>
+          showUndoToast({ message: 'Weighing deleted', undoLabel: 'Undo', onUndo: () => {} })
+        }
+      >
+        Delete the weighing
+      </Button>
+    </>
   ),
 }
