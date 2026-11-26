@@ -6,6 +6,7 @@ import { expect, test, vi } from 'vitest'
 import { Toaster } from '@portflow/design-system/atoms/sonner'
 import {
   showErrorToast,
+  showInfoToast,
   showSuccessToast,
   showUndoToast,
 } from '@portflow/design-system/atoms/toasts'
@@ -35,6 +36,19 @@ test('an error toast says what went wrong', async () => {
   expect(
     screen.getByText('The service cannot be reached.').closest('[data-sonner-toast]'),
   ).toHaveAttribute('data-type', 'error')
+})
+
+test('an info toast gives a piece of information', async () => {
+  render(<Toaster />)
+
+  act(() => {
+    showInfoToast('The weighbridge restarts at 14:00.')
+  })
+
+  expect(await screen.findByText('The weighbridge restarts at 14:00.')).toBeVisible()
+  expect(
+    screen.getByText('The weighbridge restarts at 14:00.').closest('[data-sonner-toast]'),
+  ).toHaveAttribute('data-type', 'info')
 })
 
 test('the undo toast says what was done and is undone with the keyboard', async () => {
