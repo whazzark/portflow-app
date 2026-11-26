@@ -17,7 +17,7 @@ const TOKEN_STYLE = {
   '--normal-bg': 'var(--surface)',
   '--normal-text': 'var(--text)',
   '--normal-border': 'var(--border-strong)',
-  '--border-radius': 'var(--radius-md)',
+  '--border-radius': 'var(--radius-overlay)',
   '--success-bg': 'var(--success)',
   '--success-border': 'var(--success)',
   '--success-text': 'var(--toaster-success-text)',
@@ -62,7 +62,7 @@ const COLOURED_ACTION = [
 ].join(' ')
 const CLASS_NAMES = {
   toast: FOCUS_RING,
-  actionButton: `h-control! rounded-md! bg-primary! px-control-x! text-primary-foreground! ${COLOURED_ACTION} ${INNER_FOCUS_RING}`,
+  actionButton: `h-control! rounded-control! bg-primary! px-control-x! text-primary-foreground! ${COLOURED_ACTION} ${INNER_FOCUS_RING}`,
   // Sonner turns the close button light grey on hover, whatever the colour of its text:
   // it keeps the colours of its toast instead.
   closeButton: `hover:bg-inherit! hover:border-inherit! ${INNER_FOCUS_RING}`,
