@@ -6,12 +6,12 @@ import {
   ErrorState,
   ErrorStateActions,
   ErrorStateMessage,
-} from '@portflow/design-system/molecules/error-state'
+} from '@portflow/design-system/atoms/error-state'
 import {
   LoadingState,
   LoadingStateLabel,
   LoadingStatePlaceholder,
-} from '@portflow/design-system/molecules/loading-state'
+} from '@portflow/design-system/atoms/loading-state'
 import { PageLayout, PageLayoutTitle } from '@portflow/design-system/templates/page-layout'
 
 import { ApiError } from '@/shared/api/problem'

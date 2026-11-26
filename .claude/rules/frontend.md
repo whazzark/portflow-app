@@ -48,7 +48,7 @@ file that declares what you need.
 - Generated API types stay inside `api/` and `model/`. Components, pages and routes use
   screen types and never import `@portflow/contracts` or `shared/api`.
 - Components, pages and routes import the design system file by file:
-  `@portflow/design-system/atoms/button`, `.../molecules/error-state`,
+  `@portflow/design-system/atoms/button`, `.../atoms/error-state`,
   `.../templates/page-layout`. Its own order (atoms, molecules, templates) is checked
   in the package.
 

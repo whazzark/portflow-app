@@ -8,10 +8,10 @@ import {
   ResponsiveTableHead,
   ResponsiveTableHeader,
   ResponsiveTableRow,
-} from '@portflow/design-system/molecules/responsive-table'
+} from '@portflow/design-system/atoms/responsive-table'
 
 const meta = {
-  title: 'Molecules/Responsive table',
+  title: 'Atoms/Responsive table',
   component: ResponsiveTable,
 } satisfies Meta<typeof ResponsiveTable>
 
