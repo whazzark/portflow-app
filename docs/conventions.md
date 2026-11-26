@@ -8,7 +8,7 @@ human. Do not add a rule here without saying how it is checked.
 ## Issues
 
 Created only through the forms in `.github/ISSUE_TEMPLATE/`: feature, bug, chore,
-documentation, epic. Blank issues are disabled in GitHub. A feature is one user action
+documentation, style, epic. Blank issues are disabled in GitHub. A feature is one user action
 and becomes one spec; the "user stories" of a spec are the slices of that action.
 
 - Title: `<Area>: <result>`, in English, without a type prefix (not checked).
@@ -19,6 +19,7 @@ and becomes one spec; the "user stories" of a spec are the slices of that action
   | Bug | `<Area>: <what is wrong>` | `Weighings: net tonnage is wrong after a correction` |
   | Chore | `<Area>: <result>` | `CI: cache the Rust builds` |
   | Documentation | `<Area>: <result>` | `README: describe the setup of an existing repository` |
+  | Style | `Design system: <result>` | `Design system: review the UI of the button` |
   | Epic | The user activity of the story map | `Rotations and weighings` |
 
 - The area is a part of the product in the words of `CONTEXT.md`, or a part of the
@@ -32,6 +33,7 @@ and becomes one spec; the "user stories" of a spec are the slices of that action
   | `fix` | Bug | `fix/` |
   | `chore` | Chore | `chore/` |
   | `docs` | Documentation, product discovery | `docs/` |
+  | `style` | Style: the visual layer of the design system | `style/` |
   | `epic` | Epic | None: it groups features |
 
   The labels must exist in the repository. The skills read the label to name the
@@ -54,6 +56,7 @@ issue 12 gives `spec/012-record-weighing`. Issues above 999 keep their digits.
 | `fix` | Bug fix |
 | `chore` | Tooling, CI, refactoring, dependencies |
 | `docs` | Documentation and product discovery |
+| `style` | The visual layer of the design system: its tokens, themes and densities, and the look of its atoms, molecules and templates |
 
 Slug: lowercase kebab-case. `main` is protected: no direct commit, no direct push.
 
@@ -66,6 +69,7 @@ Slug: lowercase kebab-case. `main` is protected: no direct commit, no direct pus
 | `docs/` | `docs/`, `packages/user-docs/`, `README.md`, `CONTEXT.md` |
 | `feat/` | Everything except `specs/`, where it adds only `plan.md` and `test-report.md` to the folder of its issue |
 | `fix/` | Everything except `specs/` |
+| `style/` | `packages/design-system/`, `packages/e2e/tests/design-system.spec.ts`, `pnpm-lock.yaml`, and `apps/web/`, where it changes only the imports of a renamed public name (not checked) |
 | `chore/` | Everything |
 
 On every branch but `chore/`, the frame is read-only (`paths`, from the list in
@@ -112,7 +116,8 @@ and a pull request cannot weaken the checks that judge it.
 - Title: `<type>(<scope>): <description>`, 64 characters at most, with no issue or pull
   request number: GitHub appends the pull request number at merge, and the issue is in
   the body. The type must match the branch type
-  (`chore/` branches accept `chore`, `ci`, `build`, `refactor`, `test`, `perf`, `style`).
+  (`chore/` branches accept `chore`, `ci`, `build`, `refactor`, `test`, `perf`, `style`;
+  `style/` branches accept `style` only).
 - Body: the sections of `.github/pull_request_template.md`, all present, in order,
   none empty (`N/A` when a section does not apply).
 - `Issue` contains `Refs #<issue>` for spec and design PRs, `Closes #<issue>` for `feat/`
