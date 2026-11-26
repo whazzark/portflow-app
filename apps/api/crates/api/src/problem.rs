@@ -181,6 +181,58 @@ mod tests {
     }
 
     #[test]
+    fn a_problem_without_field_errors_has_no_errors_member() {
+        let problem = serde_json::to_value(Problem::not_found()).unwrap();
+
+        assert!(problem.get("errors").is_none());
+    }
+
+    #[test]
+    fn a_failed_validation_names_each_refused_field_of_the_body() {
+        let problem = Problem::validation_failed(vec![
+            FieldError::new("/tonnage", FieldErrorCode::OutOfRange),
+            FieldError::new("/vessel/name", FieldErrorCode::Required),
+        ]);
+
+        assert_eq!(problem.status(), StatusCode::UNPROCESSABLE_ENTITY);
+        assert_eq!(
+            serde_json::to_value(&problem).unwrap(),
+            json!({
+                "type": "about:blank",
+                "title": "Unprocessable Entity",
+                "status": 422,
+                "detail": "Some fields of the request body are not valid",
+                "code": "VALIDATION_FAILED",
+                "errors": [
+                    { "pointer": "/tonnage", "code": "OUT_OF_RANGE" },
+                    { "pointer": "/vessel/name", "code": "REQUIRED" }
+                ]
+            })
+        );
+    }
+
+    #[test]
+    fn the_field_error_codes_are_written_in_upper_snake_case() {
+        let codes = [
+            FieldErrorCode::Required,
+            FieldErrorCode::InvalidFormat,
+            FieldErrorCode::OutOfRange,
+            FieldErrorCode::TooLong,
+        ]
+        .map(|code| serde_json::to_value(code).unwrap());
+
+        assert_eq!(
+            codes,
+            [
+                json!("REQUIRED"),
+                json!("INVALID_FORMAT"),
+                json!("OUT_OF_RANGE"),
+                json!("TOO_LONG")
+            ]
+        );
+    }
+
+    #[test]
     fn a_rejection_that_is_a_fault_of_the_server_is_an_internal_error() {
         let problem = Problem::rejected(StatusCode::INTERNAL_SERVER_ERROR, "Missing extension");
         let problem = serde_json::to_value(problem).unwrap();
