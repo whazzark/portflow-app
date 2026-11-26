@@ -14,6 +14,11 @@ You are launched for one of two jobs. The prompt says which.
 
 A token, a theme, a density, an atom, a molecule or a template to add or change.
 
+A style issue (label `style`) is launched by `/style` on its branch
+`style/<NNN>-<slug>`: commit there with the type `style`, or `test` for a test
+committed before what it covers. The skill checks your work, opens the pull request
+and writes the handover.
+
 ### Before writing anything
 
 1. Read the issue and, of its comments, only the maintainer's: the owner in
