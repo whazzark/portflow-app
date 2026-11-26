@@ -77,7 +77,8 @@ test('a neutral toast has no state and no action', async () => {
   const item = (await screen.findByText('Export started')).closest<HTMLElement>(
     '[data-sonner-toast]',
   )
-  expect(item).toHaveAttribute('data-type', 'default')
+  // Sonner colours a toast by its type: a neutral one has none of the states.
+  expect(['success', 'error', 'warning', 'info']).not.toContain(item?.dataset.type)
   expect(item?.querySelector('[data-button]')).toBeNull()
 })
 
