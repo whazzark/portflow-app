@@ -24,3 +24,6 @@ export const RADIUS_ROLES = ['control', 'item', 'overlay', 'card', 'pill'] as co
 
 /** The roles of the semantic shadow utilities of `theme.css`: `shadow-control`... */
 export const SHADOW_ROLES = ['control', 'raised', 'overlay', 'dialog'] as const
+
+/** The sizes of the density in `theme.css`: `h-control`, `px-control-x`, `py-cell`, `-inset-hit`. */
+export const SPACING_ROLES = ['control', 'control-x', 'cell', 'hit'] as const

@@ -1,16 +1,23 @@
 import { type ClassValue, clsx } from 'clsx'
 import { extendTailwindMerge } from 'tailwind-merge'
 
-import { RADIUS_ROLES, SHADOW_ROLES, TYPE_ROLES } from '@portflow/design-system/styles/constants'
+import {
+  RADIUS_ROLES,
+  SHADOW_ROLES,
+  SPACING_ROLES,
+  TYPE_ROLES,
+} from '@portflow/design-system/styles/constants'
 
 // The semantic sizes, radii and shadows of `theme.css`: without them, `text-label` would
-// be taken for a colour and dropped beside `text-text-muted`.
+// be taken for a colour and dropped beside `text-text-muted`. The sizes of the density
+// too: without them, `h-8` given by a consumer would not replace the `h-control` of an atom.
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       text: [...TYPE_ROLES],
       radius: [...RADIUS_ROLES],
       shadow: [...SHADOW_ROLES],
+      spacing: [...SPACING_ROLES],
     },
   },
 })
