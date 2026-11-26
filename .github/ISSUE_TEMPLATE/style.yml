@@ -1,0 +1,53 @@
+name: Style
+description: A change to the visual layer of the design system (tokens, themes, densities, the look of its components), with no change in product behaviour.
+labels: ["style"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Title: `Design system: <result>`, for example `Design system: review the UI of the button`. No type prefix: the label carries it.
+        A style issue is worked by `/style` on a `style/` branch, which may change only `packages/design-system/`, its end-to-end test `packages/e2e/tests/design-system.spec.ts` and `pnpm-lock.yaml`. Anything else, the consumers of a renamed public name in `apps/web/` included, is a chore or a feature.
+  - type: input
+    id: subject
+    attributes:
+      label: Component or tokens
+      description: The atom, molecule or template, or the tokens, themes or densities concerned.
+      placeholder: "atoms/button"
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What to review or change
+    validations:
+      required: true
+  - type: checkboxes
+    id: themes
+    attributes:
+      label: Themes to look at
+      options:
+        - label: light
+        - label: dark
+        - label: contrast
+  - type: checkboxes
+    id: densities
+    attributes:
+      label: Densities to look at
+      options:
+        - label: office
+        - label: field
+  - type: checkboxes
+    id: widths
+    attributes:
+      label: Widths to look at
+      options:
+        - label: phone
+        - label: tablet
+        - label: desktop
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: A checkable end state.
+    validations:
+      required: true

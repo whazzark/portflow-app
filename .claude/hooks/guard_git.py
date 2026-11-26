@@ -26,7 +26,7 @@ import sys
 PROTECTED = {"main"}
 HOOKS_PATH = ".githooks"
 # <type>/<NNN>-<slug>: the issue number is padded to three digits (012), as in scripts/conventions.py.
-BRANCH_RE = re.compile(r"^(spec|design|feat|fix|chore|docs)/(?:(?!000)\d{3}|[1-9]\d{3,})-[a-z0-9]+(-[a-z0-9]+)*$")
+BRANCH_RE = re.compile(r"^(spec|design|feat|fix|chore|docs|style)/(?:(?!000)\d{3}|[1-9]\d{3,})-[a-z0-9]+(-[a-z0-9]+)*$")
 GIT_OPTIONS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace"}
 SHELLS = {"bash", "sh", "zsh", "dash", "ksh"}
 TOOL_WORD_RE = re.compile(r"\b(git|gh)\b")
@@ -246,7 +246,7 @@ def check_git(tokens, cwd):
     if new_branch and not BRANCH_RE.match(new_branch):
         return (
             f"branch '{new_branch}' does not match <type>/<NNN>-<slug> (NNN: issue number padded to three digits) "
-            "(types: spec, design, feat, fix, chore, docs)"
+            "(types: spec, design, feat, fix, chore, docs, style)"
         )
     return None
 

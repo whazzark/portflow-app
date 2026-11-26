@@ -5,7 +5,7 @@ from .common import Failure, parse_issue
 
 
 PROTECTED_BRANCHES = ("main",)
-BRANCH_TYPES = ("spec", "design", "feat", "fix", "chore", "docs")
+BRANCH_TYPES = ("spec", "design", "feat", "fix", "chore", "docs", "style")
 # The issue number is zero-padded to three digits, so that folders sort in order:
 # issue 12 gives spec/012-<slug> and specs/012-<slug>/.
 BRANCH_RE = re.compile(

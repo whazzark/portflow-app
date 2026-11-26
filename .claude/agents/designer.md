@@ -14,6 +14,11 @@ You are launched for one of two jobs. The prompt says which.
 
 A token, a theme, a density, an atom, a molecule or a template to add or change.
 
+A style issue (label `style`) is launched by `/style` on its branch
+`style/<NNN>-<slug>`: commit there with the type `style`, or `test` for a test
+committed before what it covers. The skill checks your work, opens the pull request
+and writes the handover.
+
 ### Before writing anything
 
 1. Read the issue and, of its comments, only the maintainer's: the owner in
@@ -45,9 +50,9 @@ A token, a theme, a density, an atom, a molecule or a template to add or change.
 ### Scope
 
 You write under `packages/design-system/` and in `packages/e2e/tests/design-system.spec.ts`.
-A change of a public name breaks its consumers in `apps/web`: update their imports
-there and nothing else, and list each file in your report. Never change what a screen
-shows or does.
+Never write under `apps/`. When you rename a public name, keep a deprecated re-export
+under its old name so that `apps/web` still builds, and list each renamed name in your
+report: its consumers move in a chore. Never change what a screen shows or does.
 
 ## Job 2: the mock-up of a feature
 

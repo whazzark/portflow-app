@@ -48,12 +48,24 @@ class PathTests(unittest.TestCase):
         self.assert_refused("fix/031-negative-weight", SPEC + "spec.md")
         self.assert_refused("fix/031-negative-weight", "specs/031-negative-weight/plan.md")
 
+    def test_style_branch(self):
+        self.assert_allowed("style/042-review-badge", "packages/design-system/src/atoms/badge.tsx",
+                            "packages/design-system/src/styles/tokens.css",
+                            "packages/e2e/tests/design-system.spec.ts", "pnpm-lock.yaml")
+        self.assert_refused("style/042-review-badge", "apps/web/src/routes/index.tsx")
+        self.assert_refused("style/042-review-badge", "apps/web/package.json")
+        self.assert_refused("style/042-review-badge", "apps/api/src/main.rs")
+        self.assert_refused("style/042-review-badge", "packages/e2e/tests/weighing.spec.ts")
+        self.assert_refused("style/042-review-badge", "packages/contracts/openapi.json")
+        self.assert_refused("style/042-review-badge", "docs/workflow.md")
+        self.assert_refused("style/042-review-badge", SPEC + "spec.md")
+
     def test_the_frame_changes_only_on_a_chore_branch(self):
         frame = (".claude/hooks/guard_git.py", ".claude/settings.json", ".githooks/pre-push",
                  "scripts/conventions.py", "scripts/checks/specs.py", "scripts/tests/test_specs.py",
                  ".github/workflows/conventions.yml", ".github/CODEOWNERS", ".github/pull_request_template.md", "specs/_TEMPLATE/spec.md")
         for branch in ("feat/012-record-weighing", "fix/031-negative-weight", "spec/012-record-weighing",
-                       "design/012-record-weighing", "docs/003-product-discovery"):
+                       "design/012-record-weighing", "docs/003-product-discovery", "style/042-review-badge"):
             for path in frame:
                 self.assert_refused(branch, path)
         self.assert_allowed("chore/040-tighten-checks", *frame, "apps/api/src/main.rs", SPEC + "spec.md")

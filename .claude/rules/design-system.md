@@ -7,7 +7,11 @@ paths:
 
 The design system is the workspace `@portflow/design-system`, in
 `packages/design-system/` (ADR 0012, ADR 0019). The `designer` agent changes it, for
-an issue about the design system; a feature uses it and never edits it. Storybook shows
+an issue about the design system; a feature uses it and never edits it.
+
+An issue about the visual layer (tokens, themes, densities, the look of an atom, a
+molecule or a template) is a style issue: label `style`, branch `style/<NNN>-<slug>`,
+worked by `/style <issue>` (`docs/workflow.md`, "Style"). Storybook shows
 it, and the Portflow design system in Claude Design is generated from it.
 
 ## Structure
