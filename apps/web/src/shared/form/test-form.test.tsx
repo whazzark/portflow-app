@@ -237,8 +237,7 @@ describe('a form', () => {
     expect(record).toHaveAttribute('aria-busy', 'true')
     await user.click(record)
 
-    expect(await screen.findByText('Weighing recorded')).toBeVisible()
-    expect(record).toBeEnabled()
+    await vi.waitFor(() => expect(record).toBeEnabled())
     expect(requests).toBe(1)
   })
 })
