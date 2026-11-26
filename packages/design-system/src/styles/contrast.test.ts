@@ -100,11 +100,18 @@ const SOURCES = [
 const RING = /(?<![\w-])(?:[\w-]+:|\[[^\]]*\]:)*(ring|outline)-([^\s'"`;!]+)/g
 const RING_ALLOWED =
   /^(\d+(\.\d+)?|inset|offset-\d+|offset-background|ring|destructive|none|hidden)$/
-// Any chain of variants that holds a focus or highlight state: `focus:`, `dark:focus:`,
-// `group-focus:`, `focus-within:`, `data-highlighted:`, `data-[highlighted]:`, `[&:focus]:`.
-const FOCUS_BACKGROUND =
-  /(?:^|\s|['"`])(?:[\w-]+:|\[[^\]]*\]:)*?(?:[\w-]*focus[\w-]*|data-\[?highlighted\]?|\[&:focus[^\]]*\]):(?:[\w-]+:|\[[^\]]*\]:)*bg-([^\s'"`;!]+)/g
-const FOCUS_BACKGROUND_ALLOWED = /^primary$/
+// A chain of variants holding a focus or highlight state, named groups and arbitrary
+// variants included: `focus:`, `dark:focus:`, `group-focus/tabs:`, `focus-within:`,
+// `data-[state=open]:focus:`, `has-[:focus-visible]:`, `data-highlighted:`, `[&:focus]:`.
+// What it colours on focus (fill, border, shadow, inset ring) must be a tested token.
+const VARIANTS = String.raw`(?:[\w-]+(?:\/[\w-]+)?:|[\w-]*\[[^\]]*\](?:\/[\w-]+)?:|\*:)*`
+const FOCUS = String.raw`(?:[\w-]*focus[\w-]*(?:\/[\w-]+)?|has-\[[^\]]*focus[^\]]*\]|data-\[?highlighted\]?|\[&:focus[^\]]*\])`
+const FOCUS_BACKGROUND = new RegExp(
+  String.raw`(?:^|\s|['"\x60])${VARIANTS}${FOCUS}:${VARIANTS}!?(?:bg|border|shadow|inset-ring)-([^\s'"\x60;!]+)`,
+  'g',
+)
+// A focused element may fill with primary, or draw its border in ring or destructive.
+const FOCUS_BACKGROUND_ALLOWED = /^(primary|ring|destructive)$/
 
 test('every focus indicator is drawn with a tested token, opaque', () => {
   const lines = SOURCES.flatMap((root) =>

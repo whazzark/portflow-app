@@ -35,3 +35,15 @@ test('options given to the toaster keep the classes of its toasts and of their a
     'focus-visible:ring-ring!',
   )
 })
+
+test('a style given to the toaster keeps the colours of the tokens', () => {
+  const { container } = render(<Toaster style={{ zIndex: 50 }} />)
+
+  act(() => {
+    showUndoToast({ message: 'Hold closed', undoLabel: 'Undo', onUndo: () => {} })
+  })
+
+  const list = container.ownerDocument.querySelector<HTMLElement>('[data-sonner-toaster]')
+  expect(list?.style.getPropertyValue('--normal-bg')).toBe('var(--surface)')
+  expect(list?.style.zIndex).toBe('50')
+})
