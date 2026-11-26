@@ -21,8 +21,9 @@ about an error or a success in its own place. Three things were missing:
 
 - **TanStack Form** (`@tanstack/react-form`), bound once with `createFormHook`. The
   hook `useAppForm` and its components are molecules of the design system,
-  `packages/design-system/src/molecules/form.tsx`: they bind the state of a field to
-  the atoms (`Label`, `Input`, `Button`) and carry no data and no domain vocabulary.
+  `packages/design-system/src/molecules/form/`, one file per part, assembled by
+  `use-app-form.tsx`: they bind the state of a field to the atoms (`Label`, `Input`,
+  `Button`) and carry no data and no domain vocabulary.
   Mapping an error of the API to the fields stays in the web app, in
   `apps/web/src/shared/form/`, since the design system imports nothing of the API.
 - **Composition, not configuration.** A field is a family of small components that read

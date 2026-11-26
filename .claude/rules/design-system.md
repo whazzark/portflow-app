@@ -23,7 +23,9 @@ scripts/claude-design/   what the sync with Claude Design builds and publishes
 ```
 
 - The package imports its own files by their public name, `@portflow/design-system/...`,
-  never with `../../`.
+  never with `../../`. A component made of many parts may be a folder, one file per
+  part (`molecules/form/`): its files import each other with `./`, and the others import
+  the file that assembles them (`molecules/form/use-app-form`).
 - Atoms import the tokens and `lib` only, molecules import atoms, templates import
   molecules and atoms; the package imports nothing of `apps/`. Checked by Oxlint
   (`packages/design-system/.oxlintrc.json`).
@@ -77,7 +79,7 @@ alpha, which would blend below 3:1.
 | Level | Files |
 |---|---|
 | Atoms | `button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`, `showSuccessToast`, `showErrorToast`), `skeleton`, `badge`, `table`, `tabs`, `tooltip` |
-| Molecules | `loading-state`, `empty-state`, `error-state`, `undo-toast`, `pending-button`, `form` (`useAppForm` and its field family, ADR 0021), `responsive-table` |
+| Molecules | `loading-state`, `empty-state`, `error-state`, `undo-toast`, `pending-button`, `form/` (`use-app-form`: `useAppForm` and its field family, ADR 0021), `responsive-table` |
 | Templates | `page-layout`, `office-layout`, `field-layout` |
 
 ## Adding or changing an atom

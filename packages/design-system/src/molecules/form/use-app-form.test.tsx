@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 import { z } from 'zod'
 
-import { useAppForm } from '@portflow/design-system/molecules/form'
+import { useAppForm } from '@portflow/design-system/molecules/form/use-app-form'
 
 // A form of the tests: its labels are examples, not labels of the product.
 const schema = z.object({

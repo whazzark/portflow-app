@@ -6,7 +6,7 @@ import { describe, expect, test, vi } from 'vitest'
 import { z } from 'zod'
 
 import { showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
-import { useAppForm } from '@portflow/design-system/molecules/form'
+import { useAppForm } from '@portflow/design-system/molecules/form/use-app-form'
 
 import { unwrap } from '@/shared/api/client'
 import { FIELD_ERROR_LABELS, PROBLEM_LABELS, UNREACHABLE_LABEL } from '@/shared/api/constants'

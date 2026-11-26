@@ -199,7 +199,7 @@ included).
 ## Forms
 
 A form is built one way (ADR 0021): TanStack Form, through `useAppForm` and its field
-family, molecules of the design system (`@portflow/design-system/molecules/form`).
+family, molecules of the design system (`@portflow/design-system/molecules/form/use-app-form`).
 A screen never wires an atom to a field by hand.
 
 - **In `model/`, one file per form**: the Zod schema, on the values the user types (the
