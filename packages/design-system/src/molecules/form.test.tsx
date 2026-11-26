@@ -115,7 +115,7 @@ test('submitting shows the errors of every field and sends nothing', async () =>
 
 test('the submit button cannot be pressed again while the form is sent', async () => {
   const user = userEvent.setup()
-  let resolve = () => {}
+  let resolve: (() => void) | undefined
   const sent = new Promise<void>((done) => {
     resolve = done
   })
@@ -129,7 +129,7 @@ test('the submit button cannot be pressed again while the form is sent', async (
   expect(save).toHaveAttribute('aria-busy', 'true')
   await user.click(save)
 
-  resolve()
+  resolve?.()
   await vi.waitFor(() => expect(save).toBeEnabled())
   expect(onSubmit).toHaveBeenCalledOnce()
   expect(onSubmit.mock.calls[0]?.[0].value).toEqual({ name: 'Hold 1', tonnage: '12' })
