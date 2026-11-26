@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./atoms/toasts": "./src/atoms/toasts.ts",
     "./atoms/*": "./src/atoms/*.tsx",
+    "./molecules/form/use-app-form": "./src/molecules/form/use-app-form.ts",
+    "./molecules/form/*": null,
     "./molecules/*": "./src/molecules/*.tsx",
     "./templates/*": "./src/templates/*.tsx",
     "./lib/*": "./src/lib/*.ts",
@@ -20,6 +23,7 @@
     "build:claude-design": "node scripts/claude-design/build.ts"
   },
   "dependencies": {
+    "@tanstack/react-form": "1.33.5",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "lucide-react": "1.71.0",
@@ -48,7 +52,8 @@
     "tailwindcss": "4.3.5",
     "typescript": "7.0.2",
     "vite": "8.3.8",
-    "vitest": "5.1.1"
+    "vitest": "5.1.1",
+    "zod": "4.6.7"
   },
   "peerDependencies": {
     "react": "19.3.1",

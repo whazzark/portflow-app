@@ -36,8 +36,9 @@ const PAIRS: [string, string, number][] = [
   ['ring', 'background', NON_TEXT],
   ['ring', 'surface', NON_TEXT],
   ['ring', 'surface-muted', NON_TEXT],
-  ['danger', 'background', NON_TEXT],
-  ['danger', 'surface', NON_TEXT],
+  // The border of an invalid control, and the error text under a field of a form.
+  ['danger', 'background', TEXT],
+  ['danger', 'surface', TEXT],
 ]
 
 /** The colours a theme declares, the light ones under the dark and contrast ones. */

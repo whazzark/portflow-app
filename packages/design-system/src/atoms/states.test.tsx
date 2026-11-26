@@ -8,17 +8,17 @@ import {
   EmptyStateActions,
   EmptyStateDescription,
   EmptyStateTitle,
-} from '@portflow/design-system/molecules/empty-state'
+} from '@portflow/design-system/atoms/empty-state'
 import {
   ErrorState,
   ErrorStateActions,
   ErrorStateMessage,
-} from '@portflow/design-system/molecules/error-state'
+} from '@portflow/design-system/atoms/error-state'
 import {
   LoadingState,
   LoadingStateLabel,
   LoadingStatePlaceholder,
-} from '@portflow/design-system/molecules/loading-state'
+} from '@portflow/design-system/atoms/loading-state'
 
 test('the loading state is a status that reads its label only', () => {
   render(

@@ -1,7 +1,8 @@
 import type { DefaultError } from '@tanstack/react-query'
 import { describe, expect, expectTypeOf, test } from 'vitest'
 
-import { ApiError, isTransient } from './problem'
+import { FIELD_ERROR_LABELS, UNKNOWN_FIELD_ERROR_LABEL } from './constants'
+import { ApiError, isTransient, toApiError } from './problem'
 
 describe('isTransient', () => {
   test('is true when the API cannot be reached', () => {
@@ -25,6 +26,56 @@ describe('isTransient', () => {
 
   test('is false for an error that does not come from the API', () => {
     expect(isTransient(new Error('a bug'))).toBe(false)
+  })
+})
+
+describe('toApiError', () => {
+  const problem = {
+    type: 'about:blank',
+    title: 'Unprocessable Entity',
+    status: 422,
+    detail: 'Some fields of the request body are not valid',
+    code: 'VALIDATION_FAILED',
+  }
+
+  test('keeps each refused field of the body, with the label of its code', () => {
+    const error = toApiError({
+      ...problem,
+      errors: [
+        { pointer: '/tonnage', code: 'OUT_OF_RANGE' },
+        { pointer: '/name', code: 'REQUIRED' },
+      ],
+    })
+
+    expect(error.code).toBe('VALIDATION_FAILED')
+    expect(error.fieldErrors).toEqual([
+      { pointer: '/tonnage', label: FIELD_ERROR_LABELS.OUT_OF_RANGE },
+      { pointer: '/name', label: FIELD_ERROR_LABELS.REQUIRED },
+    ])
+  })
+
+  test('has no field error when the problem names no field', () => {
+    expect(toApiError(problem).fieldErrors).toEqual([])
+    expect(toApiError({ ...problem, code: 'NOT_FOUND', status: 404 }).fieldErrors).toEqual([])
+  })
+
+  test('gives a field error whose code this build does not know a general label', () => {
+    const error = toApiError({ ...problem, errors: [{ pointer: '/tonnage', code: 'NEWER_CODE' }] })
+
+    expect(error.fieldErrors).toEqual([{ pointer: '/tonnage', label: UNKNOWN_FIELD_ERROR_LABEL }])
+  })
+
+  test('ignores the entries of errors that are not a field error', () => {
+    const error = toApiError({
+      ...problem,
+      errors: ['/tonnage', { pointer: 3, code: 'REQUIRED' }, { code: 'REQUIRED' }, null],
+    })
+
+    expect(error.fieldErrors).toEqual([])
+  })
+
+  test('ignores errors when it is not a list', () => {
+    expect(toApiError({ ...problem, errors: { pointer: '/tonnage' } }).fieldErrors).toEqual([])
   })
 })
 

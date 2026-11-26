@@ -105,6 +105,23 @@ The action of a screen: it does something, where a link goes somewhere.
       h(P.Button, { variant: 'link' }, 'Link'))`,
   ),
   card(
+    'PendingButton',
+    'Actions',
+    56,
+    `# PendingButton
+
+A button whose action takes time: a submit button, or an action button bound to the
+pending state of its request.
+
+- \`pending\`: while the action runs, the button is disabled, shows a spinner and says it
+  is busy (\`aria-busy\`), so that the action is never sent twice. It keeps its label.
+- Takes the \`variant\` and the \`size\` of \`Button\`, which it is built on.
+`,
+    `h('div', { className: 'flex flex-wrap gap-2' },
+      h(P.PendingButton, { pending: false }, 'Close the hold'),
+      h(P.PendingButton, { pending: true }, 'Close the hold'))`,
+  ),
+  card(
     'Badge',
     'Status',
     56,
@@ -187,6 +204,49 @@ One choice in a short list, named by a \`Label\`.
           h(P.SelectItem, { value: 'south' }, 'South quay'))))`,
   ),
   card(
+    'Form',
+    'Forms',
+    260,
+    `# Form
+
+A form of a screen, built with \`useAppForm\` (TanStack Form) and assembled from small
+parts, never configured through props.
+
+- \`form.AppForm\` around \`form.Form\`; in it, one \`form.AppField name="..."\` per field,
+  whose children assemble \`field.Field\`, \`field.Label\`, \`field.TextInput\` or
+  \`field.NumberInput\` (the decimal keyboard) and \`field.Error\`; then
+  \`form.SubmitButton\`, a \`PendingButton\` while the form is sent.
+- The schema of the form (Zod) goes in \`validators.onDynamic\`. A field is checked when
+  it loses the focus and when the form is submitted, then at each change once it shows
+  an error.
+- An error shows under its field, in words. An error that no field can show, and a
+  success, show in a toast.
+`,
+    `h(function WeighingForm() {
+      var form = P.useAppForm({
+        defaultValues: { truck: '', tonnage: '' },
+        validators: { onDynamic: function (props) {
+          var fields = {}
+          if (!props.value.truck.trim()) fields.truck = 'Enter the plate of the truck'
+          if (!(Number(props.value.tonnage) > 0)) fields.tonnage = 'Enter a weight above zero'
+          return Object.keys(fields).length > 0 ? { fields: fields } : undefined
+        } },
+        onSubmit: function () { P.showSuccessToast('Weighing recorded') },
+      })
+      function field(name, label, Input) {
+        return h(form.AppField, { name: name }, function (f) {
+          return h(f.Field, null, h(f.Label, null, label), h(f[Input]), h(f.Error))
+        })
+      }
+      return h('div', null, h(P.Toaster, { position: 'top-left' }),
+        h(form.AppForm, null,
+          h(form.Form, { 'aria-label': 'Weighing', className: 'max-w-sm' },
+            field('truck', 'Truck', 'TextInput'),
+            field('tonnage', 'Gross weight (t)', 'NumberInput'),
+            h(form.SubmitButton, { className: 'self-start' }, 'Record'))))
+    })`,
+  ),
+  card(
     'Dialog',
     'Overlays',
     320,
@@ -237,8 +297,10 @@ A short hint on a control, shown on hover and on keyboard focus.
 Where the toasts of the app appear: rendered once, near the root. A toast tells the
 result of an action without stopping the user.
 
-- Show one with \`toast('Vessel announced')\`, \`toast.success\`, \`toast.warning\`,
-  \`toast.error\`.
+- After a form or an action: \`showSuccessToast('Vessel announced')\` when it went well,
+  \`showErrorToast(label)\` when it failed for a reason no field can show. Both stay the
+  same time.
+- Other toasts: \`toast('...')\`, \`toast.warning\`.
 - **Undo toast**: \`showUndoToast({ message, undoLabel, onUndo })\` says what was just
   done and offers to undo it for a few seconds: the correction path to prefer over a
   confirmation dialog.

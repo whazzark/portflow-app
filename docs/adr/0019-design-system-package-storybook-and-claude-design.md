@@ -2,6 +2,10 @@
 
 Status: accepted (2026-11-25)
 
+Changed by ADR 0021: the states and the responsive table are atoms, since each is
+built on one primitive or none; the form is the one molecule. The text below is kept as
+it was decided.
+
 Changes ADR 0012, which puts the tokens, atoms, molecules and templates in
 `apps/web/src/shared/`; ADR 0013, which keeps in `packages/` only what is not
 deployed; and ADR 0008 and 0010, in which the human draws every mock-up and no agent

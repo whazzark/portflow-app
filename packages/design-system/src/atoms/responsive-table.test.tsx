@@ -9,7 +9,7 @@ import {
   ResponsiveTableHead,
   ResponsiveTableHeader,
   ResponsiveTableRow,
-} from '@portflow/design-system/molecules/responsive-table'
+} from '@portflow/design-system/atoms/responsive-table'
 
 test('a responsive table is a table, and each cell carries the name of its column', () => {
   render(

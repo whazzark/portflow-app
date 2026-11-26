@@ -15,19 +15,31 @@ it, and the Portflow design system in Claude Design is generated from it.
 ```
 src/
   styles/     tokens.css (values), theme.css (Tailwind theme), constants.ts, storybook.css
-  atoms/      the shadcn/ui primitives
-  molecules/  generic composites of atoms, with no domain vocabulary
+  atoms/      the shadcn/ui primitives, and every component built on one primitive or none
+  molecules/  generic composites of several atoms, with no domain vocabulary
   templates/  page layouts with slots, no data
   lib/        cn
 scripts/claude-design/   what the sync with Claude Design builds and publishes
 ```
 
 - The package imports its own files by their public name, `@portflow/design-system/...`,
-  never with `../../`.
-- Atoms import the tokens and `lib` only, molecules import atoms, templates import
-  molecules and atoms; the package imports nothing of `apps/`. Checked by Oxlint
+  never with `../../`. A component made of many parts may be a folder, one file per
+  part (`molecules/form/`): its files import each other with `./`, and the others import
+  the file that assembles them (`molecules/form/use-app-form`).
+- Atoms import the tokens, `lib` and other atoms, molecules import atoms, templates
+  import molecules and atoms; the package imports nothing of `apps/`. Checked by Oxlint
   (`packages/design-system/.oxlintrc.json`).
-- No barrel: the `exports` of `package.json` map each file.
+- An atom or a molecule (ADR 0021): a component built on one shadcn/ui primitive, or on
+  plain elements, is an atom (`pending-button` on `button`, `toasts` on `sonner`,
+  `error-state`); a component that assembles several primitives is a molecule (`form/`).
+- A file the shadcn CLI writes holds the primitive only: what we build on it goes in a
+  file of its own next to it (`atoms/pending-button.tsx` next to `atoms/button.tsx`), so
+  that generating the primitive again never erases it.
+- No barrel: the `exports` of `package.json` map each file, by a pattern for the `.tsx`
+  files of a level. A `.ts` file (a hook, functions with no JSX) gets its own entry,
+  written before the pattern (`./atoms/toasts`). A folder exports only the file that
+  assembles it; its other files are hidden by a `null` entry
+  (`"./molecules/form/*": null`).
 - Each component is a family of small parts composed like shadcn/ui
   (`.claude/rules/frontend.md`, Components). Visual variants (`variant`, `size`) belong
   to atoms only.
@@ -73,8 +85,8 @@ alpha, which would blend below 3:1.
 
 | Level | Files |
 |---|---|
-| Atoms | `button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`), `skeleton`, `badge`, `table`, `tabs`, `tooltip` |
-| Molecules | `loading-state`, `empty-state`, `error-state`, `undo-toast`, `responsive-table` |
+| Atoms | `button`, `pending-button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`), `toasts` (`showSuccessToast`, `showErrorToast`, `showUndoToast`), `skeleton`, `badge`, `table`, `responsive-table`, `tabs`, `tooltip`, `loading-state`, `empty-state`, `error-state` |
+| Molecules | `form/` (`use-app-form`: `useAppForm` and its field family, ADR 0021) |
 | Templates | `page-layout`, `office-layout`, `field-layout` |
 
 ## Adding or changing an atom

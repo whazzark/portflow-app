@@ -12,7 +12,7 @@ import {
   ResponsiveTableHead,
   ResponsiveTableHeader,
   ResponsiveTableRow,
-} from '@portflow/design-system/molecules/responsive-table'
+} from '@portflow/design-system/atoms/responsive-table'
 import {
   OfficeLayout,
   OfficeLayoutContent,
