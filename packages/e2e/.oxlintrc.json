@@ -2,5 +2,8 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn", "oxc", "import"],
   "categories": { "correctness": "error", "suspicious": "error" },
-  "ignorePatterns": ["test-results/**", "playwright-report/**"]
+  "ignorePatterns": ["test-results/**", "playwright-report/**"],
+  "rules": {
+    "typescript/array-type": ["error", { "default": "array", "readonly": "generic" }]
+  }
 }

@@ -6,20 +6,20 @@ import {
   EmptyStateActions,
   EmptyStateDescription,
   EmptyStateTitle,
-} from '@portflow/design-system/molecules/empty-state'
+} from '@portflow/design-system/atoms/empty-state'
 import {
   ErrorState,
   ErrorStateActions,
   ErrorStateMessage,
-} from '@portflow/design-system/molecules/error-state'
+} from '@portflow/design-system/atoms/error-state'
 import {
   LoadingState,
   LoadingStateLabel,
   LoadingStatePlaceholder,
-} from '@portflow/design-system/molecules/loading-state'
+} from '@portflow/design-system/atoms/loading-state'
 
 const meta = {
-  title: 'Molecules/States',
+  title: 'Atoms/States',
   component: LoadingState,
 } satisfies Meta<typeof LoadingState>
 
