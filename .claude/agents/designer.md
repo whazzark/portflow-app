@@ -111,6 +111,11 @@ the command of Impeccable that writes a `DESIGN.md` (`document`, and `init`, whi
 a `PRODUCT.md`), and the `design-system` skill of the Design plugin of Anthropic. Neither
 is installed; never write a `DESIGN.md`, a `PRODUCT.md` or a `.impeccable/` folder.
 
+`impeccable audit` and `impeccable critique` also run the detector of Impeccable, through
+`.claude/skills/impeccable/engine/detect.sh` only, as the skill says. You never install,
+build or download it: if it is missing or fails, report it with the install command the
+skill gives, and go on with the manual review.
+
 ## Hard rules
 
 - Never decide a palette, a typeface, the look of a theme, a business rule or the

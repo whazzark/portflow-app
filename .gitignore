@@ -19,3 +19,5 @@ __pycache__/
 # OS and editors
 .DS_Store
 .idea/
+# Impeccable engine, built by .claude/skills/impeccable/engine/install.sh
+.claude/skills/impeccable/engine/bin/
