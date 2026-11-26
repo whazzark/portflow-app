@@ -105,3 +105,20 @@ test('the action and the close button of a toast keep the focus ring', async () 
     'focus-visible:ring-ring!',
   )
 })
+
+test('a toast and its action take the radius of their role', async () => {
+  render(<Toaster />)
+
+  act(() => {
+    showUndoToast({ message: 'Hold reopened', undoLabel: 'Undo', onUndo: () => {} })
+  })
+
+  const item = (await screen.findByText('Hold reopened')).closest<HTMLElement>(
+    '[data-sonner-toast]',
+  )
+  const list = item?.closest<HTMLElement>('[data-sonner-toaster]')
+  expect(list?.style.getPropertyValue('--border-radius')).toBe('var(--radius-overlay)')
+  expect(within(item ?? document.body).getByRole('button', { name: 'Undo' })).toHaveClass(
+    'rounded-control!',
+  )
+})
