@@ -35,7 +35,9 @@ and a document differ, the document is right.
   Read the brief of the same folder too.
 - **The code of a screen.** A route of `apps/web/src/routes/` or a folder of
   `apps/web/src/features/`. Read the route, the page and the components it renders,
-  and the files of `model/` its forms use.
+  the files of `model/` its forms use, and the states of the route: its own
+  `pendingComponent` and `errorComponent`, or the defaults of the router in
+  `apps/web/src/app/`.
 
 Anything else, or nothing: stop and ask which screen to check. Read the sources above
 before you judge.
