@@ -37,6 +37,9 @@ const PAIRS: [string, string, number][] = [
   ['ring', 'background', NON_TEXT],
   ['ring', 'surface', NON_TEXT],
   ['ring', 'surface-muted', NON_TEXT],
+  // The navigation of the office layout is surface-muted: the links and controls it holds.
+  ['primary', 'surface-muted', TEXT],
+  ['border-strong', 'surface-muted', NON_TEXT],
   // The border of an invalid control, and the error text under a field of a form.
   ['danger', 'background', TEXT],
   ['danger', 'surface', TEXT],
