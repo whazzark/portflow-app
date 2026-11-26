@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Button, PendingButton } from '@portflow/design-system/atoms/button'
+import { Button } from '@portflow/design-system/atoms/button'
 
 const meta = {
   title: 'Atoms/Button',
@@ -35,19 +35,6 @@ export const Variants: Story = {
       <Button {...args} disabled>
         Disabled
       </Button>
-    </div>
-  ),
-}
-
-export const Pending: Story = {
-  render: (args) => (
-    <div className="flex flex-wrap gap-2">
-      <PendingButton {...args} pending={false}>
-        Close the hold
-      </PendingButton>
-      <PendingButton {...args} pending>
-        Close the hold
-      </PendingButton>
     </div>
   ),
 }

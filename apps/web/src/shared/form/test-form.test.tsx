@@ -5,7 +5,8 @@ import createClient from 'openapi-fetch'
 import { describe, expect, test, vi } from 'vitest'
 import { z } from 'zod'
 
-import { showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
+import { Toaster } from '@portflow/design-system/atoms/sonner'
+import { showSuccessToast } from '@portflow/design-system/atoms/toasts'
 import { useAppForm } from '@portflow/design-system/molecules/form/use-app-form'
 
 import { unwrap } from '@/shared/api/client'

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { z } from 'zod'
 
-import { showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
+import { Toaster } from '@portflow/design-system/atoms/sonner'
+import { showSuccessToast } from '@portflow/design-system/atoms/toasts'
 import { useAppForm } from '@portflow/design-system/molecules/form/use-app-form'
 
 // The labels are examples: the labels of a screen come from its approved mock-up.

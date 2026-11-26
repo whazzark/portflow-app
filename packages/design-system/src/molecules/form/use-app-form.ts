@@ -12,7 +12,7 @@ import { formValidationLogic } from './validation-logic'
 // The forms of the app (ADR 0021): TanStack Form bound once to the atoms. Each part of
 // a form is a file of this folder; this one assembles them.
 
-const { useAppForm: useBaseAppForm, withForm } = createFormHook({
+const { useAppForm: useBaseAppForm } = createFormHook({
   fieldContext,
   formContext,
   fieldComponents: {
@@ -33,5 +33,3 @@ const { useAppForm: useBaseAppForm, withForm } = createFormHook({
  */
 export const useAppForm: typeof useBaseAppForm = (options) =>
   useBaseAppForm({ ...options, validationLogic: formValidationLogic })
-
-export { withForm }

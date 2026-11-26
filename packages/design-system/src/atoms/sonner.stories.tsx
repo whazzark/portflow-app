@@ -2,12 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { toast } from 'sonner'
 
 import { Button } from '@portflow/design-system/atoms/button'
-import {
-  showErrorToast,
-  showSuccessToast,
-  showUndoToast,
-  Toaster,
-} from '@portflow/design-system/atoms/sonner'
+import { Toaster } from '@portflow/design-system/atoms/sonner'
 
 const meta = {
   title: 'Atoms/Toast',
@@ -24,31 +19,15 @@ export const Kinds: Story = {
       <Button variant="outline" onClick={() => toast('Vessel announced')}>
         Neutral
       </Button>
-      <Button variant="outline" onClick={() => showSuccessToast('Weighing recorded')}>
+      <Button variant="outline" onClick={() => toast.success('Weighing recorded')}>
         Success
       </Button>
       <Button variant="outline" onClick={() => toast.warning('Hold almost full')}>
         Warning
       </Button>
-      <Button variant="outline" onClick={() => showErrorToast('The weighing was refused')}>
+      <Button variant="outline" onClick={() => toast.error('The weighing was refused')}>
         Error
       </Button>
     </div>
-  ),
-}
-
-export const Undo: Story = {
-  render: (args) => (
-    <>
-      <Toaster {...args} />
-      <Button
-        variant="destructive"
-        onClick={() =>
-          showUndoToast({ message: 'Weighing deleted', undoLabel: 'Undo', onUndo: () => {} })
-        }
-      >
-        Delete the weighing
-      </Button>
-    </>
   ),
 }

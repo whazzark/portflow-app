@@ -267,7 +267,7 @@ test('a tab panel that has the focus shows it', async ({ page }) => {
 
 test('the action of a toast takes the height of a control', async ({ page }) => {
   await page.goto(
-    `${STORYBOOK_URL}/iframe.html?id=atoms-toast--undo&viewMode=story&globals=density:field`,
+    `${STORYBOOK_URL}/iframe.html?id=atoms-toasts--undo&viewMode=story&globals=density:field`,
   )
   await page.getByRole('button', { name: 'Delete the weighing' }).click()
   await expect(page.getByRole('button', { name: 'Undo' })).toHaveCSS('height', '44px')

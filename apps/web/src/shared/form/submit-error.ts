@@ -1,6 +1,6 @@
 import type { AnyFormApi } from '@tanstack/react-form'
 
-import { showErrorToast } from '@portflow/design-system/atoms/sonner'
+import { showErrorToast } from '@portflow/design-system/atoms/toasts'
 
 import { ApiError } from '@/shared/api/problem'
 
