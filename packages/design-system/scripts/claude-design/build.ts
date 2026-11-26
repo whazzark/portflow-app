@@ -79,14 +79,19 @@ const COLOUR_USAGE: Record<string, string> = {
   'primary-text': 'Text and icons on primary.',
   secondary: 'A secondary action, the current item of a navigation.',
   'secondary-text': 'Text on secondary.',
-  danger: 'Deleting actions, refusals, the border of an error state.',
-  'danger-text': 'Text on danger.',
+  danger:
+    'Deleting actions, refusals, the border of an error state or of an invalid control, the error under a field; text in danger reaches 4.5:1 on the page.',
+  'danger-text':
+    'Text and icons on danger; the fill of the action of an error toast, its label in danger.',
   success: 'A success toast or status.',
-  'success-text': 'Text on success.',
+  'success-text':
+    'Text and icons on success; the fill of the action of a success toast, its label in success.',
   warning: 'A warning toast or status.',
-  'warning-text': 'Text on warning.',
+  'warning-text':
+    'Text and icons on warning; the fill of the action of a warning toast, its label in warning.',
   info: 'Neutral information: an informative toast or status. A cyan, never read as an action.',
-  'info-text': 'Text on info.',
+  'info-text':
+    'Text and icons on info; the fill of the action of an info toast, its label in info.',
   overlay: 'The veil behind a dialog.',
 }
 
