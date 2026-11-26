@@ -69,7 +69,7 @@ Slug: lowercase kebab-case. `main` is protected: no direct commit, no direct pus
 | `docs/` | `docs/`, `packages/user-docs/`, `README.md`, `CONTEXT.md` |
 | `feat/` | Everything except `specs/`, where it adds only `plan.md` and `test-report.md` to the folder of its issue |
 | `fix/` | Everything except `specs/` |
-| `style/` | `packages/design-system/`, `packages/e2e/tests/design-system.spec.ts`, `pnpm-lock.yaml`, and `apps/web/`, where it changes only the imports of a renamed public name (not checked) |
+| `style/` | `packages/design-system/`, `packages/e2e/tests/design-system.spec.ts` and `pnpm-lock.yaml` |
 | `chore/` | Everything |
 
 On every branch but `chore/`, the frame is read-only (`paths`, from the list in
