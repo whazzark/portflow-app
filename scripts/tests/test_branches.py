@@ -10,6 +10,7 @@ class BranchTests(unittest.TestCase):
         self.assertEqual(branches.parse_branch("feat/123-back-record-weighing"), ("feat", 123, "back-record-weighing"))
         self.assertEqual(branches.parse_branch("spec/007-login"), ("spec", 7, "login"))
         self.assertEqual(branches.parse_branch("feat/1234-x")[1], 1234)
+        self.assertEqual(branches.parse_branch("style/042-review-badge"), ("style", 42, "review-badge"))
 
     def test_invalid(self):
         for name in ("feature/001-x", "feat/record", "feat/000-x", "feat/012-Record", "feat/012_record",
@@ -22,7 +23,7 @@ class BranchTests(unittest.TestCase):
         spec = importlib.util.spec_from_file_location("guard_git", support.ROOT / ".claude" / "hooks" / "guard_git.py")
         guard = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(guard)
-        names = ("feat/123-back-record-weighing", "spec/007-login", "feat/1234-x", "docs/001-a", "chore/999-b-c",
+        names = ("feat/123-back-record-weighing", "spec/007-login", "feat/1234-x", "docs/001-a", "chore/999-b-c", "style/042-review-badge",
                  "feature/001-x", "feat/record", "feat/000-x", "feat/012-Record", "feat/012_record",
                  "012-record", "feat/12-record", "feat/7-login", "feat/0012-record", "main")
         for name in names:

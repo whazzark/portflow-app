@@ -33,6 +33,12 @@ class PullRequestTests(unittest.TestCase):
     def test_chore_pr_may_be_typed_style(self):
         pull_requests.check_pr("chore/012-design-system", "style(design-system): add the tokens", VALID_BODY)
 
+    def test_style_pr_is_typed_style(self):
+        pull_requests.check_pr("style/012-review-badge", "style(design-system): review the badge", VALID_BODY)
+        for title in ("chore(design-system): review the badge", "feat(design-system): review the badge"):
+            with self.assertRaises(common.Failure, msg=title):
+                pull_requests.check_pr("style/012-review-badge", title, VALID_BODY)
+
     def test_spec_pr_must_not_close(self):
         with self.assertRaises(common.Failure):
             pull_requests.check_pr("spec/012-record-weighing", "spec: record a weighing", VALID_BODY.replace("Refs #12", "Closes #12"))
