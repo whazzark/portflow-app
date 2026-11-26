@@ -36,3 +36,12 @@ export function showSuccessToast(message: string) {
 export function showErrorToast(message: string) {
   return toast.error(message)
 }
+
+/**
+ * Gives a neutral piece of information: neither the result of an action nor a failure,
+ * such as a service that restarts at a given time. The text comes from the approved
+ * mock-up. Needs the `Toaster`, rendered once near the root.
+ */
+export function showInfoToast(message: string) {
+  return toast.info(message)
+}
