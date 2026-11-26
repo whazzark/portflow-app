@@ -109,9 +109,10 @@ and weight: no `font-medium` or `font-semibold` beside it. The sizes of `text-bo
 | `shadow-dialog` | the old `shadow-lg` | Dialogs |
 
 The roles are listed in `src/styles/constants.ts` (`TYPE_ROLES`, `RADIUS_ROLES`,
-`SHADOW_ROLES`), which `cn` reads so that `text-label` is not merged away as a colour;
-`src/styles/theme.test.ts` keeps that list in step with `theme.css`. A new role goes in
-both.
+`SHADOW_ROLES`, and `SPACING_ROLES` for the sizes of the density), which `cn` reads so
+that `text-label` is not merged away as a colour and a consumer's `h-8` replaces the
+`h-control` of an atom; `src/styles/theme.test.ts` keeps that list in step with
+`theme.css`. A new role goes in both.
 
 The raw type scale (`text-xs` to `text-2xl`), radii (`rounded-sm` to `rounded-xl`) and
 shadows (`shadow-xs` to `shadow-lg`) stay in `theme.css` only until every atom has moved
