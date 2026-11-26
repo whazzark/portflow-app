@@ -107,7 +107,7 @@ and a pull request cannot weaken the checks that judge it.
   not rewrite its history to tidy it: the pull request is merged by squash, and small
   commits keep the review readable (not checked).
 - Only the first commit of a branch ends with the trailer
-  `Co-Authored-By: Claude <model> <noreply@anthropic.com>` when Claude wrote it; the
+  `Co-Authored-By: Claude <noreply@anthropic.com>` when Claude wrote it; the
   others carry none, so the squash commit names Claude once (not checked).
 
 ## Pull requests
