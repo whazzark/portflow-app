@@ -127,9 +127,18 @@ alpha, which would blend below 3:1.
 
 | Level | Files |
 |---|---|
-| Atoms | `button`, `pending-button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`), `toasts` (`showSuccessToast`, `showErrorToast`, `showUndoToast`), `skeleton`, `badge`, `table`, `responsive-table`, `tabs`, `tooltip`, `loading-state`, `empty-state`, `error-state` |
+| Atoms | `button`, `pending-button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`), `toasts` (`showNeutralToast`, `showUndoToast`, `showSuccessToast`, `showInfoToast`, `showWarningToast`, `showErrorToast`), `skeleton`, `badge`, `table`, `responsive-table`, `tabs`, `tooltip`, `loading-state`, `empty-state`, `error-state` |
 | Molecules | `form/` (`use-app-form`: `useAppForm` and its field family, ADR 0021) |
 | Templates | `page-layout`, `office-layout`, `field-layout` |
+
+**Toasts.** The `Toaster` turns on Sonner's rich colours and binds them to the tokens:
+a success, an error, a warning and an information are filled with `success`, `danger`,
+`warning` or `info`, their text and icon in its `-text` token, and their action swaps the
+two; a neutral toast and the undo toast stay on `surface`, their action in `primary`.
+Sonner names its own `--success-text`, `--warning-text` and `--info-text` on its list:
+the `Toaster` reads our tokens on a wrapper under `--toaster-<state>-text` and gives them
+back to the list. A button inside a toast draws its ring with a `background` halo
+(`ring-offset-background`), so that the ring stands apart from a coloured fill.
 
 ## Adding or changing an atom
 
