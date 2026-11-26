@@ -5,8 +5,8 @@ paths:
 
 # Front-end rules (React)
 
-Stack: React, TypeScript strict, Vite, TanStack Router, TanStack Query, shadcn/ui,
-Oxlint, Oxfmt, Vitest, Testing Library, MSW. See `docs/architecture.md`.
+Stack: React, TypeScript strict, Vite, TanStack Router, TanStack Query, TanStack Form,
+Zod, shadcn/ui and sonner, Oxlint, Oxfmt, Vitest, Testing Library, MSW. See `docs/architecture.md`.
 
 ## Structure
 
@@ -17,12 +17,13 @@ src/
   features/<context>/
     api/          <context>-query-keys.ts, queryOptions, mutations
     hooks/        screen logic worth sharing or testing
-    model/        screen types, mappers from API types, form schemas
+    model/        screen types, mappers from API types; form schemas, their mappers to request bodies
     components/   organisms: sections with domain vocabulary; data comes through props
     constants.ts  the fixed values the files of the feature share
     <context>-page.tsx   page: connects a template and organisms to data
   shared/
     api/          HTTP client bound to the types of @portflow/contracts; ApiError
+    form/         the errors of a submitted form: under its fields or in a toast
     styles/       the entry stylesheet: Tailwind, then the tokens of the design system
     lib/          utilities
   test/         MSW server, setup, renderApp
@@ -163,6 +164,76 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 - Everything else: local state. No global store. Never copy server data into `useState`.
 - `useEffect` is for synchronising with something outside React, nothing else.
 
+## Forms
+
+A form is built one way (ADR 0020): TanStack Form, through `useAppForm` and its field
+family, molecules of the design system (`@portflow/design-system/molecules/form`).
+A screen never wires an atom to a field by hand.
+
+- **In `model/`, one file per form**: the Zod schema, on the values the user types (the
+  text of each input, never a number or a date); the mapper from those values to the
+  body of the request, typed by `@portflow/contracts`, which reads the numbers and dates
+  with `schema.parse`; and the function from a JSON Pointer of that body to the name of a
+  field. Each has its unit tests, the pointers included.
+- **The schema goes in `validators.onDynamic`.** `useAppForm` decides when it runs: when
+  a field loses the focus and on submit, then at each change once the field shows an
+  error. A screen sets no other validator and no validation logic.
+- **Assemble, do not configure**: `form.AppForm`, `form.Form`, one `form.AppField` per
+  field with `field.Field`, `field.Label`, `field.TextInput` or `field.NumberInput`, and
+  `field.Error`, then `form.SubmitButton`.
+- **Where the outcome shows:**
+  - an error of the schema, under its field (`field.Error`);
+  - a refusal of the API, through `showSubmitError(formApi, error, fieldOf)`
+    (`shared/form/submit-error.ts`) in the `onSubmit` of the form: the fields a
+    `VALIDATION_FAILED` names under those fields, everything else in a toast with the
+    label of its code;
+  - a success, in a toast: `showSuccessToast(...)`, its text from the approved mock-up.
+    An action button outside a form does the same, and is a `PendingButton` bound to
+    the pending state of its mutation.
+- The values the user typed stay after a failure; the submit button cannot be pressed
+  again while the request runs. Both come with `useAppForm`: do not reset or disable by
+  hand.
+- **Field error codes grow with the forms.** The codes of `FieldErrorCode` in the
+  contract started generic (`REQUIRED`, `INVALID_FORMAT`, `OUT_OF_RANGE`, `TOO_LONG`).
+  When you add a form, list each refusal of a field its endpoint can answer, and check
+  that a code says it precisely. If none does, add the code in the same pull request: in
+  the API (`.claude/rules/backend.md`), in the contract, and its label in
+  `FIELD_ERROR_LABELS` (`shared/api/constants.ts`; the build breaks without it). A
+  business refusal gets its own code, not a generic one; a code is never renamed or
+  removed (not checked: `/review` checks it).
+
+```tsx
+// features/weighings/model/weighing-form.ts
+export const weighingSchema = z.object({
+  tonnage: z.string().trim().min(1, 'Enter the tonnage')
+    .transform(Number).pipe(z.number({ error: 'Enter a number' }).positive()),
+})
+export type WeighingValues = z.input<typeof weighingSchema>
+export function toWeighingBody(values: WeighingValues): WeighingBody {
+  const { tonnage } = weighingSchema.parse(values)
+  return { grossWeightKg: tonnage * 1000 }
+}
+export function weighingFieldOf(pointer: string): keyof WeighingValues | undefined {
+  return pointer === '/grossWeightKg' ? 'tonnage' : undefined
+}
+
+// features/weighings/weighing-page.tsx
+const form = useAppForm({
+  defaultValues: { tonnage: '' } satisfies WeighingValues,
+  validators: { onDynamic: weighingSchema },
+  onSubmit: async ({ value, formApi }) => {
+    try {
+      await recordWeighing.mutateAsync(toWeighingBody(value))
+      showSuccessToast('Weighing recorded')
+    } catch (error) {
+      showSubmitError(formApi, error, weighingFieldOf)
+    }
+  },
+})
+```
+
+The test form of `shared/form/test-form.test.tsx` shows the whole path, through MSW.
+
 ## Mock-up
 
 - The approved mock-up in `specs/<NNN>-<slug>/design/` is the reference for screens,
@@ -196,7 +267,8 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 
 ## Tests
 
-- Mappers and rules in `model/`: unit tests without rendering.
+- Mappers and rules in `model/`, form schemas and their pointer functions included:
+  unit tests without rendering.
 - Features: Testing Library through the real router, network mocked with MSW.
   Never mock the API client module. `renderApp(path)` (`src/test/render-app.tsx`)
   renders the whole app with fresh clients, no retry, and the pending state of a route

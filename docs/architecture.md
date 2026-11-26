@@ -88,7 +88,10 @@ with TanStack Query: one `queryOptions` per read, its key from the key factory o
 domain (ADR 0017).
 
 Every error is a problem (RFC 9457) with a stable `code`, and each endpoint documents
-its success response and every error it can answer (ADR 0015).
+its success response and every error it can answer (ADR 0015). A refused request body
+answers `VALIDATION_FAILED` with the refused fields as JSON Pointers; the web app builds
+its forms with TanStack Form and a Zod schema, and shows those errors under the fields
+or in a toast (ADR 0020).
 
 ## Front end: feature slices
 
