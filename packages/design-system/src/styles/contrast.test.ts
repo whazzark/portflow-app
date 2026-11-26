@@ -43,6 +43,12 @@ const PAIRS: [string, string, number][] = [
   // Information drawn as text on the page: a status or the icon of a toast.
   ['info', 'background', TEXT],
   ['info', 'surface', TEXT],
+  // A coloured toast is filled with its state colour: its edge against the page, and the
+  // halo that sets its focus rings apart from the fill. Danger and info are above.
+  ['success', 'background', NON_TEXT],
+  ['success', 'surface', NON_TEXT],
+  ['warning', 'background', NON_TEXT],
+  ['warning', 'surface', NON_TEXT],
 ]
 
 /** The colours a theme declares, the light ones under the dark and contrast ones. */
