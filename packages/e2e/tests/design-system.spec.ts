@@ -47,6 +47,10 @@ async function measureFocus(page: Page): Promise<Focus | undefined> {
     const element = document.activeElement as HTMLElement | null
     if (!element || element === document.body || element.dataset.focusMeasured) return undefined
     element.dataset.focusMeasured = 'true'
+    // A browser scrolls the focused element into view in its scrolling ancestors; headless
+    // Chromium does not always do it, so the test does it the same way.
+    element.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
     // Wait for the transitions of the ring and the finite animations of the page (a dialog
     // fades in): an infinite one (a spinner) never ends.
     await Promise.all(
@@ -115,16 +119,17 @@ async function measureFocus(page: Page): Promise<Focus | undefined> {
         const { overflowX, overflowY } = getComputedStyle(node)
         if (overflowX === 'visible' && overflowY === 'visible') continue
         const area = node.getBoundingClientRect()
-        if (
-          box.left - width < area.left - 0.5 ||
-          box.right + width > area.right + 0.5 ||
-          box.top - width < area.top - 0.5 ||
-          box.bottom + width > area.bottom + 0.5
-        ) {
-          return true
+        const over = [
+          area.left - (box.left - width),
+          box.right + width - area.right,
+          area.top - (box.top - width),
+          box.bottom + width - area.bottom,
+        ]
+        if (over.some((amount) => amount > 0.5)) {
+          return `${node.tagName.toLowerCase()} cuts ${over.map((amount) => Math.max(0, Math.round(amount))).join('/')}px (left/right/top/bottom)`
         }
       }
-      return false
+      return ''
     }
 
     const name = `${element.tagName.toLowerCase()} "${(element.textContent ?? element.getAttribute('aria-label') ?? '').trim().slice(0, 30)}"`
@@ -132,7 +137,8 @@ async function measureFocus(page: Page): Promise<Focus | undefined> {
       const [red = 0, green = 0, blue = 0, alpha = 0] = rgba(colour)
       if ((alpha / 255) * opacity < 1) return `${colour} is not opaque`
       if (ratio([red, green, blue], pageColour) < 3) return `${colour} is below 3:1`
-      if (cutOff(width)) return `${colour} is cut off`
+      const cut = cutOff(width)
+      if (cut) return `${colour}: ${cut}`
       return ''
     })
     const visible = reasons.includes('')
