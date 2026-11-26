@@ -298,25 +298,37 @@ A short hint on a control, shown on hover and on keyboard focus.
   card(
     'Toaster',
     'Overlays',
-    200,
+    300,
     `# Toaster
 
 Where the toasts of the app appear: rendered once, near the root. A toast tells the
-result of an action without stopping the user.
+result of an action, or a piece of information, without stopping the user.
 
 - After a form or an action: \`showSuccessToast('Vessel announced')\` when it went well,
   \`showErrorToast(label)\` when it failed for a reason no field can show. Both stay the
   same time.
-- Other toasts: \`toast('...')\`, \`toast.warning\`.
+- A neutral piece of information, neither the result of an action nor a failure:
+  \`showInfoToast('The weighbridge restarts at 14:00.')\`.
+- Something that needs attention without having failed:
+  \`showWarningToast('Hold 2 is almost full.')\`.
+- Something with no state and nothing to do: \`showNeutralToast('Export started')\`.
 - **Undo toast**: \`showUndoToast({ message, undoLabel, onUndo })\` says what was just
   done and offers to undo it for a few seconds: the correction path to prefer over a
   confirmation dialog.
+- **Colours**: a success, an error, a warning and an information are filled with the
+  colour of their state (\`success\`, \`danger\`, \`warning\`, \`info\`), their text in its
+  \`-text\` token; their action swaps the two. A neutral toast and the undo toast stay
+  on the surface, their action in \`primary\`. The colour never says the message alone:
+  the icon and the text do too.
 `,
     `(function () {
       setTimeout(function () {
+        P.showSuccessToast('Weighing recorded')
+        P.showInfoToast('The weighbridge restarts at 14:00.')
+        P.showWarningToast('Hold 2 is almost full.')
         P.showUndoToast({ message: 'Weighing deleted', undoLabel: 'Undo', onUndo: function () {} })
       }, 50)
-      return h('div', null, h(P.Toaster, { position: 'top-left' }),
+      return h('div', null, h(P.Toaster, { position: 'top-left', expand: true }),
         h(P.Button, { variant: 'destructive', onClick: function () {
           P.showUndoToast({ message: 'Weighing deleted', undoLabel: 'Undo', onUndo: function () {} })
         } }, 'Delete the weighing'))
