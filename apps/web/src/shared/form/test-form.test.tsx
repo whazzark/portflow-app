@@ -5,9 +5,8 @@ import createClient from 'openapi-fetch'
 import { describe, expect, test, vi } from 'vitest'
 import { z } from 'zod'
 
-import { Toaster } from '@portflow/design-system/atoms/sonner'
+import { showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
 import { useAppForm } from '@portflow/design-system/molecules/form'
-import { showSuccessToast } from '@portflow/design-system/molecules/toasts'
 
 import { unwrap } from '@/shared/api/client'
 import { FIELD_ERROR_LABELS, PROBLEM_LABELS, UNREACHABLE_LABEL } from '@/shared/api/constants'

@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { z } from 'zod'
 
-import { Toaster } from '@portflow/design-system/atoms/sonner'
+import { showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
 import { useAppForm } from '@portflow/design-system/molecules/form'
-import { showSuccessToast } from '@portflow/design-system/molecules/toasts'
 
 // The labels are examples: the labels of a screen come from its approved mock-up.
 const schema = z.object({

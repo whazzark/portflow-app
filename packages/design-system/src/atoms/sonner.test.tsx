@@ -2,8 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { act } from 'react'
 import { expect, test } from 'vitest'
 
-import { Toaster } from '@portflow/design-system/atoms/sonner'
-import { showErrorToast, showSuccessToast } from '@portflow/design-system/molecules/toasts'
+import { showErrorToast, showSuccessToast, Toaster } from '@portflow/design-system/atoms/sonner'
 
 test('a success toast says what was done', async () => {
   render(<Toaster />)
