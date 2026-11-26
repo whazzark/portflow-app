@@ -33,7 +33,10 @@ export function OfficeLayoutNavTitle({ className, ...props }: ComponentProps<'p'
 export function OfficeLayoutNavList({ className, ...props }: ComponentProps<'ul'>) {
   return (
     <ul
-      className={cn('flex gap-1 overflow-x-auto lg:flex-col lg:overflow-visible', className)}
+      className={cn(
+        'flex gap-1 overflow-x-auto p-1 lg:flex-col lg:overflow-visible lg:p-0',
+        className,
+      )}
       {...props}
     />
   )
