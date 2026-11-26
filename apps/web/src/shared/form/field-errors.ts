@@ -22,10 +22,15 @@ export function toFormErrors<Name extends string>(
 ): FormErrors<Name> {
   const fields: Partial<Record<Name, string>> = {}
   let unmatched = false
+
   for (const { pointer, label } of error.fieldErrors) {
     const field = fieldOf(pointer)
-    if (field === undefined) unmatched = true
-    else fields[field] ??= label
+    if (field === undefined) {
+      unmatched = true
+    } else {
+      fields[field] ??= label
+    }
   }
+
   return { fields, unmatched }
 }

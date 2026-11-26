@@ -50,6 +50,7 @@ type Values = z.input<typeof schema>
 
 function toBody(values: Values): WeighingBody {
   const { truck, tonnage } = schema.parse(values)
+
   return { truck, grossWeightKg: tonnage * 1000 }
 }
 
@@ -75,6 +76,7 @@ function WeighingForm() {
       }
     },
   })
+
   return (
     <form.AppForm>
       <form.Form aria-label="Weighing">
@@ -102,7 +104,10 @@ function WeighingForm() {
   )
 }
 
-function problem(status: number, code: string, errors?: { pointer: string; code: string }[]) {
+/** An entry of `errors` as the API sends it, with any code. */
+type ProblemFieldError = { pointer: string; code: string }
+
+function problem(status: number, code: string, errors?: ProblemFieldError[]) {
   return HttpResponse.json(
     { type: 'about:blank', title: 'Error', status, detail: 'For the developer', code, errors },
     { status, headers: { 'Content-Type': 'application/problem+json' } },
@@ -123,6 +128,7 @@ async function fillAndRecord() {
   await user.type(truck, 'AB-123-CD')
   await user.type(tonnage, '41.2')
   await user.click(record)
+
   return { user, truck, tonnage, record }
 }
 

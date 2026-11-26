@@ -59,23 +59,32 @@ export class ApiError extends Error {
 
 /** The error that `openapi-fetch` returned, as an `ApiError`. */
 export function toApiError(error: unknown): ApiError {
-  if (!hasCode(error)) return new ApiError(null)
+  if (!hasCode(error)) {
+    return new ApiError(null)
+  }
   if (isProblemCode(error.code)) {
     return new ApiError(error.code, { fieldErrors: readFieldErrors(error) })
   }
+
   return new ApiError(null, { refused: true })
 }
 
 // The `errors` member of a problem; an entry that is not a field error is dropped.
 function readFieldErrors(problem: object): ApiFieldError[] {
-  if (!('errors' in problem) || !Array.isArray(problem.errors)) return []
+  if (!('errors' in problem) || !Array.isArray(problem.errors)) {
+    return []
+  }
+
   return problem.errors.filter(isFieldError).map(({ pointer, code }) => ({
     pointer,
     label: isFieldErrorCode(code) ? FIELD_ERROR_LABELS[code] : UNKNOWN_FIELD_ERROR_LABEL,
   }))
 }
 
-function isFieldError(value: unknown): value is { pointer: string; code: string } {
+/** An entry of the `errors` member of a problem, with a code this build may not know. */
+type ProblemFieldError = { pointer: string; code: string }
+
+function isFieldError(value: unknown): value is ProblemFieldError {
   return (
     typeof value === 'object' &&
     value !== null &&

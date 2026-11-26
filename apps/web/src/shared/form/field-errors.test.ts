@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { ApiError } from '@/shared/api/problem'
+import { ApiError, type ApiFieldError } from '@/shared/api/problem'
 
 import { toFormErrors } from './field-errors'
 
@@ -12,7 +12,7 @@ function fieldOf(pointer: string): Name | undefined {
   return FIELDS[pointer]
 }
 
-function validationFailed(fieldErrors: { pointer: string; label: string }[]) {
+function validationFailed(fieldErrors: ApiFieldError[]) {
   return new ApiError('VALIDATION_FAILED', { fieldErrors })
 }
 
