@@ -47,10 +47,12 @@ async function measureFocus(page: Page): Promise<Focus | undefined> {
     const element = document.activeElement as HTMLElement | null
     if (!element || element === document.body || element.dataset.focusMeasured) return undefined
     element.dataset.focusMeasured = 'true'
+    // Wait for the transitions of the ring and the finite animations of the page (a dialog
+    // fades in): an infinite one (a spinner) never ends.
     await Promise.all(
-      element
+      document
         .getAnimations()
-        .filter((animation) => animation instanceof CSSTransition)
+        .filter((animation) => animation.effect?.getComputedTiming().iterations !== Infinity)
         .map((animation) => animation.finished.catch(() => undefined)),
     )
 
@@ -103,7 +105,13 @@ async function measureFocus(page: Page): Promise<Focus | undefined> {
     // A scrolling ancestor cuts off what is drawn outside its box.
     const box = element.getBoundingClientRect()
     const cutOff = (width: number) => {
-      for (let node = element.parentElement; node; node = node.parentElement) {
+      // The document scrolls, it does not cut: html and body are left out (a dialog hides
+      // the overflow of body while it is open).
+      for (
+        let node = element.parentElement;
+        node && node !== document.body;
+        node = node.parentElement
+      ) {
         const { overflowX, overflowY } = getComputedStyle(node)
         if (overflowX === 'visible' && overflowY === 'visible') continue
         const area = node.getBoundingClientRect()
