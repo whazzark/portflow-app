@@ -21,6 +21,9 @@ Completed by ADR 0016: the contract and the generated types live in the workspac
 Completed by ADR 0017: the web app uses `openapi-fetch` without `openapi-react-query`,
 with one query key factory per domain.
 
+Completed by ADR 0020: the web app parses each response with a Zod schema written by
+hand, whose input is bound to the generated type of the response.
+
 ## Context
 
 The web app must never drift from the API. With two languages there is no shared
