@@ -49,9 +49,9 @@ again. When the two differ, the code is right.
   border and focus ring 3:1, in the three themes.
 - **Type.** The system typeface of the device, no web font to load on a weak network.
   Eight roles, each with its size, line height and weight: \`page-title\`,
-  \`task-title\` and \`section-title\` (semibold); \`body\`, \`control\` and \`label\`
-  (medium), 14px in the office density and 16px in the field density; \`caption\` and
-  \`badge\` (medium), 12px.
+  \`task-title\` and \`section-title\` (semibold); \`body\` and \`control\` (regular)
+  and \`label\` (medium), 14px in the office density and 16px in the field density;
+  \`caption\` (regular) and \`badge\` (medium), 12px.
 - **Shape.** Small radii by role (\`item\` 4px, \`control\` and \`overlay\` 6px, \`card\`
   8px, \`pill\` for badges), hairline borders between rows, soft shadows only on what
   stands above the page (\`control\`, \`raised\`, \`overlay\`, \`dialog\`).
