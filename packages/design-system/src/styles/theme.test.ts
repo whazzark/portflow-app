@@ -6,7 +6,12 @@ import { fileURLToPath } from 'node:url'
 import { compile } from 'tailwindcss'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { RADIUS_ROLES, SHADOW_ROLES, TYPE_ROLES } from '@portflow/design-system/styles/constants'
+import {
+  RADIUS_ROLES,
+  SHADOW_ROLES,
+  SPACING_ROLES,
+  TYPE_ROLES,
+} from '@portflow/design-system/styles/constants'
 
 /*
  * The utilities `theme.css` gives a consumer: the semantic ones, which name a role, and
@@ -136,6 +141,7 @@ describe('the roles that cn knows', () => {
     ['text', TYPE_ROLES],
     ['radius', RADIUS_ROLES],
     ['shadow', SHADOW_ROLES],
+    ['spacing', SPACING_ROLES],
   ])('every semantic %s of theme.css is listed in constants.ts', (namespace, roles) => {
     expect(names(namespace)).toEqual([...roles].toSorted())
   })

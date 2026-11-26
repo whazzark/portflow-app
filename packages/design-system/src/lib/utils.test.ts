@@ -19,6 +19,12 @@ describe('cn', () => {
     ['rounded-control', 'rounded-none'],
     ['shadow-xs', 'shadow-control'],
     ['shadow-control', 'shadow-none'],
+    // The sizes of the density: a class given by a consumer replaces the one of the atom.
+    ['h-control', 'h-8'],
+    ['size-control', 'size-8'],
+    ['px-control-x', 'px-4'],
+    ['py-cell', 'py-2'],
+    ['-inset-hit', '-inset-2'],
   ])('lets %s give way to %s', (first, last) => {
     expect(cn(first, last)).toBe(last)
   })
