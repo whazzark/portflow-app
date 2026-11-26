@@ -4,6 +4,7 @@ import { Button } from '@portflow/design-system/atoms/button'
 import { Toaster } from '@portflow/design-system/atoms/sonner'
 import {
   showErrorToast,
+  showInfoToast,
   showSuccessToast,
   showUndoToast,
 } from '@portflow/design-system/atoms/toasts'
@@ -26,6 +27,9 @@ export const Outcomes: Story = {
         onClick={() => showErrorToast('The service cannot be reached. Try again in a moment.')}
       >
         Show an error
+      </Button>
+      <Button variant="outline" onClick={() => showInfoToast('The weighbridge restarts at 14:00.')}>
+        Show an information
       </Button>
     </div>
   ),
