@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url'
 import { compile } from 'tailwindcss'
 import { beforeAll, describe, expect, test } from 'vitest'
 
+import { RADIUS_ROLES, SHADOW_ROLES, TYPE_ROLES } from '@portflow/design-system/styles/constants'
+
 /*
  * The utilities `theme.css` gives a consumer: the semantic ones, which name a role, and
  * the raw scale, kept until the atoms have moved to the semantic ones.
@@ -46,19 +48,6 @@ function rule(utility: string): string {
 
   return body.trim()
 }
-
-const TYPE_ROLES = [
-  'page-title',
-  'task-title',
-  'section-title',
-  'body',
-  'control',
-  'label',
-  'caption',
-  'badge',
-]
-const RADIUS_ROLES = ['control', 'item', 'overlay', 'card', 'pill']
-const SHADOW_ROLES = ['control', 'raised', 'overlay', 'dialog']
 
 describe('the semantic utilities', () => {
   test.each(TYPE_ROLES)('text-%s sets the size, the line height and the weight', (role) => {
