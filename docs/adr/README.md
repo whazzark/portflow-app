@@ -35,7 +35,8 @@ decision, they draft a new ADR and stop for the human.
 | 0016 | The contract in packages/contracts |
 | 0017 | openapi-fetch with query key factories |
 | 0018 | English for the interface and the user documentation |
-| 0019 | Zod at the edge of the web app |
+| 0019 | The design system as a package, shown in Storybook and synced with Claude Design |
+| 0020 | Zod at the edge of the web app |
 
 Domain decisions taken in the previous repository (immutable report snapshots,
 activity log scope, rotation corrections, capacity compliance, and others) are not

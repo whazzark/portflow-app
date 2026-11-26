@@ -5,7 +5,7 @@ Status: accepted (2026-11-25)
 Completes ADR 0003, which binds the typed client to TanStack Query with
 `openapi-react-query`: that library is not used.
 
-Completed by ADR 0019: the `queryFn` parses the answer with a Zod schema after
+Completed by ADR 0020: the `queryFn` parses the answer with a Zod schema after
 unwrapping it, so the cache holds parsed values.
 
 ## Context

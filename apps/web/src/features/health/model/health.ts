@@ -9,7 +9,7 @@ type HealthResponse = components['schemas']['HealthResponse']
 const componentStatus = z.enum(['up', 'down'])
 
 /**
- * The answer of `GET /api/health`, parsed by its `queryFn` (ADR 0019). Its input is the
+ * The answer of `GET /api/health`, parsed by its `queryFn` (ADR 0020). Its input is the
  * `HealthResponse` of the contract: a change of one without the other fails the build.
  */
 export const healthAnswerSchema = contractSchema<HealthResponse>()(

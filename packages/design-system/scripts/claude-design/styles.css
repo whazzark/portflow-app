@@ -1,0 +1,3 @@
+/* The stylesheet of the bundle: the one of Storybook, plus the classes the previews use. */
+@import '../../src/styles/storybook.css';
+@source './content.ts';

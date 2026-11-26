@@ -12,6 +12,9 @@ class CommitTests(unittest.TestCase):
         for header in ("feat(api): add weighing endpoint", "fix: refuse weight below tare", "spec(discharges): record a weighing"):
             self.assertEqual(commits.header_problems(header), [], header)
 
+    def test_style_is_the_type_of_the_design_system(self):
+        self.assertEqual(commits.header_problems("style(design-system): add the button atom"), [])
+
     def test_invalid_headers(self):
         for header in ("add stuff", "feat: Add thing", "feat: add thing.", "feature: add", "feat(API): add", "feat: " + "x" * 80):
             self.assertTrue(commits.header_problems(header), header)

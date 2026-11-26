@@ -5,7 +5,7 @@ import type { z } from 'zod'
 type AcceptEachOther<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false
 
 /**
- * The schema of an answer of the API, bound to its type in the contract (ADR 0019):
+ * The schema of an answer of the API, bound to its type in the contract (ADR 0020):
  * `contractSchema<components['schemas']['X']>()(z.object({ ... }))`. It returns the
  * schema as it is, and compiles only when the input of the schema and the answer of
  * the contract accept each other: a required field added or removed, or a value added
