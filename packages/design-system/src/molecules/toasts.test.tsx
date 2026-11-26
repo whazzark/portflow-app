@@ -13,9 +13,10 @@ test('a success toast says what was done', async () => {
   })
 
   expect(await screen.findByText('Vessel announced')).toBeVisible()
-  expect(
-    screen.getByText('Vessel announced').closest('[data-sonner-toast]'),
-  ).toHaveAttribute('data-type', 'success')
+  expect(screen.getByText('Vessel announced').closest('[data-sonner-toast]')).toHaveAttribute(
+    'data-type',
+    'success',
+  )
 })
 
 test('an error toast says what went wrong', async () => {
