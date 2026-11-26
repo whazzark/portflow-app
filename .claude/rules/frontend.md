@@ -62,8 +62,10 @@ packages, then `@portflow/*`, then `@/`, then relative.
   (`type HealthTableProps = { status: HealthStatus }`).
 - The one exception is a module augmentation (`declare module` ... `interface Register`),
   which only an interface can merge: disable the rule on that line and say why.
+- A read-only array is `ReadonlyArray<T>`, never `readonly T[]`; a mutable one is `T[]`,
+  never `Array<T>`.
 
-Checked by Oxlint (`typescript/consistent-type-definitions`).
+Checked by Oxlint (`typescript/consistent-type-definitions`, `typescript/array-type`).
 
 ## Constants
 
