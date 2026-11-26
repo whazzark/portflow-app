@@ -139,8 +139,10 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
   the loader, the page and `select` all hold parsed values, never raw JSON:
 
   ```ts
-  queryFn: async ({ signal }) =>
-    healthResponseSchema.parse(await unwrap(apiClient.GET('/api/health', { signal }))),
+  queryFn: async ({ signal }) => {
+    const response = await unwrap(apiClient.GET('/api/health', { signal }))
+    return healthResponseSchema.parse(response)
+  },
   select: toHealthStatus,
   ```
 

@@ -16,7 +16,9 @@ import { healthResponseSchema } from './health-response'
 export const healthQuery = () =>
   queryOptions({
     queryKey: healthQueryKeys.get(),
-    queryFn: async ({ signal }) =>
-      healthResponseSchema.parse(await unwrap(apiClient.GET('/api/health', { signal }))),
+    queryFn: async ({ signal }) => {
+      const response = await unwrap(apiClient.GET('/api/health', { signal }))
+      return healthResponseSchema.parse(response)
+    },
     select: toHealthStatus,
   })
