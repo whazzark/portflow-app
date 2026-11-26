@@ -110,9 +110,7 @@ and a pull request cannot weaken the checks that judge it.
   a test, a step of the implementation. Do not gather a branch into one commit and do
   not rewrite its history to tidy it: the pull request is merged by squash, and small
   commits keep the review readable (not checked).
-- Only the first commit of a branch ends with the trailer
-  `Co-Authored-By: Claude <noreply@anthropic.com>` when Claude wrote it; the
-  others carry none, so the squash commit names Claude once (not checked).
+- No commit carries a `Co-Authored-By` trailer, Claude's included (not checked).
 
 ## Pull requests
 
