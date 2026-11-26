@@ -50,9 +50,9 @@ and writes the handover.
 ### Scope
 
 You write under `packages/design-system/` and in `packages/e2e/tests/design-system.spec.ts`.
-A change of a public name breaks its consumers in `apps/web`: update their imports
-there and nothing else, and list each file in your report. Never change what a screen
-shows or does.
+Never write under `apps/`. When you rename a public name, keep a deprecated re-export
+under its old name so that `apps/web` still builds, and list each renamed name in your
+report: its consumers move in a chore. Never change what a screen shows or does.
 
 ## Job 2: the mock-up of a feature
 
