@@ -1,12 +1,26 @@
 ---
 name: ux-copy
-description: Write or review UX copy — microcopy, error messages, empty states, CTAs. Trigger with "write copy for", "what should this button say?", "review this error message", or when naming a CTA, wording a confirmation dialog, filling an empty state, or writing onboarding text.
+description: Review the UX copy of a Portflow mock-up or component (labels, error messages, empty states, actions) and propose wording. Used by the designer agent only, on a mock-up before it is delivered; never to settle a label.
 argument-hint: "<context or copy to review>"
 ---
 
 # /ux-copy
 
-> If you see unfamiliar placeholders or need to check which tools are connected, see [CONNECTORS.md](../../CONNECTORS.md).
+> Copied from `anthropics/knowledge-work-plugins`, plugin `design` 1.2.0, commit
+> `c71b6f3082b1e5ace3d1a9e30ac9205934134c9c`, under the Apache License 2.0 (`LICENSE`).
+> Changed for Portflow: the description, this note and the Portflow section; the link to
+> `CONNECTORS.md` and the section "If Connectors Available" are removed (no connector is
+> installed). Used by the `designer` agent only (`.claude/agents/designer.md`).
+
+## In Portflow
+
+- You propose, you never decide: a label, a value or a pattern you suggest is listed for
+  the human, who settles it. Labels are in English, in the terms of `CONTEXT.md`; the
+  labels of the approved mock-ups in `specs/*/design/` are the reference.
+- The design system is `packages/design-system` (ADR 0012, ADR 0019): judge against it,
+  never write a second one.
+- Ignore what this skill says about asking the user: the agent that runs it reports its
+  findings instead.
 
 Write or review UX copy for any interface context.
 
@@ -89,16 +103,6 @@ Adapt tone to context:
 ### Localization Notes
 [Anything translators should know — idioms to avoid, character expansion, cultural context]
 ```
-
-## If Connectors Available
-
-If **~~knowledge base** is connected:
-- Pull your brand voice guidelines and content style guide
-- Check for existing copy patterns and terminology standards
-
-If **~~design tool** is connected:
-- View the screen context in Figma to understand the full user flow
-- Check character limits and layout constraints from the design
 
 ## Tips
 

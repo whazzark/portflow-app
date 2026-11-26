@@ -1,12 +1,26 @@
 ---
 name: accessibility-review
-description: Run a WCAG 2.1 AA accessibility audit on a design or page. Trigger with "audit accessibility", "check a11y", "is this accessible?", or when reviewing a design for color contrast, keyboard navigation, touch target size, or screen reader behavior before handoff.
-argument-hint: "<Figma URL, URL, or description>"
+description: Run a WCAG 2.1 AA accessibility review of a Portflow component of the design system and report findings. Used by the designer agent only, on a component during a style issue.
+argument-hint: "<component, mock-up export or description>"
 ---
 
 # /accessibility-review
 
-> If you see unfamiliar placeholders or need to check which tools are connected, see [CONNECTORS.md](../../CONNECTORS.md).
+> Copied from `anthropics/knowledge-work-plugins`, plugin `design` 1.2.0, commit
+> `c71b6f3082b1e5ace3d1a9e30ac9205934134c9c`, under the Apache License 2.0 (`LICENSE`).
+> Changed for Portflow: the description, the argument hint, this note and the Portflow section; the link to
+> `CONNECTORS.md` and the section "If Connectors Available" are removed (no connector is
+> installed). Used by the `designer` agent only (`.claude/agents/designer.md`).
+
+## In Portflow
+
+- You propose, you never decide: a label, a value or a pattern you suggest is listed for
+  the human, who settles it. Labels are in English, in the terms of `CONTEXT.md`; the
+  labels of the approved mock-ups in `specs/*/design/` are the reference.
+- The design system is `packages/design-system` (ADR 0012, ADR 0019): judge against it,
+  never write a second one.
+- Ignore what this skill says about asking the user: the agent that runs it reports its
+  findings instead.
 
 Audit a design or page for WCAG 2.1 AA accessibility compliance.
 
@@ -110,16 +124,6 @@ Audit for accessibility: @$1
 2. **[Major fix]** — Improves [what] for [who]
 3. **[Minor fix]** — Nice to have
 ```
-
-## If Connectors Available
-
-If **~~design tool** is connected:
-- Inspect color values, font sizes, and touch targets directly from Figma
-- Check component ARIA roles and keyboard behavior in the design spec
-
-If **~~project tracker** is connected:
-- Create tickets for each accessibility finding with severity and WCAG criterion
-- Link findings to existing accessibility remediation epics
 
 ## Tips
 
