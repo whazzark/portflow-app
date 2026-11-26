@@ -104,8 +104,11 @@ and a pull request cannot weaken the checks that judge it.
   `feat(...)` or `fix(...)` (not checked).
 - Many small commits, each one change that can be described in its header: a rename,
   a test, a step of the implementation. Do not gather a branch into one commit and do
-  not rewrite its history to tidy it: the pull request is merged by squash, so only its
-  title reaches `main`, and small commits keep the review readable (not checked).
+  not rewrite its history to tidy it: the pull request is merged by squash, and small
+  commits keep the review readable (not checked).
+- Only the first commit of a branch ends with the trailer
+  `Co-Authored-By: Claude <model> <noreply@anthropic.com>` when Claude wrote it; the
+  others carry none, so the squash commit names Claude once (not checked).
 
 ## Pull requests
 
@@ -120,8 +123,9 @@ and a pull request cannot weaken the checks that judge it.
 - `Spec` links `specs/<NNN>-<slug>/` for spec, design and feat PRs.
 - `Requirements covered` lists the functional requirements on a `feat/` PR.
 - Every checklist item of the template is present and ticked; none is removed or reworded.
-- Merged by squash; the commit on `main` is the PR title followed by the pull request
-  number, `<title> (#<pr>)` (a repository setting: default commit message "Pull request title").
+- Merged by squash; the commit on `main` is titled `<title> (#<pr>)` and its body lists
+  the messages of the branch commits (a repository setting: default commit message
+  "Pull request title and commit details").
 
 ## Specs
 
