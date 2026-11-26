@@ -1,9 +1,10 @@
-# 0020. Forms with TanStack Form and Zod, outcomes in toasts
+# 0021. Forms with TanStack Form and Zod, outcomes in toasts
 
 Status: accepted (2026-11-26)
 
-Completes ADR 0004 (the web app), ADR 0012 and 0019 (the design system), and ADR 0015
-(problem details): a problem can now name the fields of the request it refuses.
+Completes ADR 0004 (the web app), ADR 0012 and 0019 (the design system), ADR 0015
+(problem details): a problem can now name the fields of the request it refuses, and
+ADR 0020, which parses the responses with Zod: the forms use the same Zod.
 
 ## Context
 
@@ -89,9 +90,9 @@ about an error or a success in its own place. Three things were missing:
   checks that each refusal of a field it can produce has a code that says it precisely,
   and adds the code in the same pull request otherwise. A business refusal gets its
   own code, not a generic one. A code is never renamed or removed (ADR 0015).
-- **Versions:** `@tanstack/react-form` 1.33.5 and `zod` 4.6.7, pinned, released weeks
-  before this decision and maintained; `sonner` stays at the version of the design
-  system.
+- **Versions:** `@tanstack/react-form` 1.33.5, pinned, released weeks before this
+  decision and maintained; `zod` and `sonner` stay at the versions ADR 0020 and the
+  design system pinned.
 
 ## Consequences
 
@@ -104,5 +105,5 @@ about an error or a success in its own place. Three things were missing:
 - Adding a field error code is a change of the `api` crate, of the contract and of the
   labels of the web app, in the same pull request; the build of the web app breaks when
   a code has no label.
-- Zod is a dependency of the web app from this ADR on. Parsing the answers of the API
-  with Zod is decided apart (issue #35).
+- The schemas of the forms live in `model/`, on the values the user types; those of the
+  responses live in `api/`, on the wire (ADR 0020). The two never share a schema.

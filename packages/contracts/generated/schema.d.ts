@@ -35,7 +35,7 @@ export interface components {
          * @description Why a field of the request body is refused. The web app maps each value to a label,
          *     shown under the field: a value is never renamed or removed without the two issues of
          *     a contract change. A form, or an endpoint that validates a body, adds the code that
-         *     says its refusal precisely when none does (ADR 0020).
+         *     says its refusal precisely when none does (ADR 0021).
          * @enum {string}
          */
         FieldErrorCode: "REQUIRED" | "INVALID_FORMAT" | "OUT_OF_RANGE" | "TOO_LONG";

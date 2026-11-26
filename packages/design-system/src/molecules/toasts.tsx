@@ -11,7 +11,7 @@ export function showSuccessToast(message: string) {
 
 /**
  * Tells that an action failed for a reason no field of a form can show: the label of
- * the error of the API. It stays as long as a success toast (ADR 0020). Needs the
+ * the error of the API. It stays as long as a success toast (ADR 0021). Needs the
  * `Toaster` atom, rendered once near the root.
  */
 export function showErrorToast(message: string) {

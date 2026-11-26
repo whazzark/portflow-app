@@ -1,6 +1,4 @@
-import type { components } from '@portflow/contracts'
-
-type HealthResponse = components['schemas']['HealthResponse']
+import type { HealthResponse } from '../api/health-response'
 
 /** What the health screen shows: whether each component is up. */
 export type HealthStatus = {

@@ -37,7 +37,7 @@ pub enum ProblemCode {
 /// Why a field of the request body is refused. The web app maps each value to a label,
 /// shown under the field: a value is never renamed or removed without the two issues of
 /// a contract change. A form, or an endpoint that validates a body, adds the code that
-/// says its refusal precisely when none does (ADR 0020).
+/// says its refusal precisely when none does (ADR 0021).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum FieldErrorCode {
@@ -132,7 +132,7 @@ impl Problem {
         )
     }
 
-    /// A request body whose fields are refused, each named by its pointer (ADR 0020).
+    /// A request body whose fields are refused, each named by its pointer (ADR 0021).
     pub fn validation_failed(errors: Vec<FieldError>) -> Self {
         Self {
             errors,

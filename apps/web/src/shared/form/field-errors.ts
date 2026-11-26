@@ -3,7 +3,7 @@ import type { ApiError } from '@/shared/api/problem'
 /**
  * The field of a form a JSON Pointer of the request body names, or `undefined` when it
  * names none. Written next to the mapper of the form, which alone knows how the values
- * become the body (ADR 0020).
+ * become the body (ADR 0021).
  */
 export type FieldOfPointer<Name extends string> = (pointer: string) => Name | undefined
 

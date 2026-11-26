@@ -13,7 +13,7 @@ export type Problem = components['schemas']['Problem']
 export type ProblemCode = components['schemas']['ProblemCode']
 export type FieldErrorCode = components['schemas']['FieldErrorCode']
 
-/** A field of the request body the API refused (ADR 0020). */
+/** A field of the request body the API refused (ADR 0021). */
 export type ApiFieldError = {
   /** A JSON Pointer into the body of the request, such as `/tonnage`. */
   pointer: string

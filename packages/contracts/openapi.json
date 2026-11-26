@@ -90,7 +90,7 @@
       },
       "FieldErrorCode": {
         "type": "string",
-        "description": "Why a field of the request body is refused. The web app maps each value to a label,\nshown under the field: a value is never renamed or removed without the two issues of\na contract change. A form, or an endpoint that validates a body, adds the code that\nsays its refusal precisely when none does (ADR 0020).",
+        "description": "Why a field of the request body is refused. The web app maps each value to a label,\nshown under the field: a value is never renamed or removed without the two issues of\na contract change. A form, or an endpoint that validates a body, adds the code that\nsays its refusal precisely when none does (ADR 0021).",
         "enum": [
           "REQUIRED",
           "INVALID_FORMAT",

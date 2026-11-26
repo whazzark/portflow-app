@@ -15,7 +15,7 @@ export const PROBLEM_LABELS: Record<ProblemCode, string> = {
 
 /**
  * The label shown under a field the API refused, keyed by the code of the refusal
- * (ADR 0020): the build breaks when a code of the contract has no label.
+ * (ADR 0021): the build breaks when a code of the contract has no label.
  */
 export const FIELD_ERROR_LABELS: Record<FieldErrorCode, string> = {
   REQUIRED: 'This field is required.',

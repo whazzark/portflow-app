@@ -7,7 +7,7 @@ import { ApiError } from '@/shared/api/problem'
 import { type FieldOfPointer, toFormErrors } from './field-errors'
 
 /**
- * Shows why the API refused a submitted form (ADR 0020): the fields it names under
+ * Shows why the API refused a submitted form (ADR 0021): the fields it names under
  * those fields, everything else in a toast with the label of its code. The values the
  * user typed stay. Call it from the `onSubmit` of the form, with the error its request
  * threw; an error that does not come from the API is thrown again.
