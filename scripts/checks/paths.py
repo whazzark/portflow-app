@@ -23,9 +23,9 @@ FRAME = (
 )
 CODE_ARTEFACTS = ("plan.md", "test-report.md")
 USER_DOCS = "packages/user-docs/"
-# A style branch changes the design system, its end-to-end test, the lockfile when an
-# atom pins a dependency, and the imports of apps/web when a public name changes.
-STYLE_PATHS = ("packages/design-system/", "packages/e2e/tests/design-system.spec.ts", "apps/web/")
+# A style branch changes the design system, its end-to-end test, and the lockfile when
+# an atom pins a dependency.
+STYLE_PATHS = ("packages/design-system/", "packages/e2e/tests/design-system.spec.ts")
 STYLE_FILES = ("pnpm-lock.yaml",)
 
 
@@ -53,7 +53,7 @@ def problem_for(btype, issue, path):
         if not (path.startswith(STYLE_PATHS) or path in STYLE_FILES):
             return (
                 "a style/ branch changes only packages/design-system/, "
-                "packages/e2e/tests/design-system.spec.ts, pnpm-lock.yaml and the imports of apps/web/"
+                "packages/e2e/tests/design-system.spec.ts and pnpm-lock.yaml"
             )
     elif path.startswith("specs/"):
         folder, _, rest = path[len("specs/"):].partition("/")
