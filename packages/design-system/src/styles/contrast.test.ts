@@ -40,7 +40,8 @@ const PAIRS: [string, string, number][] = [
   // The border of an invalid control, and the error text under a field of a form.
   ['danger', 'background', TEXT],
   ['danger', 'surface', TEXT],
-  // Information drawn as text on the page: a status or the icon of a toast.
+  // Information drawn as text on the page: a status (`text-info`). An info toast is filled
+  // with info, its text, icon and action in info-text: the pair above.
   ['info', 'background', TEXT],
   ['info', 'surface', TEXT],
   // A coloured toast is filled with its state colour: its edge against the page, and the
