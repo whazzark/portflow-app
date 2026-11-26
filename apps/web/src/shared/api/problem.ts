@@ -25,7 +25,7 @@ type ApiErrorOptions = ErrorOptions & {
   /** The API answered a problem, with a code this build does not know. */
   refused?: boolean
   /** The fields of the request body the problem names. */
-  fieldErrors?: Readonly<ApiFieldError[]>
+  fieldErrors?: ReadonlyArray<ApiFieldError>
 }
 
 /**
@@ -37,7 +37,7 @@ export class ApiError extends Error {
   readonly code: ProblemCode | null
   readonly refused: boolean
   /** The fields of the request body the API refused; empty when it names none. */
-  readonly fieldErrors: Readonly<ApiFieldError[]>
+  readonly fieldErrors: ReadonlyArray<ApiFieldError>
 
   constructor(
     code: ProblemCode | null,
