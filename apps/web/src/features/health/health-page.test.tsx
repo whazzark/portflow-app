@@ -66,8 +66,18 @@ describe('the health page', () => {
   })
 
   test('says that something went wrong when the error does not come from the API', async () => {
-    // A success without a body: TanStack Query refuses data that is undefined.
+    // A success without a body: the schema of the answer refuses it.
     server.use(http.get(HEALTH_PATH, () => new HttpResponse(null, { status: 200 })))
+
+    renderApp('/')
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(PAGE_LABELS.unexpectedError)
+  })
+
+  test('says that something went wrong when the answer does not match its schema', async () => {
+    server.use(
+      http.get(HEALTH_PATH, () => HttpResponse.json({ status: 'degraded', database: 'up' })),
+    )
 
     renderApp('/')
 
