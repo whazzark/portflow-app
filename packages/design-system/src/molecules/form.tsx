@@ -54,7 +54,7 @@ const formValidationLogic: ValidationLogicFn = ({ event, form, validators, runVa
 }
 
 /** The text of the first error of a field: a message of the schema, or a label of the API. */
-function firstMessage(errors: readonly unknown[]): string | undefined {
+function firstMessage(errors: Readonly<unknown[]>): string | undefined {
   for (const error of errors.flat()) {
     if (typeof error === 'string') return error
     if (typeof error === 'object' && error !== null && 'message' in error) {
