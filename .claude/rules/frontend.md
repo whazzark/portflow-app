@@ -5,7 +5,7 @@ paths:
 
 # Front-end rules (React)
 
-Stack: React, TypeScript strict, Vite, TanStack Router, TanStack Query, shadcn/ui,
+Stack: React, TypeScript strict, Vite, TanStack Router, TanStack Query, Zod, shadcn/ui,
 Oxlint, Oxfmt, Vitest, Testing Library, MSW. See `docs/architecture.md`.
 
 ## Structure
@@ -15,16 +15,16 @@ src/
   app/        bootstrap: providers, router, query client, pending and error states of a route
   routes/     file-based routes; thin
   features/<context>/
-    api/          <context>-query-keys.ts, queryOptions, mutations
+    api/          <context>-query-keys.ts, queryOptions, mutations, schemas of the responses
     hooks/        screen logic worth sharing or testing
-    model/        screen types, mappers from API types, form schemas
+    model/        screen types, mappers, form schemas
     components/   organisms: sections with domain vocabulary; data comes through props
     constants.ts  the fixed values the files of the feature share
     <context>-page.tsx   page: connects a template and organisms to data
   shared/
-    api/          HTTP client bound to the types of @portflow/contracts; ApiError
+    api/          HTTP client bound to the types of @portflow/contracts; ApiError; contractSchema
     styles/       the entry stylesheet: Tailwind, then the tokens of the design system
-    lib/          utilities
+    lib/          utilities; schemas of wire values (isoDateTime)
   test/         MSW server, setup, renderApp
 ```
 
@@ -135,6 +135,34 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 - A read calls `apiClient` (openapi-fetch) in its `queryFn`, through `unwrap`, which
   throws an `ApiError`: its `label` is what the error state shows. No
   `openapi-react-query` (ADR 0017).
+- The `queryFn` then parses the response with its Zod schema (ADR 0020), so the cache,
+  the loader, the page and `select` all hold parsed values, never raw JSON:
+
+  ```ts
+  queryFn: async ({ signal }) => {
+    const response = await unwrap(apiClient.GET('/api/health', { signal }))
+    return healthResponseSchema.parse(response)
+  },
+  select: toHealthStatus,
+  ```
+
+  A response that does not match its schema fails the read: the error state of the
+  route shows its general label.
+- Each response has one schema, written by hand in
+  `features/<context>/api/<name>-response.ts`, which also exports its parsed type. The
+  schema turns wire values into values (`isoDateTime` of `shared/lib/schemas.ts` for an
+  ISO date and time); the mapper of `model/` builds the screen type from that parsed
+  type, never from a generated one. The input of the schema is bound to the generated
+  type of the response with `contractSchema` (`shared/api/contract-schema.ts`), so a
+  change of the contract that the schema does not follow fails the build:
+
+  ```ts
+  export const healthResponseSchema = contractSchema<components['schemas']['HealthResponse']>()(
+    z.object({ status: componentStatus, database: componentStatus }),
+  )
+
+  export type HealthResponse = z.output<typeof healthResponseSchema>
+  ```
 - Every cache key comes from the key factory of its domain,
   `features/<context>/api/<context>-query-keys.ts` (ADR 0017):
 
@@ -196,7 +224,9 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 
 ## Tests
 
-- Mappers and rules in `model/`: unit tests without rendering.
+- Mappers and rules in `model/`, and schemas of the responses in `api/`: unit tests
+  without rendering. Each schema is tested with a response that matches it and one
+  that does not.
 - Features: Testing Library through the real router, network mocked with MSW.
   Never mock the API client module. `renderApp(path)` (`src/test/render-app.tsx`)
   renders the whole app with fresh clients, no retry, and the pending state of a route
