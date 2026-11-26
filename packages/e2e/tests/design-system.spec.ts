@@ -33,89 +33,177 @@ function contrast(first: string, second: string): number {
   return ((light ?? 0) + 0.05) / ((dark ?? 0) + 0.05)
 }
 
-type FocusIndicator = { outline: string[]; shadows: string[]; page: string; name: string }
+type Focus = { name: string; visible: boolean; reason: string }
 
-/** What the element that has the focus draws around it, and the colour of the page. */
-async function focusIndicator(page: Page): Promise<FocusIndicator | undefined> {
+/**
+ * Measures the focus indicator of the element that has the focus, in the page: undefined
+ * when nothing in the story has the focus or when it comes back to an element already
+ * measured. The indicator is an outline or a ring (a box-shadow with a spread and no blur)
+ * whose colour, once its transition is over, made opaque by the opacity of the element and
+ * its ancestors, reaches 3:1 against the page, and that no scrolling ancestor cuts off.
+ */
+async function measureFocus(page: Page): Promise<Focus | undefined> {
   return page.evaluate(async () => {
-    const element = document.activeElement
-    if (!element || element === document.body) return undefined
-    // Controls ease their ring in: measure it once the transition is over.
-    await Promise.all(element.getAnimations().map((animation) => animation.finished))
-    const style = getComputedStyle(element)
-    const outline =
-      style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 1
-        ? [style.outlineColor]
-        : []
-    // A ring is a box-shadow with a spread and no blur: `rgb(…) 0px 0px 0px 3px`.
-    const shadows = style.boxShadow
-      .split(/,(?![^(]*\))/)
-      .filter((shadow) => {
-        const lengths = (shadow.match(/-?[\d.]+px/g) ?? []).map(Number.parseFloat)
-        return (lengths[3] ?? 0) >= 1 && (lengths[2] ?? 0) === 0
-      })
-      .map((shadow) => shadow.match(/rgba?\([^)]*\)/)?.[0] ?? '')
-    return {
-      outline,
-      shadows,
-      page: getComputedStyle(document.body).backgroundColor,
-      name: `${element.tagName.toLowerCase()} "${(element.textContent ?? '').trim().slice(0, 30)}"`,
+    const element = document.activeElement as HTMLElement | null
+    if (!element || element === document.body || element.dataset.focusMeasured) return undefined
+    element.dataset.focusMeasured = 'true'
+    await Promise.all(
+      element
+        .getAnimations()
+        .filter((animation) => animation instanceof CSSTransition)
+        .map((animation) => animation.finished.catch(() => undefined)),
+    )
+
+    // Any CSS colour (rgb, oklab, color-mix…) to RGBA through a canvas; an unreadable one
+    // stays transparent, so it counts as not visible.
+    const context = document.createElement('canvas').getContext('2d', { willReadFrequently: true })
+    const rgba = (colour: string): number[] => {
+      if (!context) return [0, 0, 0, 0]
+      context.clearRect(0, 0, 1, 1)
+      context.fillStyle = 'transparent'
+      context.fillStyle = colour
+      context.fillRect(0, 0, 1, 1)
+      return [...context.getImageData(0, 0, 1, 1).data]
     }
+    // These run in the page, which cannot reach the helpers of this file.
+    // oxlint-disable-next-line unicorn/consistent-function-scoping
+    const relativeLuminance = ([red = 0, green = 0, blue = 0]: number[]) =>
+      [red, green, blue]
+        .map((value) => value / 255)
+        .map((value) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4))
+        .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index]!, 0)
+    const ratio = (first: number[], second: number[]) => {
+      const [light, dark] = [relativeLuminance(first), relativeLuminance(second)].toSorted(
+        (a, b) => b - a,
+      )
+      return (light! + 0.05) / (dark! + 0.05)
+    }
+
+    let opacity = 1
+    for (let node: HTMLElement | null = element; node; node = node.parentElement) {
+      opacity *= Number(getComputedStyle(node).opacity)
+    }
+    const pageColour = rgba(getComputedStyle(document.body).backgroundColor)
+    const style = getComputedStyle(element)
+
+    const drawn: { colour: string; width: number }[] = []
+    if (style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 1) {
+      drawn.push({
+        colour: style.outlineColor,
+        width: Number.parseFloat(style.outlineWidth) + Number.parseFloat(style.outlineOffset),
+      })
+    }
+    for (const shadow of style.boxShadow.split(/,(?![^(]*\))/)) {
+      const lengths = (shadow.match(/-?[\d.]+px/g) ?? []).map(Number.parseFloat)
+      if ((lengths[3] ?? 0) >= 1 && (lengths[2] ?? 0) === 0 && !shadow.includes('inset')) {
+        drawn.push({ colour: shadow.replace(/\s+-?[\d.]+px.*$/, '').trim(), width: lengths[3]! })
+      }
+    }
+
+    // A scrolling ancestor cuts off what is drawn outside its box.
+    const box = element.getBoundingClientRect()
+    const cutOff = (width: number) => {
+      for (let node = element.parentElement; node; node = node.parentElement) {
+        const { overflowX, overflowY } = getComputedStyle(node)
+        if (overflowX === 'visible' && overflowY === 'visible') continue
+        const area = node.getBoundingClientRect()
+        if (
+          box.left - width < area.left - 0.5 ||
+          box.right + width > area.right + 0.5 ||
+          box.top - width < area.top - 0.5 ||
+          box.bottom + width > area.bottom + 0.5
+        ) {
+          return true
+        }
+      }
+      return false
+    }
+
+    const name = `${element.tagName.toLowerCase()} "${(element.textContent ?? element.getAttribute('aria-label') ?? '').trim().slice(0, 30)}"`
+    const reasons = drawn.map(({ colour, width }) => {
+      const [red = 0, green = 0, blue = 0, alpha = 0] = rgba(colour)
+      if ((alpha / 255) * opacity < 1) return `${colour} is not opaque`
+      if (ratio([red, green, blue], pageColour) < 3) return `${colour} is below 3:1`
+      if (cutOff(width)) return `${colour} is cut off`
+      return ''
+    })
+    const visible = reasons.includes('')
+    return { name, visible, reason: visible ? '' : reasons.join('; ') || 'nothing drawn' }
   })
 }
 
-/** Whether a colour is opaque and reaches 3:1 against the page. */
-function visible(colour: string, pageColour: string): boolean {
-  const alpha = colour.startsWith('rgba') ? Number(colour.match(/[\d.]+/g)?.[3] ?? 1) : 1
-  return alpha === 1 && contrast(colour, pageColour) >= 3
+/** Tabs through what has the focus and returns each element whose focus cannot be seen. */
+async function tabThrough(
+  page: Page,
+  where: string,
+): Promise<{ measured: number; unseen: string[] }> {
+  const unseen: string[] = []
+  let measured = 0
+  for (let step = 0; step < 40; step += 1) {
+    await page.keyboard.press('Tab')
+    const focus = await measureFocus(page)
+    if (!focus) break
+    measured += 1
+    if (!focus.visible) unseen.push(`${where}: ${focus.name}: ${focus.reason}`)
+  }
+  return { measured, unseen }
 }
 
 for (const theme of ['light', 'dark', 'contrast'] as const) {
   test(`every element of every story shows the keyboard focus, ${theme} theme`, async ({
     page,
   }) => {
+    test.setTimeout(120_000)
     const index = await (await page.request.get(`${STORYBOOK_URL}/index.json`)).json()
     const stories = Object.values(index.entries as Record<string, { id: string; type: string }>)
       .filter((entry) => entry.type === 'story')
       .map((entry) => entry.id)
 
+    let measured = 0
     const unseen: string[] = []
     for (const id of stories) {
       await page.goto(`${STORYBOOK_URL}/iframe.html?id=${id}&viewMode=story&globals=theme:${theme}`)
       await expect(page.locator('#storybook-root > *').first()).toBeAttached()
-      // Tab through the story until the focus leaves it or comes back to the start.
-      const seen = new Set<string>()
-      for (let step = 0; step < 30; step += 1) {
-        await page.keyboard.press('Tab')
-        const indicator = await focusIndicator(page)
-        if (!indicator || seen.has(indicator.name)) break
-        seen.add(indicator.name)
-        const drawn = [...indicator.outline, ...indicator.shadows]
-        if (!drawn.some((colour) => visible(colour, indicator.page))) {
-          unseen.push(`${id}: ${indicator.name}`)
-        }
-      }
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+      const result = await tabThrough(page, id)
+      measured += result.measured
+      unseen.push(...result.unseen)
     }
+    expect(measured).toBeGreaterThan(20)
     expect(unseen).toEqual([])
   })
 
-  test(`a toast that has the focus shows it, ${theme} theme`, async ({ page }) => {
+  test(`the open dialog and the toasts show the keyboard focus, ${theme} theme`, async ({
+    page,
+  }) => {
+    const unseen: string[] = []
+
     await page.goto(
-      `${STORYBOOK_URL}/iframe.html?id=molecules-undo-toast--default&viewMode=story&globals=theme:${theme}`,
+      `${STORYBOOK_URL}/iframe.html?id=atoms-dialog--default&viewMode=story&globals=theme:${theme}`,
     )
-    await page.getByRole('button', { name: 'Delete the weighing' }).click()
-    const toast = page.locator('[data-sonner-toast]')
-    await expect(toast).toBeVisible()
-    // Reach the toast with the keyboard, from the start of the page.
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur())
-    for (let step = 0; step < 5; step += 1) {
-      await page.keyboard.press('Tab')
-      if (await toast.evaluate((element) => element === document.activeElement)) break
-    }
-    await expect(toast).toBeFocused()
-    const indicator = await focusIndicator(page)
-    const drawn = [...(indicator?.outline ?? []), ...(indicator?.shadows ?? [])]
-    expect(drawn.some((colour) => visible(colour, indicator?.page ?? ''))).toBe(true)
+    await page.getByRole('button', { name: 'Close the hold' }).focus()
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('dialog')).toBeVisible()
+    const dialog = await tabThrough(page, 'dialog')
+    expect(dialog.measured).toBeGreaterThanOrEqual(3)
+    unseen.push(...dialog.unseen)
+
+    await page.goto(
+      `${STORYBOOK_URL}/iframe.html?id=atoms-toast--kinds&viewMode=story&globals=theme:${theme}`,
+    )
+    await page.getByRole('button', { name: 'Success' }).click()
+    await expect(page.locator('[data-sonner-toast]')).toBeVisible()
+    // Sonner's shortcut moves the focus to the list of toasts, then Tab to the toast.
+    await page.keyboard.press('Alt+KeyT')
+    const list = await measureFocus(page)
+    expect(list?.name).toMatch(/^ol/)
+    if (list && !list.visible) unseen.push(`toast list: ${list.reason}`)
+    await page.keyboard.press('Tab')
+    const toast = await measureFocus(page)
+    expect(toast).toBeDefined()
+    if (toast && !toast.visible) unseen.push(`toast: ${toast.reason}`)
+
+    expect(unseen).toEqual([])
   })
 }
 
