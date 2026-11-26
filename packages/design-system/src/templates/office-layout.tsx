@@ -4,7 +4,8 @@ import { cn } from '@portflow/design-system/lib/utils'
 
 /*
  * The layout of the office screens: a navigation and the content. Below `lg` the
- * navigation is a bar above the content, whose links scroll sideways inside it; from
+ * navigation is a bar above the content, whose links scroll sideways inside it, with
+ * room for their focus ring when the focus scrolls one into view; from
  * `lg` it is a column on the left. The page itself never scrolls sideways.
  */
 
@@ -34,7 +35,7 @@ export function OfficeLayoutNavList({ className, ...props }: ComponentProps<'ul'
   return (
     <ul
       className={cn(
-        'flex gap-1 overflow-x-auto p-1 lg:flex-col lg:overflow-visible lg:p-0',
+        'flex scroll-px-1 gap-1 overflow-x-auto p-1 lg:flex-col lg:overflow-visible lg:p-0',
         className,
       )}
       {...props}
