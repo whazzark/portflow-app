@@ -56,6 +56,14 @@ The crates, their dependency direction and the bounded contexts are in
   `body = Problem, content_type = PROBLEM_CONTENT_TYPE`, and always the 500. Each
   error carries the problem it really answers as its example, built from the code and
   never typed by hand: `example = json!(Problem::database_unavailable())`.
+- A request body whose fields are refused is answered with
+  `Problem::validation_failed(errors)` (422, `VALIDATION_FAILED`): one
+  `FieldError::new(pointer, code)` per refused field, `pointer` a JSON Pointer into the
+  request body (`/tonnage`), `code` a value of `FieldErrorCode` (ADR 0020). The codes
+  grow with the forms: when an endpoint validates a body, check that each refusal of a
+  field has a code that says it precisely, and add one otherwise, with its label in the
+  web app, in the same pull request. A business refusal gets its own code, not a
+  generic one.
 - The errors of a context are mapped to `Problem` in `api/<context>/error_mapping.rs`.
   An unexpected error becomes `Problem::internal()`, which carries no cause.
 - A handler takes its body and its parameters through `api::extract` (`JsonBody`,

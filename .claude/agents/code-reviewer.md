@@ -41,6 +41,9 @@ you never approve or merge.
    answers, built from the code (`example = json!(Problem::...())`) and not typed by
    hand? The test of the document checks the status code of the example, not its
    `code`: compare it with what the handler returns.
+   For each refusal of a field a new form or endpoint can produce: does a value of
+   `FieldErrorCode` say it precisely, with its label in the web app? A business refusal
+   answered with a generic code is a finding (ADR 0020).
    Does every HTTP test go through `support::call`, and every handler through the
    extractors of `api::extract`? The routes of the page of `/api/docs` are the only
    ones served outside the document: a new route that is not an operation is a blocker.
