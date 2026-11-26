@@ -36,6 +36,7 @@ decision, they draft a new ADR and stop for the human.
 | 0017 | openapi-fetch with query key factories |
 | 0018 | English for the interface and the user documentation |
 | 0019 | The design system as a package, shown in Storybook and synced with Claude Design |
+| 0020 | Forms with TanStack Form and Zod, outcomes in toasts |
 
 Domain decisions taken in the previous repository (immutable report snapshots,
 activity log scope, rotation corrections, capacity compliance, and others) are not
