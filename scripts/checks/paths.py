@@ -23,6 +23,10 @@ FRAME = (
 )
 CODE_ARTEFACTS = ("plan.md", "test-report.md")
 USER_DOCS = "packages/user-docs/"
+# A style branch changes the design system, its end-to-end test, the lockfile when an
+# atom pins a dependency, and the imports of apps/web when a public name changes.
+STYLE_PATHS = ("packages/design-system/", "packages/e2e/tests/design-system.spec.ts", "apps/web/")
+STYLE_FILES = ("pnpm-lock.yaml",)
 
 
 def changed_files(base):
@@ -45,6 +49,12 @@ def problem_for(btype, issue, path):
     elif btype == "docs":
         if not (path.startswith(("docs/", USER_DOCS)) or path in ("README.md", "CONTEXT.md")):
             return f"a docs/ branch changes only docs/, {USER_DOCS}, README.md and CONTEXT.md"
+    elif btype == "style":
+        if not (path.startswith(STYLE_PATHS) or path in STYLE_FILES):
+            return (
+                "a style/ branch changes only packages/design-system/, "
+                "packages/e2e/tests/design-system.spec.ts, pnpm-lock.yaml and the imports of apps/web/"
+            )
     elif path.startswith("specs/"):
         folder, _, rest = path[len("specs/"):].partition("/")
         if btype == "feat" and ("specs/" + folder).startswith(own_spec) and rest in CODE_ARTEFACTS:
