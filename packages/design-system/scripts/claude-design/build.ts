@@ -85,6 +85,8 @@ const COLOUR_USAGE: Record<string, string> = {
   'success-text': 'Text on success.',
   warning: 'A warning toast or status.',
   'warning-text': 'Text on warning.',
+  info: 'Neutral information: an informative toast or status. A cyan, never read as an action.',
+  'info-text': 'Text on info.',
   overlay: 'The veil behind a dialog.',
 }
 
@@ -137,12 +139,35 @@ function themeValues(): Map<string, string> {
 }
 
 function typeTokens(values: Map<string, string>) {
-  const style = (name: string, fontWeight: number, usage: string) => ({
+  const densities = declarations(read('src/styles/tokens.css'))
+  const office = densities.find((block) => block.selector.includes(`[data-density='office']`))
+  const field = densities.find((block) => block.selector.includes(`[data-density='field']`))
+  // A semantic style: its size, line height and weight are theme variables of `theme.css`.
+  const role = (name: string, usage: string) => ({
+    name,
+    fontSize: values.get(`text-${name}`),
+    lineHeight: values.get(`text-${name}--line-height`),
+    fontWeight: Number(values.get(`text-${name}--font-weight`)),
+    usage,
+  })
+  // A semantic style whose size follows the density: one style per density.
+  const dense = (name: string, fontWeight: number, usage: string) =>
+    [
+      { density: 'office', label: 'Office', block: office },
+      { density: 'field', label: 'Field', block: field },
+    ].map(({ density, label, block }) => ({
+      name: `${name}-${density}`,
+      fontSize: block?.values.get(`type-${name}-size`),
+      lineHeight: block?.values.get(`type-${name}-line-height`),
+      fontWeight,
+      usage: `${label}: ${usage}`,
+    }))
+  const raw = (name: string, fontWeight: number, usage: string) => ({
     name,
     fontSize: values.get(`text-${name}`),
     lineHeight: values.get(`text-${name}--line-height`),
     fontWeight,
-    usage,
+    usage: `Raw step, kept until the atoms have moved: ${usage}`,
   })
   return {
     fonts: [],
@@ -152,18 +177,38 @@ function typeTokens(values: Map<string, string>) {
         name: 'Headings',
         family: 'sans',
         styles: [
-          style('2xl', 600, 'The title of a page (h1).'),
-          style('xl', 600, 'The task of a field screen (h1 of the field layout).'),
-          style('lg', 600, 'The title of a section, an empty state or a dialog.'),
+          role('page-title', 'text-page-title: the title of a page (h1).'),
+          role(
+            'task-title',
+            'text-task-title: the task of a field screen (h1 of the field layout).',
+          ),
+          role(
+            'section-title',
+            'text-section-title: the title of a section, an empty state or a dialog.',
+          ),
         ],
       },
       {
         name: 'Text',
         family: 'sans',
         styles: [
-          style('base', 400, 'Body text and inputs on a phone.'),
-          style('sm', 400, 'Controls, tables and labels of office screens.'),
-          style('xs', 400, 'Badges.'),
+          ...dense('body', 400, 'text-body: descriptions, table cells, messages of a state.'),
+          ...dense('control', 400, 'text-control: the value of an input or a select.'),
+          ...dense('label', 500, 'text-label: labels, buttons, tabs, table headers.'),
+          role('caption', 'text-caption: tooltips, the group label of a select.'),
+          role('badge', 'text-badge: badges.'),
+        ],
+      },
+      {
+        name: 'Raw scale',
+        family: 'sans',
+        styles: [
+          raw('2xl', 600, 'use text-page-title.'),
+          raw('xl', 600, 'use text-task-title.'),
+          raw('lg', 600, 'use text-section-title.'),
+          raw('base', 400, 'use text-body or text-control.'),
+          raw('sm', 400, 'use text-body, text-control or text-label.'),
+          raw('xs', 400, 'use text-caption or text-badge.'),
         ],
       },
     ],
@@ -201,16 +246,26 @@ function tokens(ref: string, packageRef: string, repo: string) {
       })),
     },
     radius: listOf(values, 'radius', {
-      sm: 'Checkboxes, select items, small tiles.',
-      md: 'Buttons, inputs, selects, toasts.',
-      lg: 'Cards, dialogs, empty and error states.',
-      xl: 'Large panels.',
+      control:
+        'rounded-control: buttons, inputs, the trigger of a select, skeletons, the active tab.',
+      item: 'rounded-item: checkboxes, the items of a select, the close button of a dialog.',
+      overlay: 'rounded-overlay: what floats: the content of a select, tooltips, toasts.',
+      card: 'rounded-card: dialogs, empty and error states, cards, the list of tabs.',
+      pill: 'rounded-pill: badges.',
+      sm: 'Raw step, kept until the atoms have moved: use rounded-item.',
+      md: 'Raw step, kept until the atoms have moved: use rounded-control or rounded-overlay.',
+      lg: 'Raw step, kept until the atoms have moved: use rounded-card.',
+      xl: 'Raw step, kept until the atoms have moved: no semantic radius uses it.',
     }),
     shadow: listOf(values, 'shadow', {
-      xs: 'Buttons and inputs that are outlined.',
-      sm: 'The active tab.',
-      md: 'Menus and selects.',
-      lg: 'Dialogs.',
+      control: 'shadow-control: outlined buttons, inputs, checkboxes, the trigger of a select.',
+      raised: 'shadow-raised: the active tab.',
+      overlay: 'shadow-overlay: the content of a select, menus.',
+      dialog: 'shadow-dialog: dialogs.',
+      xs: 'Raw step, kept until the atoms have moved: use shadow-control.',
+      sm: 'Raw step, kept until the atoms have moved: use shadow-raised.',
+      md: 'Raw step, kept until the atoms have moved: use shadow-overlay.',
+      lg: 'Raw step, kept until the atoms have moved: use shadow-dialog.',
     }),
     density: densityTokens(),
     meta: {
