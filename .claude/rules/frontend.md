@@ -23,16 +23,15 @@ src/
     <context>-page.tsx   page: connects a template and organisms to data
   shared/
     api/          HTTP client bound to the types of @portflow/contracts; ApiError
-    styles/       tokens: the CSS variables of the Tailwind theme, themes and densities
-    atoms/        shadcn primitives; changed only by a design-system issue
-    molecules/    generic composites of atoms, with no domain vocabulary
-    templates/    page layouts with slots; no domain vocabulary, no data
+    styles/       the entry stylesheet: Tailwind, then the tokens of the design system
     lib/          utilities
   test/         MSW server, setup, renderApp
 ```
 
-The component layers follow atomic design (ADR 0012). The contract and its generated
-types are the workspace `@portflow/contracts` (ADR 0016).
+The component layers follow atomic design (ADR 0012). The tokens, atoms, molecules and
+templates are the workspace `@portflow/design-system` (ADR 0019,
+`.claude/rules/design-system.md`); organisms and pages stay in the features. The
+contract and its generated types are the workspace `@portflow/contracts` (ADR 0016).
 
 There is no `index.ts` that re-exports a folder: barrel files hide cycles. Import the
 file that declares what you need.
@@ -47,8 +46,10 @@ file that declares what you need.
 - Feature names match the back-end contexts.
 - Generated API types stay inside `api/` and `model/`. Components, pages and routes use
   screen types and never import `@portflow/contracts` or `shared/api`.
-- Inside `shared`: atoms import tokens only, molecules import atoms, templates import
-  molecules and atoms. Never the other way.
+- Components, pages and routes import the design system file by file:
+  `@portflow/design-system/atoms/button`, `.../molecules/error-state`,
+  `.../templates/page-layout`. Its own order (atoms, molecules, templates) is checked
+  in the package.
 
 These rules are checked by Oxlint (`no-restricted-imports` per folder, in
 `apps/web/.oxlintrc.json`), with `import/no-cycle`. Oxfmt sorts the imports: external
@@ -74,8 +75,12 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
 
 ## Design system
 
+- The package `@portflow/design-system` is the design system: its tokens, components and
+  Storybook are listed in `.claude/rules/design-system.md`. A feature uses it and never
+  edits it; the `designer` agent changes it, for a design-system issue.
 - Styling is Tailwind utilities bound to the tokens. No raw colour, spacing or font
-  size in a component; if a token is missing, report it.
+  size in a component; if a token is missing, report it. This is checked in review:
+  no tool checks the class names.
 - Never edit an atom to fit one screen. A new variant or size is a design-system issue.
 - Themes (light, dark, high contrast) and densities (office, field) are token values,
   not per-component variants.
@@ -108,7 +113,7 @@ Checked by Oxlint (`typescript/consistent-type-definitions`).
   and its callbacks. A title, an action, an icon or an optional section is a child or
   a sub-component, never a prop; no boolean prop that switches a part on or off.
   Visual variants (`variant`, `size`) belong to the atoms of the design system.
-- Generic pieces live in `shared` (atoms, molecules, ADR 0012); the organisms of a
+- Generic pieces live in the design system (atoms, molecules, ADR 0019); the organisms of a
   feature are small and compose them. Small does not mean shared: an organism becomes a
   molecule only when a third screen needs it and its domain vocabulary can be removed.
 - Pages and large sections connect to data. Leaf components are pure.

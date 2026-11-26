@@ -15,6 +15,10 @@ export const API_URL = process.env.API_URL ?? 'http://127.0.0.1:8080'
 export const WEB_PORT = 4173
 export const WEB_URL = `http://127.0.0.1:${WEB_PORT}`
 
+/** The port of the built Storybook of the design system, served by `vite preview`. */
+export const STORYBOOK_PORT = 6007
+export const STORYBOOK_URL = `http://127.0.0.1:${STORYBOOK_PORT}`
+
 /** The endpoint that answers once the API and its database are up. */
 export const HEALTH_PATH = '/api/health'
 

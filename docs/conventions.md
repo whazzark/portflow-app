@@ -92,7 +92,10 @@ and a pull request cannot weaken the checks that judge it.
 <type>(<scope>): <description>
 ```
 
-- Types: `feat`, `fix`, `spec`, `design`, `docs`, `test`, `refactor`, `perf`, `chore`, `ci`, `build`.
+- Types: `feat`, `fix`, `spec`, `design`, `docs`, `test`, `refactor`, `perf`, `chore`, `ci`, `build`, `style`.
+- `style` is the visual layer of the design system: its tokens, themes and densities,
+  and the styles of its atoms, molecules and templates. It is not code formatting, as
+  it is in plain Conventional Commits: a change of formatting is a `chore`.
 - Scope: optional, lowercase kebab-case, usually the context (`discharges`, `auth`, `web`, `api`).
 - Description: starts lowercase, no trailing period, header of 72 characters at most.
 - Second line blank.
@@ -109,7 +112,7 @@ and a pull request cannot weaken the checks that judge it.
 - Title: `<type>(<scope>): <description>`, 64 characters at most, with no issue or pull
   request number: GitHub appends the pull request number at merge, and the issue is in
   the body. The type must match the branch type
-  (`chore/` branches accept `chore`, `ci`, `build`, `refactor`, `test`, `perf`).
+  (`chore/` branches accept `chore`, `ci`, `build`, `refactor`, `test`, `perf`, `style`).
 - Body: the sections of `.github/pull_request_template.md`, all present, in order,
   none empty (`N/A` when a section does not apply).
 - `Issue` contains `Refs #<issue>` for spec and design PRs, `Closes #<issue>` for `feat/`

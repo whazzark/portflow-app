@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/storybook.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@portflow/design-system/atoms",
+    "ui": "@portflow/design-system/atoms",
+    "utils": "@portflow/design-system/lib/utils",
+    "lib": "@portflow/design-system/lib",
+    "hooks": "@portflow/design-system/lib/hooks"
+  }
+}

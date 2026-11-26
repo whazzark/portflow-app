@@ -6,6 +6,8 @@ import {
   HEALTH_PATH,
   PHONE_VIEWPORT,
   REPOSITORY_ROOT,
+  STORYBOOK_PORT,
+  STORYBOOK_URL,
   WEB_PORT,
   WEB_URL,
 } from './constants.ts'
@@ -36,8 +38,9 @@ export default defineConfig({
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: DESKTOP_VIEWPORT } },
   ],
   // The whole application: the API on PostgreSQL, then the built web app under the same
-  // origin. The suite always starts its own: a server already listening is never reused,
-  // since Playwright would take any answer, even another program's, as a ready server.
+  // origin; and the Storybook of the design system. The suite always starts its own: a
+  // server already listening is never reused, since Playwright would take any answer,
+  // even another program's, as a ready server.
   webServer: [
     {
       command: 'pnpm --filter @portflow/api migrate && pnpm --filter @portflow/api start',
@@ -51,6 +54,14 @@ export default defineConfig({
       command: `pnpm --filter @portflow/web preview --host 127.0.0.1 --port ${WEB_PORT} --strictPort`,
       cwd: REPOSITORY_ROOT,
       url: WEB_URL,
+      reuseExistingServer: false,
+      timeout: 60_000,
+    },
+    // The built Storybook of the design system (ADR 0019): its toolbar and its templates.
+    {
+      command: `pnpm --filter @portflow/design-system exec vite preview --outDir storybook-static --host 127.0.0.1 --port ${STORYBOOK_PORT} --strictPort`,
+      cwd: REPOSITORY_ROOT,
+      url: STORYBOOK_URL,
       reuseExistingServer: false,
       timeout: 60_000,
     },
