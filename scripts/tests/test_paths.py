@@ -51,8 +51,9 @@ class PathTests(unittest.TestCase):
     def test_style_branch(self):
         self.assert_allowed("style/042-review-badge", "packages/design-system/src/atoms/badge.tsx",
                             "packages/design-system/src/styles/tokens.css",
-                            "packages/e2e/tests/design-system.spec.ts", "pnpm-lock.yaml",
-                            "apps/web/src/routes/index.tsx")
+                            "packages/e2e/tests/design-system.spec.ts", "pnpm-lock.yaml")
+        self.assert_refused("style/042-review-badge", "apps/web/src/routes/index.tsx")
+        self.assert_refused("style/042-review-badge", "apps/web/package.json")
         self.assert_refused("style/042-review-badge", "apps/api/src/main.rs")
         self.assert_refused("style/042-review-badge", "packages/e2e/tests/weighing.spec.ts")
         self.assert_refused("style/042-review-badge", "packages/contracts/openapi.json")
