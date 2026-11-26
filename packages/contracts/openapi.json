@@ -71,6 +71,33 @@
           "down"
         ]
       },
+      "FieldError": {
+        "type": "object",
+        "description": "A field of the request body that is refused, and why.",
+        "required": [
+          "pointer",
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/FieldErrorCode"
+          },
+          "pointer": {
+            "type": "string",
+            "description": "A JSON Pointer (RFC 6901) to the field in the request body, such as `/tonnage`."
+          }
+        }
+      },
+      "FieldErrorCode": {
+        "type": "string",
+        "description": "Why a field of the request body is refused. The web app maps each value to a label,\nshown under the field: a value is never renamed or removed without the two issues of\na contract change. A form, or an endpoint that validates a body, adds the code that\nsays its refusal precisely when none does (ADR 0020).",
+        "enum": [
+          "REQUIRED",
+          "INVALID_FORMAT",
+          "OUT_OF_RANGE",
+          "TOO_LONG"
+        ]
+      },
       "HealthResponse": {
         "type": "object",
         "required": [
@@ -105,6 +132,13 @@
             "type": "string",
             "description": "An explanation in English for the developer, never shown to the user."
           },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldError"
+            },
+            "description": "The refused fields of the request body, when `code` is `VALIDATION_FAILED`."
+          },
           "status": {
             "type": "integer",
             "format": "int32",
@@ -129,7 +163,8 @@
           "METHOD_NOT_ALLOWED",
           "INVALID_REQUEST",
           "DATABASE_UNAVAILABLE",
-          "INTERNAL_ERROR"
+          "INTERNAL_ERROR",
+          "VALIDATION_FAILED"
         ]
       }
     }

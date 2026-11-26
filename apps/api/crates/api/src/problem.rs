@@ -30,6 +30,42 @@ pub enum ProblemCode {
     DatabaseUnavailable,
     /// Anything the server did not expect.
     InternalError,
+    /// Some fields of the request body are not valid: `errors` names each of them.
+    ValidationFailed,
+}
+
+/// Why a field of the request body is refused. The web app maps each value to a label,
+/// shown under the field: a value is never renamed or removed without the two issues of
+/// a contract change. A form, or an endpoint that validates a body, adds the code that
+/// says its refusal precisely when none does (ADR 0020).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum FieldErrorCode {
+    /// The field is missing or empty.
+    Required,
+    /// The value cannot be read: not a number, not a date.
+    InvalidFormat,
+    /// The value is outside the range the field accepts.
+    OutOfRange,
+    /// The value is longer than the field accepts.
+    TooLong,
+}
+
+/// A field of the request body that is refused, and why.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, ToSchema)]
+pub struct FieldError {
+    /// A JSON Pointer (RFC 6901) to the field in the request body, such as `/tonnage`.
+    pointer: String,
+    code: FieldErrorCode,
+}
+
+impl FieldError {
+    pub fn new(pointer: &str, code: FieldErrorCode) -> Self {
+        Self {
+            pointer: pointer.to_owned(),
+            code,
+        }
+    }
 }
 
 /// The body of every error response of the API.
@@ -45,6 +81,10 @@ pub struct Problem {
     /// An explanation in English for the developer, never shown to the user.
     detail: String,
     code: ProblemCode,
+    /// The refused fields of the request body, when `code` is `VALIDATION_FAILED`.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[schema(required = false)]
+    errors: Vec<FieldError>,
 }
 
 impl Problem {
@@ -55,6 +95,7 @@ impl Problem {
             status: status.as_u16(),
             detail: detail.to_owned(),
             code,
+            errors: Vec::new(),
         }
     }
 
@@ -89,6 +130,18 @@ impl Problem {
             ProblemCode::InternalError,
             INTERNAL_DETAIL,
         )
+    }
+
+    /// A request body whose fields are refused, each named by its pointer (ADR 0020).
+    pub fn validation_failed(errors: Vec<FieldError>) -> Self {
+        Self {
+            errors,
+            ..Self::new(
+                StatusCode::UNPROCESSABLE_ENTITY,
+                ProblemCode::ValidationFailed,
+                "Some fields of the request body are not valid",
+            )
+        }
     }
 
     /// A body or parameters that an extractor of Axum rejected, with the status code

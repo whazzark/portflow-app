@@ -25,6 +25,20 @@ export interface components {
     schemas: {
         /** @enum {string} */
         ComponentStatus: "up" | "down";
+        /** @description A field of the request body that is refused, and why. */
+        FieldError: {
+            code: components["schemas"]["FieldErrorCode"];
+            /** @description A JSON Pointer (RFC 6901) to the field in the request body, such as `/tonnage`. */
+            pointer: string;
+        };
+        /**
+         * @description Why a field of the request body is refused. The web app maps each value to a label,
+         *     shown under the field: a value is never renamed or removed without the two issues of
+         *     a contract change. A form, or an endpoint that validates a body, adds the code that
+         *     says its refusal precisely when none does (ADR 0020).
+         * @enum {string}
+         */
+        FieldErrorCode: "REQUIRED" | "INVALID_FORMAT" | "OUT_OF_RANGE" | "TOO_LONG";
         HealthResponse: {
             database: components["schemas"]["ComponentStatus"];
             /** @description `up` when every component is up. */
@@ -35,6 +49,8 @@ export interface components {
             code: components["schemas"]["ProblemCode"];
             /** @description An explanation in English for the developer, never shown to the user. */
             detail: string;
+            /** @description The refused fields of the request body, when `code` is `VALIDATION_FAILED`. */
+            errors?: components["schemas"]["FieldError"][];
             /**
              * Format: int32
              * @description The HTTP status code of the response.
@@ -50,7 +66,7 @@ export interface components {
          *     a value is never renamed or removed without the two issues of a contract change.
          * @enum {string}
          */
-        ProblemCode: "NOT_FOUND" | "METHOD_NOT_ALLOWED" | "INVALID_REQUEST" | "DATABASE_UNAVAILABLE" | "INTERNAL_ERROR";
+        ProblemCode: "NOT_FOUND" | "METHOD_NOT_ALLOWED" | "INVALID_REQUEST" | "DATABASE_UNAVAILABLE" | "INTERNAL_ERROR" | "VALIDATION_FAILED";
     };
     responses: never;
     parameters: never;
