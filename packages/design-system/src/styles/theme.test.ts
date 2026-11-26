@@ -116,3 +116,27 @@ describe('the raw scale, until the atoms have moved', () => {
     expect(rule(utility)).toMatch(declaration)
   })
 })
+
+describe('the roles that cn knows', () => {
+  const THEME = readFileSync(join(STYLES, 'theme.css'), 'utf8')
+  const RAW = /^(xs|sm|md|lg|xl|2xl|base)$/
+
+  /** The names `theme.css` declares under a namespace, the raw steps aside. */
+  function names(namespace: string): string[] {
+    const declared = [
+      ...THEME.matchAll(new RegExp(String.raw`--${namespace}-([a-z0-9]+(?:-[a-z0-9]+)*):`, 'g')),
+    ]
+
+    return [
+      ...new Set(declared.map(([, name = '']) => name).filter((name) => !RAW.test(name))),
+    ].toSorted()
+  }
+
+  test.each([
+    ['text', TYPE_ROLES],
+    ['radius', RADIUS_ROLES],
+    ['shadow', SHADOW_ROLES],
+  ])('every semantic %s of theme.css is listed in constants.ts', (namespace, roles) => {
+    expect(names(namespace)).toEqual([...roles].toSorted())
+  })
+})
