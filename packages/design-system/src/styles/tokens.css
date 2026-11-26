@@ -30,6 +30,8 @@
   --success-text: #ffffff;
   --warning: #b45309;
   --warning-text: #ffffff;
+  --info: #0e7490;
+  --info-text: #ffffff;
   --overlay: #0f172a99;
 }
 
@@ -52,6 +54,8 @@
   --success-text: #020617;
   --warning: #fbbf24;
   --warning-text: #020617;
+  --info: #22d3ee;
+  --info-text: #020617;
   --overlay: #000000b3;
 }
 
@@ -75,6 +79,8 @@
   --success-text: #ffffff;
   --warning: #6b3600;
   --warning-text: #ffffff;
+  --info: #00505f;
+  --info-text: #ffffff;
   --overlay: #000000cc;
 }
 

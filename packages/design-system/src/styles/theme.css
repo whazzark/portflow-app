@@ -34,6 +34,8 @@
   --color-success-foreground: var(--success-text);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-text);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-text);
   --color-overlay: var(--overlay);
 
   /* The names the shadcn/ui atoms use, bound to the semantic ones. */
