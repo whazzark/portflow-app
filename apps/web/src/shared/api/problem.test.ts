@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest'
+import type { DefaultError } from '@tanstack/react-query'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 
 import { FIELD_ERROR_LABELS, UNKNOWN_FIELD_ERROR_LABEL } from './constants'
 import { ApiError, isTransient, toApiError } from './problem'
@@ -75,5 +76,21 @@ describe('toApiError', () => {
 
   test('ignores errors when it is not a list', () => {
     expect(toApiError({ ...problem, errors: { pointer: '/tonnage' } }).fieldErrors).toEqual([])
+  })
+})
+
+// The cases below that the build must refuse are marked `@ts-expect-error`: `pnpm build`
+// type checks the tests, and fails if one of them compiles.
+describe('the error of a query', () => {
+  test('is any error, not only an error of the API', () => {
+    expectTypeOf<DefaultError>().toEqualTypeOf<Error>()
+  })
+
+  test('is narrowed to an ApiError before its label and code are read', () => {
+    const error: DefaultError = new ApiError('NOT_FOUND')
+
+    // @ts-expect-error a read also throws errors that do not come from the API
+    expect(error.code).toBe('NOT_FOUND')
+    expect(error instanceof ApiError && error.code).toBe('NOT_FOUND')
   })
 })

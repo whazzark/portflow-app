@@ -139,7 +139,9 @@ included).
   and the component. After a mutation, invalidate; do not patch the cache by hand.
 - A read calls `apiClient` (openapi-fetch) in its `queryFn`, through `unwrap`, which
   throws an `ApiError`: its `label` is what the error state shows. No
-  `openapi-react-query` (ADR 0017).
+  `openapi-react-query` (ADR 0017). A read also fails with other errors (a `ZodError`,
+  an `Error` of TanStack Query), so the error of a query is typed `Error`: narrow it with
+  `instanceof ApiError` before reading `label` or `code`.
 - The `queryFn` then parses the response with its Zod schema (ADR 0020), so the cache,
   the loader, the page and `select` all hold parsed values, never raw JSON:
 
