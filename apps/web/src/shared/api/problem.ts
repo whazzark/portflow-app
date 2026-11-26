@@ -1,14 +1,31 @@
 import type { components } from '@portflow/contracts'
 
-import { PROBLEM_LABELS, REFUSED_LABEL, UNREACHABLE_LABEL } from './constants'
+import {
+  FIELD_ERROR_LABELS,
+  PROBLEM_LABELS,
+  REFUSED_LABEL,
+  UNKNOWN_FIELD_ERROR_LABEL,
+  UNREACHABLE_LABEL,
+} from './constants'
 
 /** The body of every error the API answers (RFC 9457, ADR 0015). */
 export type Problem = components['schemas']['Problem']
 export type ProblemCode = components['schemas']['ProblemCode']
+export type FieldErrorCode = components['schemas']['FieldErrorCode']
+
+/** A field of the request body the API refused (ADR 0020). */
+export type ApiFieldError = {
+  /** A JSON Pointer into the body of the request, such as `/tonnage`. */
+  pointer: string
+  /** The text to show under the field. */
+  label: string
+}
 
 type ApiErrorOptions = ErrorOptions & {
   /** The API answered a problem, with a code this build does not know. */
   refused?: boolean
+  /** The fields of the request body the problem names. */
+  fieldErrors?: readonly ApiFieldError[]
 }
 
 /**
@@ -19,12 +36,18 @@ type ApiErrorOptions = ErrorOptions & {
 export class ApiError extends Error {
   readonly code: ProblemCode | null
   readonly refused: boolean
+  /** The fields of the request body the API refused; empty when it names none. */
+  readonly fieldErrors: readonly ApiFieldError[]
 
-  constructor(code: ProblemCode | null, { refused = false, ...options }: ApiErrorOptions = {}) {
+  constructor(
+    code: ProblemCode | null,
+    { refused = false, fieldErrors = [], ...options }: ApiErrorOptions = {},
+  ) {
     super(code ?? (refused ? 'REFUSED' : 'UNREACHABLE'), options)
     this.name = 'ApiError'
     this.code = code
     this.refused = refused
+    this.fieldErrors = fieldErrors
   }
 
   /** The text to show to the user. */
@@ -37,8 +60,34 @@ export class ApiError extends Error {
 /** The error that `openapi-fetch` returned, as an `ApiError`. */
 export function toApiError(error: unknown): ApiError {
   if (!hasCode(error)) return new ApiError(null)
-  if (isProblemCode(error.code)) return new ApiError(error.code)
+  if (isProblemCode(error.code)) {
+    return new ApiError(error.code, { fieldErrors: readFieldErrors(error) })
+  }
   return new ApiError(null, { refused: true })
+}
+
+// The `errors` member of a problem; an entry that is not a field error is dropped.
+function readFieldErrors(problem: object): ApiFieldError[] {
+  if (!('errors' in problem) || !Array.isArray(problem.errors)) return []
+  return problem.errors.filter(isFieldError).map(({ pointer, code }) => ({
+    pointer,
+    label: isFieldErrorCode(code) ? FIELD_ERROR_LABELS[code] : UNKNOWN_FIELD_ERROR_LABEL,
+  }))
+}
+
+function isFieldError(value: unknown): value is { pointer: string; code: string } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'pointer' in value &&
+    typeof value.pointer === 'string' &&
+    'code' in value &&
+    typeof value.code === 'string'
+  )
+}
+
+function isFieldErrorCode(code: string): code is FieldErrorCode {
+  return Object.hasOwn(FIELD_ERROR_LABELS, code)
 }
 
 // The problems where the server, not the request, failed.
