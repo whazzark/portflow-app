@@ -3,6 +3,15 @@ import { toast } from 'sonner'
 // The toasts the app shows, through the `Toaster` of `atoms/sonner`, rendered once near the
 // root. Kept apart from that file, which the shadcn CLI writes.
 
+/**
+ * Tells something with no state and nothing to do: a step that started, a note on the
+ * screen, such as "Export started". It keeps the colours of the surface. Prefer a toast
+ * of a state when there is one. Needs the `Toaster`, rendered once near the root.
+ */
+export function showNeutralToast(message: string) {
+  return toast(message)
+}
+
 type UndoToast = {
   /** What was just done, such as "Weighing deleted". */
   message: string
@@ -44,4 +53,13 @@ export function showErrorToast(message: string) {
  */
 export function showInfoToast(message: string) {
   return toast.info(message)
+}
+
+/**
+ * Tells that something needs attention without having failed: a limit almost reached,
+ * an input that will be rounded. The text comes from the approved mock-up. Needs the
+ * `Toaster`, rendered once near the root.
+ */
+export function showWarningToast(message: string) {
+  return toast.warning(message)
 }
