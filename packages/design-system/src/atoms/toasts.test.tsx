@@ -6,8 +6,11 @@ import { expect, test, vi } from 'vitest'
 import { Toaster } from '@portflow/design-system/atoms/sonner'
 import {
   showErrorToast,
+  showInfoToast,
+  showNeutralToast,
   showSuccessToast,
   showUndoToast,
+  showWarningToast,
 } from '@portflow/design-system/atoms/toasts'
 
 test('a success toast says what was done', async () => {
@@ -35,6 +38,48 @@ test('an error toast says what went wrong', async () => {
   expect(
     screen.getByText('The service cannot be reached.').closest('[data-sonner-toast]'),
   ).toHaveAttribute('data-type', 'error')
+})
+
+test('an info toast gives a piece of information', async () => {
+  render(<Toaster />)
+
+  act(() => {
+    showInfoToast('The weighbridge restarts at 14:00.')
+  })
+
+  expect(await screen.findByText('The weighbridge restarts at 14:00.')).toBeVisible()
+  expect(
+    screen.getByText('The weighbridge restarts at 14:00.').closest('[data-sonner-toast]'),
+  ).toHaveAttribute('data-type', 'info')
+})
+
+test('a warning toast tells what needs attention', async () => {
+  render(<Toaster />)
+
+  act(() => {
+    showWarningToast('Hold 2 is almost full.')
+  })
+
+  expect(await screen.findByText('Hold 2 is almost full.')).toBeVisible()
+  expect(screen.getByText('Hold 2 is almost full.').closest('[data-sonner-toast]')).toHaveAttribute(
+    'data-type',
+    'warning',
+  )
+})
+
+test('a neutral toast has no state and no action', async () => {
+  render(<Toaster />)
+
+  act(() => {
+    showNeutralToast('Export started')
+  })
+
+  const item = (await screen.findByText('Export started')).closest<HTMLElement>(
+    '[data-sonner-toast]',
+  )
+  // Sonner colours a toast by its type: a neutral one has none of the states.
+  expect(['success', 'error', 'warning', 'info']).not.toContain(item?.dataset.type)
+  expect(item?.querySelector('[data-button]')).toBeNull()
 })
 
 test('the undo toast says what was done and is undone with the keyboard', async () => {

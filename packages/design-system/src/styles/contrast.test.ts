@@ -31,14 +31,28 @@ const PAIRS: [string, string, number][] = [
   ['danger-text', 'danger', TEXT],
   ['success-text', 'success', TEXT],
   ['warning-text', 'warning', TEXT],
+  ['info-text', 'info', TEXT],
   ['border-strong', 'background', NON_TEXT],
   ['border-strong', 'surface', NON_TEXT],
   ['ring', 'background', NON_TEXT],
   ['ring', 'surface', NON_TEXT],
   ['ring', 'surface-muted', NON_TEXT],
+  // The navigation of the office layout is surface-muted: the links and controls it holds.
+  ['primary', 'surface-muted', TEXT],
+  ['border-strong', 'surface-muted', NON_TEXT],
   // The border of an invalid control, and the error text under a field of a form.
   ['danger', 'background', TEXT],
   ['danger', 'surface', TEXT],
+  // Information drawn as text on the page: a status (`text-info`). An info toast is filled
+  // with info, its text, icon and action in info-text: the pair above.
+  ['info', 'background', TEXT],
+  ['info', 'surface', TEXT],
+  // A coloured toast is filled with its state colour: its edge against the page, and the
+  // halo that sets its focus rings apart from the fill. Danger and info are above.
+  ['success', 'background', NON_TEXT],
+  ['success', 'surface', NON_TEXT],
+  ['warning', 'background', NON_TEXT],
+  ['warning', 'surface', NON_TEXT],
 ]
 
 /** The colours a theme declares, the light ones under the dark and contrast ones. */

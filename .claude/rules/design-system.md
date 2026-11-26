@@ -18,7 +18,8 @@ it, and the Portflow design system in Claude Design is generated from it.
 
 ```
 src/
-  styles/     tokens.css (values), theme.css (Tailwind theme), constants.ts, storybook.css
+  styles/     tokens.css (values), theme.css (Tailwind theme), constants.ts, storybook.css,
+              tokens.stories.tsx (every semantic token in each theme and density)
   atoms/      the shadcn/ui primitives, and every component built on one primitive or none
   molecules/  generic composites of several atoms, with no domain vocabulary
   templates/  page layouts with slots, no data
@@ -68,6 +69,7 @@ document, for the overlays too).
 | `--primary`, `--primary-text` | `bg-primary`, `text-primary-foreground` | Main action, links |
 | `--secondary`, `--secondary-text` | `bg-secondary`, `text-secondary-foreground` | Secondary action |
 | `--danger`, `--success`, `--warning` (+ `-text`) | `bg-danger`, `text-danger-foreground`... | States |
+| `--info`, `--info-text` | `bg-info`, `text-info-foreground`, `text-info` | Neutral information: an informative toast or status. A cyan, never read as an action |
 | `--overlay` | `bg-overlay` | Behind a dialog |
 | `--control-height` | `h-control`, `size-control` | 36px office, 44px field |
 | `--control-padding-x` | `px-control-x` | Inner padding of a control |
@@ -75,10 +77,47 @@ document, for the overlays too).
 | (computed) | `-inset-hit` | Hit area of a control smaller than the control height (the checkbox) |
 
 The names shadcn/ui uses (`foreground`, `muted`, `accent`, `destructive`, `input`,
-`card`, `popover`) are bound to these in `theme.css`. The type scale (`text-xs` to
-`text-2xl`), radii (`rounded-sm` to `rounded-xl`) and shadows (`shadow-xs` to
-`shadow-lg`) are theme variables of `theme.css`; spacing and breakpoints are those of
-Tailwind, unchanged.
+`card`, `popover`) are bound to these in `theme.css`.
+
+**Type, radius and shadow by role.** A component names the role of its text, its corners
+and its shadow, never a step of a scale. Each type utility carries its size, line height
+and weight: no `font-medium` or `font-semibold` beside it. The sizes of `text-body`,
+`text-control` and `text-label` follow `data-density` (`--type-<role>-size` and
+`--type-<role>-line-height` in `tokens.css`); the others are the same in both densities.
+
+| Utility | Office | Field | Weight | Use |
+|---|---|---|---|---|
+| `text-page-title` | 24/32px | same | 600 | The title of a page (`PageLayoutTitle`) |
+| `text-task-title` | 20/28px | same | 600 | The task of a field screen (`FieldLayoutTitle`) |
+| `text-section-title` | 18/28px | same | 600 | The title of a section, a dialog, an empty state |
+| `text-body` | 14/20px | 16/24px | 400 | Descriptions, table cells, the message of a state, a field error |
+| `text-control` | 14/20px | 16/24px | 400 | The value of an input or a select (16px in the field density: no zoom on iOS) |
+| `text-label` | 14/20px | 16/24px | 500 | Labels, buttons, tabs, table headers |
+| `text-caption` | 12/16px | same | 400 | Tooltips, the group label of a select |
+| `text-badge` | 12/16px | same | 500 | Badges |
+
+| Utility | Value | Use |
+|---|---|---|
+| `rounded-control` | 6px | Buttons, inputs, the trigger of a select, skeletons, the active tab |
+| `rounded-item` | 4px | Checkboxes, the items of a select, the close button of a dialog |
+| `rounded-overlay` | 6px | What floats: the content of a select, tooltips, toasts |
+| `rounded-card` | 8px | Dialogs, empty and error states, cards, the list of tabs |
+| `rounded-pill` | full | Badges |
+| `shadow-control` | the old `shadow-xs` | Outlined buttons, inputs, checkboxes, the trigger of a select |
+| `shadow-raised` | the old `shadow-sm` | The active tab |
+| `shadow-overlay` | the old `shadow-md` | The content of a select, menus |
+| `shadow-dialog` | the old `shadow-lg` | Dialogs |
+
+The roles are listed in `src/styles/constants.ts` (`TYPE_ROLES`, `RADIUS_ROLES`,
+`SHADOW_ROLES`, and `SPACING_ROLES` for the sizes of the density), which `cn` reads so
+that `text-label` is not merged away as a colour and a consumer's `h-8` replaces the
+`h-control` of an atom; `src/styles/theme.test.ts` keeps that list in step with
+`theme.css`. A new role goes in both.
+
+The raw type scale (`text-xs` to `text-2xl`), radii (`rounded-sm` to `rounded-xl`) and
+shadows (`shadow-xs` to `shadow-lg`) stay in `theme.css` only until every atom has moved
+to the semantic utilities: new code uses the semantic ones. Spacing and breakpoints are
+those of Tailwind, unchanged.
 
 **Contrast.** In each theme, every text pair reaches 4.5:1, and every control border,
 focus ring and error border 3:1. `src/styles/contrast.test.ts` measures each pair the
@@ -89,9 +128,18 @@ alpha, which would blend below 3:1.
 
 | Level | Files |
 |---|---|
-| Atoms | `button`, `pending-button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`), `toasts` (`showSuccessToast`, `showErrorToast`, `showUndoToast`), `skeleton`, `badge`, `table`, `responsive-table`, `tabs`, `tooltip`, `loading-state`, `empty-state`, `error-state` |
+| Atoms | `button`, `pending-button`, `input`, `label`, `select`, `checkbox`, `dialog`, `sonner` (the `Toaster`), `toasts` (`showNeutralToast`, `showUndoToast`, `showSuccessToast`, `showInfoToast`, `showWarningToast`, `showErrorToast`), `skeleton`, `badge`, `table`, `responsive-table`, `tabs`, `tooltip`, `loading-state`, `empty-state`, `error-state` |
 | Molecules | `form/` (`use-app-form`: `useAppForm` and its field family, ADR 0021) |
 | Templates | `page-layout`, `office-layout`, `field-layout` |
+
+**Toasts.** The `Toaster` turns on Sonner's rich colours and binds them to the tokens:
+a success, an error, a warning and an information are filled with `success`, `danger`,
+`warning` or `info`, their text and icon in its `-text` token, and their action swaps the
+two; a neutral toast and the undo toast stay on `surface`, their action in `primary`.
+Sonner names its own `--success-text`, `--warning-text` and `--info-text` on its list:
+the `Toaster` reads our tokens on a wrapper under `--toaster-<state>-text` and gives them
+back to the list. A button inside a toast draws its ring with a `background` halo
+(`ring-offset-background`), so that the ring stands apart from a coloured fill.
 
 ## Adding or changing an atom
 
@@ -101,9 +149,10 @@ alpha, which would blend below 3:1.
 3. Check what the CLI changed: pin each dependency it added to an exact version, remove
    any it added by mistake (it has added a package named `cn` and `next-themes`), and
    leave `src/styles/` as it was.
-4. Adapt it once: heights on the density tokens (`h-control`), semantic colours, no
-   arbitrary value where a token or a step of the scale exists, `type` and function
-   declarations (Oxlint), no `"use client"`.
+4. Adapt it once: heights on the density tokens (`h-control`), semantic colours, the
+   semantic type, radius and shadow utilities (`text-label`, `rounded-control`,
+   `shadow-control`) in place of the raw scale, no arbitrary value where a token
+   exists, `type` and function declarations (Oxlint), no `"use client"`.
 5. Its tests, its stories, and its entry for Claude Design (below).
 
 ## Claude Design
@@ -149,7 +198,7 @@ From the root of the repository:
 pnpm build --filter @portflow/design-system          # type check, then the static Storybook
 pnpm lint --filter @portflow/design-system
 pnpm format:check --filter @portflow/design-system
-pnpm test --filter @portflow/design-system           # Vitest: components and contrast
+pnpm test --filter @portflow/design-system           # Vitest: components, contrast, theme utilities
 pnpm --filter @portflow/design-system storybook      # http://127.0.0.1:6006
 pnpm --filter @portflow/design-system run build:claude-design [--index <path>]
 ```

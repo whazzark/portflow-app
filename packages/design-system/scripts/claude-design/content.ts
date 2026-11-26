@@ -23,7 +23,9 @@ again. When the two differ, the code is right.
 ## Principles
 
 - **Semantic tokens only.** A component names what a colour is for (\`surface\`,
-  \`text-muted\`, \`primary\`, \`danger\`), never a raw colour, spacing or font size.
+  \`text-muted\`, \`primary\`, \`danger\`), and the role of a type, radius or shadow
+  (\`text-section-title\`, \`rounded-card\`, \`shadow-overlay\`), never a raw colour or a
+  step of a scale. The raw scales stay only until every component has moved.
 - **Three themes, one set of names.** \`light\` is the default, \`dark\` for dim rooms,
   \`contrast\` for field screens in sunlight: black on white, strong borders. A theme
   changes values, never components.
@@ -42,12 +44,17 @@ again. When the two differ, the code is right.
 ## Visual foundations
 
 - **Colour.** Neutral slate surfaces and ink; one blue for primary actions and links;
-  red, green and amber only for danger, success and warning. Every text pair reaches
-  4.5:1 and every control border and focus ring 3:1, in the three themes.
+  red, green and amber only for danger, success and warning; a cyan for neutral
+  information, never read as an action. Every text pair reaches 4.5:1 and every control
+  border and focus ring 3:1, in the three themes.
 - **Type.** The system typeface of the device, no web font to load on a weak network.
-  Body text 16px (14px in dense tables), headings semibold.
-- **Shape.** Small radii (4 to 8px), hairline borders between rows, soft shadows only on
-  what floats (dialogs, menus, toasts).
+  Eight roles, each with its size, line height and weight: \`page-title\`,
+  \`task-title\` and \`section-title\` (semibold); \`body\` and \`control\` (regular)
+  and \`label\` (medium), 14px in the office density and 16px in the field density;
+  \`caption\` (regular) and \`badge\` (medium), 12px.
+- **Shape.** Small radii by role (\`item\` 4px, \`control\` and \`overlay\` 6px, \`card\`
+  8px, \`pill\` for badges), hairline borders between rows, soft shadows only on what
+  stands above the page (\`control\`, \`raised\`, \`overlay\`, \`dialog\`).
 - **Spacing.** The 4px scale of Tailwind. Control heights and table row padding come
   from the density.
 
@@ -291,25 +298,37 @@ A short hint on a control, shown on hover and on keyboard focus.
   card(
     'Toaster',
     'Overlays',
-    200,
+    300,
     `# Toaster
 
 Where the toasts of the app appear: rendered once, near the root. A toast tells the
-result of an action without stopping the user.
+result of an action, or a piece of information, without stopping the user.
 
 - After a form or an action: \`showSuccessToast('Vessel announced')\` when it went well,
   \`showErrorToast(label)\` when it failed for a reason no field can show. Both stay the
   same time.
-- Other toasts: \`toast('...')\`, \`toast.warning\`.
+- A neutral piece of information, neither the result of an action nor a failure:
+  \`showInfoToast('The weighbridge restarts at 14:00.')\`.
+- Something that needs attention without having failed:
+  \`showWarningToast('Hold 2 is almost full.')\`.
+- Something with no state and nothing to do: \`showNeutralToast('Export started')\`.
 - **Undo toast**: \`showUndoToast({ message, undoLabel, onUndo })\` says what was just
   done and offers to undo it for a few seconds: the correction path to prefer over a
   confirmation dialog.
+- **Colours**: a success, an error, a warning and an information are filled with the
+  colour of their state (\`success\`, \`danger\`, \`warning\`, \`info\`), their text in its
+  \`-text\` token; their action swaps the two. A neutral toast and the undo toast stay
+  on the surface, their action in \`primary\`. The colour never says the message alone:
+  the icon and the text do too.
 `,
     `(function () {
       setTimeout(function () {
+        P.showSuccessToast('Weighing recorded')
+        P.showInfoToast('The weighbridge restarts at 14:00.')
+        P.showWarningToast('Hold 2 is almost full.')
         P.showUndoToast({ message: 'Weighing deleted', undoLabel: 'Undo', onUndo: function () {} })
       }, 50)
-      return h('div', null, h(P.Toaster, { position: 'top-left' }),
+      return h('div', null, h(P.Toaster, { position: 'top-left', expand: true }),
         h(P.Button, { variant: 'destructive', onClick: function () {
           P.showUndoToast({ message: 'Weighing deleted', undoLabel: 'Undo', onUndo: function () {} })
         } }, 'Delete the weighing'))
