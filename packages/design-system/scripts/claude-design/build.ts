@@ -20,8 +20,6 @@ const PACKAGE = fileURLToPath(new URL('../../', import.meta.url))
 const OUT = join(PACKAGE, 'claude-design')
 const PROJECT = join(OUT, 'project')
 const REPOSITORY = join(PACKAGE, '..', '..')
-// The files of the repository root that decide what gets installed, from the package.
-const ROOT_FILES = ['../../pnpm-lock.yaml', '../../pnpm-workspace.yaml', '../../package.json']
 const NAMESPACE = 'Portflow'
 
 const { values: args } = parseArgs({ options: { index: { type: 'string' } } })
@@ -336,16 +334,22 @@ if (args.index) {
   if (!remoteMain || remoteMain !== gitOr('', 'rev-parse', 'origin/main')) {
     throw new Error('origin/main is not the main of GitHub: git fetch origin, then sync')
   }
-  // The bundle inlines the dependencies: the lockfile and the workspace must be main's too,
-  // and node_modules installed from them.
-  try {
-    git('diff', '--quiet', 'origin/main', '--', '.', ...ROOT_FILES)
-  } catch {
-    throw new Error(
-      'packages/design-system or the lockfile differs from origin/main: sync from main',
-    )
+  // The bundle inlines the dependencies, and an install reads every manifest and the pnpm
+  // config of the repository: the whole checkout must be main's, specs aside (the design
+  // branch adds its spec folder), with nothing uncommitted or untracked.
+  if (git('status', '--porcelain', '--untracked-files=all', '--', ':/') !== '') {
+    throw new Error('the checkout has changes or untracked files: sync from a clean main')
   }
-  execFileSync('pnpm', ['install', '--frozen-lockfile'], { cwd: REPOSITORY, stdio: 'inherit' })
+  try {
+    git('diff', '--quiet', 'origin/main', '--', ':/', ':(exclude,top)specs')
+  } catch {
+    throw new Error('the checkout differs from origin/main outside specs/: sync from main')
+  }
+  // Installed from main's lockfile, with no lifecycle script: no project needs one.
+  execFileSync('pnpm', ['install', '--frozen-lockfile', '--ignore-scripts'], {
+    cwd: REPOSITORY,
+    stdio: 'inherit',
+  })
 }
 
 // Nothing of an earlier build may reach this one: the bundle, the types and the files
