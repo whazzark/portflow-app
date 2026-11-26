@@ -58,6 +58,17 @@
   --spacing-cell: var(--cell-padding-y);
   /* Around a control smaller than the control height (a checkbox): its hit area. */
   --spacing-hit: calc((var(--control-height) - 1rem) / 2);
+
+  /* Type that follows the density: body text, the value of a control, a label. */
+  --text-body: var(--type-body-size);
+  --text-body--line-height: var(--type-body-line-height);
+  --text-body--font-weight: 400;
+  --text-control: var(--type-control-size);
+  --text-control--line-height: var(--type-control-line-height);
+  --text-control--font-weight: 400;
+  --text-label: var(--type-label-size);
+  --text-label--line-height: var(--type-label-line-height);
+  --text-label--font-weight: 500;
 }
 
 @theme {
@@ -77,6 +88,24 @@
   --text-xl--line-height: 1.75rem;
   --text-2xl: 1.5rem;
   --text-2xl--line-height: 2rem;
+
+  /* Semantic type: a role, its size, line height and weight. Components use these; the
+     raw scale above stays until the atoms have moved to them. */
+  --text-page-title: 1.5rem;
+  --text-page-title--line-height: 2rem;
+  --text-page-title--font-weight: 600;
+  --text-task-title: 1.25rem;
+  --text-task-title--line-height: 1.75rem;
+  --text-task-title--font-weight: 600;
+  --text-section-title: 1.125rem;
+  --text-section-title--line-height: 1.75rem;
+  --text-section-title--font-weight: 600;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--font-weight: 400;
+  --text-badge: 0.75rem;
+  --text-badge--line-height: 1rem;
+  --text-badge--font-weight: 500;
 
   /* Spacing: the scale of Tailwind, one step is 0.25rem. */
   --spacing: 0.25rem;
