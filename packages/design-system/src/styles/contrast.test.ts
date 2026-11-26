@@ -31,6 +31,7 @@ const PAIRS: [string, string, number][] = [
   ['danger-text', 'danger', TEXT],
   ['success-text', 'success', TEXT],
   ['warning-text', 'warning', TEXT],
+  ['info-text', 'info', TEXT],
   ['border-strong', 'background', NON_TEXT],
   ['border-strong', 'surface', NON_TEXT],
   ['ring', 'background', NON_TEXT],
@@ -39,6 +40,9 @@ const PAIRS: [string, string, number][] = [
   // The border of an invalid control, and the error text under a field of a form.
   ['danger', 'background', TEXT],
   ['danger', 'surface', TEXT],
+  // Information drawn as text on the page: a status or the icon of a toast.
+  ['info', 'background', TEXT],
+  ['info', 'surface', TEXT],
 ]
 
 /** The colours a theme declares, the light ones under the dark and contrast ones. */
