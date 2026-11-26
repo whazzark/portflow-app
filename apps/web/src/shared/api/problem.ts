@@ -67,11 +67,15 @@ function isProblemCode(code: string): code is ProblemCode {
   return Object.hasOwn(PROBLEM_LABELS, code)
 }
 
-// Every read throws an `ApiError` (see `unwrap`): the error of a query is typed so.
+// The error of a query is any `Error`, never only an `ApiError`: a read throws an
+// `ApiError` when the API answers an error or cannot be reached (see `unwrap`), a
+// `ZodError` when the response does not match its schema, and TanStack Query throws
+// an `Error` of its own when a read resolves without data. Narrow it with
+// `instanceof ApiError` before reading `label` or `code`.
 declare module '@tanstack/react-query' {
   // Module augmentation merges declarations, which only an interface does.
   // oxlint-disable-next-line typescript/consistent-type-definitions
   interface Register {
-    defaultError: ApiError
+    defaultError: Error
   }
 }
