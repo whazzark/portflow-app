@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "categories": { "correctness": "error", "suspicious": "error" },
+  "ignorePatterns": ["generated/**"],
   "rules": {
     "typescript/array-type": ["error", { "default": "array", "readonly": "generic" }]
   }
