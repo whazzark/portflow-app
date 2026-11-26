@@ -63,6 +63,21 @@ A bug (issue form "Bug", label `fix`) has no spec of its own. Its branch is `fix
    opens the pull request.
 5. `/review <pr>`, then the human reviews and merges.
 
+## Style
+
+A style issue (issue form "Style", label `style`) changes the visual layer of the
+design system: its tokens, themes and densities, and the look of its atoms, molecules
+and templates. It has no spec and no mock-up: the issue and
+`.claude/rules/design-system.md` are its reference. Its branch is `style/<NNN>-<slug>`.
+
+1. `/style <issue>` creates the branch and launches the `designer` agent, which works
+   the issue test first; the skill then checks the package, opens the pull request (`style(...)`,
+   `Closes #<issue>`) and posts the handover `## Handover: style`.
+2. The human reviews the result in Storybook and merges, or asks for changes and runs
+   `/style <issue>` again.
+
+## Chores
+
 Chores have no skill: they are done on a `chore/` branch, by hand or on request. It is
 the only kind of branch that may change the frame (listed in `docs/conventions.md`),
 and the only one whose own checks run in CI: review it accordingly.
@@ -73,7 +88,7 @@ The stages are driven by Claude Code skills, run in an interactive session.
 
 | Skill | State |
 |---|---|
-| `/discover`, `/spec`, `/design`, `/develop`, `/test`, `/doc`, `/review` | Written, never run |
+| `/discover`, `/spec`, `/design`, `/develop`, `/test`, `/doc`, `/review`, `/style` | Written, never run |
 
 A GitHub Project board with one column per stage is decided in ADR 0010 and 0011. It is not
 set up, and the skills do not read or move cards yet.
@@ -100,7 +115,7 @@ work branch (`plan.md`, `test-report.md`). No session keeps state the next one n
 |---|---|---|
 | `product-owner` | Discovery and spec | Read-only |
 | `security-reviewer` | Spec review, then review of the code pull request | Read-only |
-| `designer` | Design stage, and design-system issues | Writes `packages/design-system/` and its end-to-end test, and the brief and the mock-up export in `specs/<NNN>-<slug>/design/` |
+| `designer` | Design stage, and style issues (`/style`) | Writes `packages/design-system/` and its end-to-end test, and the brief and the mock-up export in `specs/<NNN>-<slug>/design/` |
 | `fullstack-developer` | Development, unit and integration tests first | Writes code and the tests under `apps/`; uses the design system, never edits it |
 | `devops-engineer` | Development, when `infra_impact` is yes | Writes CI and infrastructure files |
 | `qa-engineer` | End-to-end and regression tests, from the spec and the mock-up | Writes under `packages/e2e/` only, does not read the implementation first |
