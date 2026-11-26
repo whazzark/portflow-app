@@ -15,9 +15,10 @@ human reviews the result in Storybook and merges. `<NNN>` is the issue number pa
 three digits (issue 42 gives `042`).
 
 A `style/` branch changes only `packages/design-system/`, its end-to-end test
-`packages/e2e/tests/design-system.spec.ts`, `pnpm-lock.yaml`, and the imports of
-`apps/web/` when a public name changes (`docs/conventions.md`, "What a branch may
-change"). Never what a screen shows or does: that is a feature or a bug.
+`packages/e2e/tests/design-system.spec.ts` and `pnpm-lock.yaml` (`docs/conventions.md`,
+"What a branch may change"), never `apps/web/`. A renamed public name keeps a deprecated
+re-export under its old name; its consumers in `apps/web/` move in a chore. Never what a
+screen shows or does: that is a feature or a bug.
 
 ## 1. Preconditions
 
@@ -74,8 +75,8 @@ python3 scripts/conventions.py commits origin/main..HEAD
 
 - When a template changed, the end-to-end test of the design system
   (`packages/e2e/tests/design-system.spec.ts`) must pass.
-- When a file of `apps/web/` changed, `pnpm build --filter @portflow/web` and
-  `pnpm lint --filter @portflow/web` must pass, and the diff of `apps/web/` holds imports only.
+- `pnpm build --filter @portflow/web` and `pnpm lint --filter @portflow/web` must pass:
+  the app still builds against the package.
 - For each theme, density and width the issue asks to look at, the story that shows it.
 
 If a check fails, send the agent back with the output.
@@ -97,8 +98,8 @@ If a check fails, send the agent back with the output.
 
 Post one comment on the issue with `gh issue comment`. Its first line is
 `## Handover: style`. Then: the link of the pull request, what changed, the themes,
-densities and widths looked at, the values left for the human to settle, any file of
-`apps/web/` changed, what was not verified, and the commands run with their real result.
+densities and widths looked at, the values left for the human to settle, any public
+name renamed (its consumers in `apps/web/` move in a chore), what was not verified, and the commands run with their real result.
 
 Then stop and report the same to the human, who reviews the result in Storybook and
 merges, or asks for changes and runs `/style $ARGUMENTS` again. The Portflow design
