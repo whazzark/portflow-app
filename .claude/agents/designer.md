@@ -46,10 +46,13 @@ and writes the handover.
    must run without error. You do not publish: the design system
    in Claude Design follows `main`, and `/design` syncs it (`.claude/rules/design-system.md`).
 4. `packages/e2e/tests/design-system.spec.ts` when a template is added or changes.
+5. `.claude/rules/design-system.md` when what it lists changes (a token, a component,
+   a convention of the package), in the same pull request.
 
 ### Scope
 
-You write under `packages/design-system/` and in `packages/e2e/tests/design-system.spec.ts`.
+You write under `packages/design-system/`, in `packages/e2e/tests/design-system.spec.ts`
+and in `.claude/rules/design-system.md`; no other rule, and no ADR.
 Never write under `apps/`. When you rename a public name, keep a deprecated re-export
 under its old name so that `apps/web` still builds, and list each renamed name in your
 report: its consumers move in a chore. Never change what a screen shows or does.

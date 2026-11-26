@@ -8,14 +8,16 @@ disable-model-invocation: true
 # /style <issue>
 
 The deliverables are, on `style/<NNN>-<slug>`: the change of `packages/design-system/`,
-its tests and stories, and the style pull request. The `designer` agent does the work
+its tests and stories, `.claude/rules/design-system.md` when what it lists changes, and
+the style pull request. The `designer` agent does the work
 (job 1); this skill checks it and opens the pull request. A style issue has no spec and
 no mock-up: the issue and `.claude/rules/design-system.md` are its reference, and the
 human reviews the result in Storybook and merges. `<NNN>` is the issue number padded to
 three digits (issue 42 gives `042`).
 
 A `style/` branch changes only `packages/design-system/`, its end-to-end test
-`packages/e2e/tests/design-system.spec.ts` and `pnpm-lock.yaml` (`docs/conventions.md`,
+`packages/e2e/tests/design-system.spec.ts`, `pnpm-lock.yaml` and the rule
+`.claude/rules/design-system.md`, no other rule and no ADR (`docs/conventions.md`,
 "What a branch may change"), never `apps/web/`. A renamed public name keeps a deprecated
 re-export under its old name; its consumers in `apps/web/` move in a chore. Never what a
 screen shows or does: that is a feature or a bug.
