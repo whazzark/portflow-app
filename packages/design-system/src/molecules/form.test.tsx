@@ -115,8 +115,11 @@ test('submitting shows the errors of every field and sends nothing', async () =>
 
 test('the submit button cannot be pressed again while the form is sent', async () => {
   const user = userEvent.setup()
-  const { promise, resolve } = Promise.withResolvers<void>()
-  const onSubmit = vi.fn<SubmitProps['onSubmit']>(() => promise)
+  let resolve = () => {}
+  const sent = new Promise<void>((done) => {
+    resolve = done
+  })
+  const onSubmit = vi.fn<SubmitProps['onSubmit']>(() => sent)
   const { name, tonnage, save } = renderForm(onSubmit)
   await user.type(name, 'Hold 1')
   await user.type(tonnage, '12')
